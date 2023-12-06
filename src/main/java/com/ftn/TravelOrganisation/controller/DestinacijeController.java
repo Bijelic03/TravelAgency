@@ -32,32 +32,21 @@ import com.ftn.TravelOrganisation.service.DestinacijeService;
 
 @Controller
 @RequestMapping("destinacije")
-public class DestinacijeController implements ApplicationContextAware{
+public class DestinacijeController {
 	
 	private final String bURL;
 
-	private ServletContext servletContext;
-
-	private ApplicationContext applicationContext;
-
-	private ApplicationMemory memorijaAplikacije;
 	
 	private final DestinacijeService destinacijeService;
 	 
 	@Autowired
-	public DestinacijeController(ServletContext servletContext, ApplicationContext applicationContext, ApplicationMemory memorijaAplikacije, DestinacijeService destinacijeService) {
-		this.servletContext = servletContext;
-		this.applicationContext = applicationContext;
-		this.memorijaAplikacije = memorijaAplikacije;
+	public DestinacijeController(ServletContext servletContext, DestinacijeService destinacijeService) {
 		this.destinacijeService = destinacijeService;
 		this.bURL = servletContext.getContextPath();
 	}
 
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+
 
 
 	@GetMapping
@@ -197,5 +186,11 @@ public class DestinacijeController implements ApplicationContextAware{
 				+ "");
 
 	}
+
+
+
+
+
+
 
 }

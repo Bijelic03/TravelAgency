@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Form</title>
+    <!-- Dodajte linkove ka stilovima po potrebi -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+	
+	
+		<div  th:attr="data-show-modal=${userAlreadyExists}" th:if="${userAlreadyExists}" class="modal fade" id="userExistsModal" tabindex="-1" role="dialog" aria-labelledby="userExistsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userExistsModalLabel">User Already Exists</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                The username already exists. Please choose a different username.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+	
+
+    <h2>Registration Form</h2>
+    <form th:action="@{/register}" th:object="${korisnik}" method="post">
+        <div class="form-group">
+            <label for="korisnickoIme">Username:</label>
+            <input type="text" class="form-control" id="korisnickoIme" th:field="*{korisnickoIme}" required/>
+        </div>
+        <div class="form-group">
+            <label for="sifra">Password:</label>
+            <input type="password" class="form-control" id="sifra" th:field="*{sifra}" required/>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" required/>
+        </div>
+        <div class="form-group">
+            <label for="ime">First Name:</label>
+            <input type="text" class="form-control" id="ime" th:field="*{ime}" required/>
+        </div>
+        <div class="form-group">
+            <label for="prezime">Last Name:</label>
+            <input type="text" class="form-control" id="prezime" th:field="*{prezime}" required/>
+        </div>
+        <div class="form-group">
+            <label for="adresa">Address:</label>
+            <input type="text" class="form-control" id="adresa" th:field="*{adresa}" required/>
+        </div>
+        <div class="form-group">
+            <label for="brojTelefona">Phone Number:</label>
+            <input type="text" class="form-control" id="brojTelefona" th:field="*{brojTelefona}" required/>
+        </div>
+        <div class="form-group">
+            <label for="datumRodjenja">Date of Birth:</label>
+            <input type="date" class="form-control" id="datumRodjenja" th:field="*{datumRodjenja}" required/>
+        </div>
+        <!-- Dodajte ostala polja prema potrebama -->
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
+
+</body>
+</html>
+
+
+<script>
+    var showModal = $('[data-show-modal]').data('show-modal');
+
+    if (showModal) {
+        $('#userExistsModal').modal('show');
+    }
+</script>
+

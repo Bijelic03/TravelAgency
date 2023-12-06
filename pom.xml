@@ -46,6 +46,8 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
+		
+		
 		<!-- Add dependencies for tomcat container -->
 		<!-- Omogućuje da se Tomcat veb kontejner ugradi u izvršnu verziju aplikacije. 
 			Tomcat je predefinisani veb kontejner za Spring Boot verziju 2.2.5.RELEASE.
@@ -135,10 +137,10 @@
 		
 		<!-- webjar bootstrap and jquery dependencies -->
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
-        </dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>4.0.0</version> <!-- Prilagodite verziju po potrebi -->
+    </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
