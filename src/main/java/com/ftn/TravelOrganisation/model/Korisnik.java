@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.List;
 
 public class Korisnik {
     private Long id;
@@ -19,6 +20,9 @@ public class Korisnik {
     private LocalDate datumRodjenja;
     private LocalDateTime datumVremeRegistracije;
     private KorisnikUloga uloga;
+    private List<Putovanje> listaZelja;
+    private List<Rezervacija> rezervacije;
+    private boolean blokiran;
 
     public Korisnik() {
     }
@@ -42,7 +46,7 @@ public class Korisnik {
     }
 
     
-    //konstruktor koriscen u registraciji txt-a
+    //konstruktor koriscen u registraciji
     public Korisnik(String korisnickoIme, String sifra, String email, String ime,
             String prezime, String adresa, String brojTelefona, String datumRodjenja) {
         this.korisnickoIme = korisnickoIme;
@@ -58,7 +62,7 @@ public class Korisnik {
     
     public Korisnik(Long id, String korisnickoIme, String sifra, String email, String ime,
                     String prezime, String adresa, String brojTelefona, LocalDate datumRodjenja,
-                    LocalDateTime datumVremeRegistracije, KorisnikUloga uloga) {
+                    LocalDateTime datumVremeRegistracije, KorisnikUloga uloga, boolean blokiran) {
         this.id = id;
         this.korisnickoIme = korisnickoIme;
         this.sifra = sifra;
@@ -70,9 +74,33 @@ public class Korisnik {
         this.datumRodjenja = datumRodjenja;
         this.datumVremeRegistracije = datumVremeRegistracije;
         this.uloga = uloga;
+        this.blokiran = blokiran;
     }
     
-    private LocalDateTime convertStringToLocalDateTime(String localDateTimeString) {
+    
+    
+    public Korisnik(Long id, String korisnickoIme, String sifra, String email, String ime, String prezime,
+			String adresa, String brojTelefona, LocalDate datumRodjenja, LocalDateTime datumVremeRegistracije,
+			KorisnikUloga uloga, List<Putovanje> listaZelja, List<Rezervacija> rezervacije, boolean blokiran) {
+		super();
+		this.id = id;
+		this.korisnickoIme = korisnickoIme;
+		this.sifra = sifra;
+		this.email = email;
+		this.ime = ime;
+		this.prezime = prezime;
+		this.adresa = adresa;
+		this.brojTelefona = brojTelefona;
+		this.datumRodjenja = datumRodjenja;
+		this.datumVremeRegistracije = datumVremeRegistracije;
+		this.uloga = uloga;
+		this.listaZelja = listaZelja;
+		this.rezervacije = rezervacije;
+		this.blokiran = blokiran;
+	}
+
+
+	private LocalDateTime convertStringToLocalDateTime(String localDateTimeString) {
         if (localDateTimeString == null || localDateTimeString.equalsIgnoreCase("null")) {
             return null;
         }
@@ -206,4 +234,14 @@ public class Korisnik {
     public void setUloga(KorisnikUloga uloga) {
         this.uloga = uloga;
     }
+
+
+	public boolean isBlokiran() {
+		return blokiran;
+	}
+
+
+	public void setBlokiran(boolean blokiran) {
+		this.blokiran = blokiran;
+	}
 }

@@ -12,6 +12,8 @@ public class SmestajnaJedinica {
 	private List<SmestajnaJedinicaUslugaEnum> usluge;
 	private String opis;
 	
+	
+	
 	public SmestajnaJedinica(Long id, String naziv, int kapacitet, Destinacija destinacija, List<Recenzija> recenzije,
 			List<SmestajnaJedinicaUslugaEnum> usluge, String opis) {
 		super();
@@ -23,6 +25,7 @@ public class SmestajnaJedinica {
 		this.usluge = usluge;
 		this.opis = opis;
 	}
+	
 	
 	
 

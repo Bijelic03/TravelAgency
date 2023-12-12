@@ -10,9 +10,9 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<groupId>com.ftn</groupId>
 	<artifactId>TravelOrganisation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -24,7 +24,7 @@
 		Potrebno je označiti embedovani servlet kontejner kao provided (vidi dole) 
 	 -->
 	<packaging>jar</packaging>
- 	
+
 	<name>TravelOrganisation Maven Webapp</name>
 	<url>http://www.example.com</url>
 
@@ -45,24 +45,34 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
-		
-		
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+
 		<!-- Add dependencies for tomcat container -->
-		<!-- Omogućuje da se Tomcat veb kontejner ugradi u izvršnu verziju aplikacije. 
+		<!-- Omogućuje da se Tomcat veb kontejner ugradi u izvršnu verziju
+		aplikacije. 
 			Tomcat je predefinisani veb kontejner za Spring Boot verziju 2.2.5.RELEASE.
 			Može se koristiti i Jetty veb kontejner sa spring-boot-starter-jetty, ili
 			Undertow sa spring-boot-starter-undertow.
 			-->
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Add dependencies for using Spring Session -->
-		<!-- Provides session repository for relational database like MYSQL etc session management -->
+		<!-- Provides session repository for relational database like MYSQL etc
+		session management -->
 		<!-- 
 		<dependency>
 			<groupId>org.springframework.session</groupId>
@@ -73,92 +83,104 @@
 			<artifactId>spring-session-jdbc</artifactId>
 		</dependency>
 		 -->
-		 
+
 		<!-- Add dependencies for testing -->
-		<!-- pribavljanje test okruženja, artifact će ujedno prevući i JUnit biblioteku -->
+		<!-- pribavljanje test okruženja, artifact će ujedno prevući i JUnit
+		biblioteku -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Add thymeleaf dependencies-->
 		<!-- uključivanje Thymeleaf biblioteka -->
-		<!-- Thymeleaf je Java XML/XHTML/HTML5 templejt endžin koji se koristi za veb (servlet-based) i ne-veb oruženja -->  
+		<!-- Thymeleaf je Java XML/XHTML/HTML5 templejt endžin koji se koristi
+		za veb (servlet-based) i ne-veb oruženja -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
 		<!-- Add spring-boot-devtools -->
-		<!-- modul je poželjno koristiti tokom samog razvoja veb aplikacija jer omogućuje 
+		<!-- modul je poželjno koristiti tokom samog razvoja veb aplikacija jer
+		omogućuje 
 				dodatne pogodnosti kao što su automatski restart, 
 				ne bi li razvoj aplikacije išao što lakše.
 				Više o modulu na https://www.baeldung.com/spring-boot-devtools -->
-		<!-- spring-boot-devtools provides ability to quickly setup and run services -->
-		<!-- it enables Property defaults, Automatic Restart, Live Reload, Global Settings, Remote Applications -->
-		<!-- Property defaults: for e.g. disabling caching of Thymeleaf templates spring.thymeleaf.cache=false,
-				reason: during development, it's more important to see the changes as quickly as possible 
+		<!-- spring-boot-devtools provides ability to quickly setup and run
+		services -->
+		<!-- it enables Property defaults, Automatic Restart, Live Reload,
+		Global Settings, Remote Applications -->
+		<!-- Property defaults: for e.g. disabling caching of Thymeleaf
+		templates spring.thymeleaf.cache=false,
+				reason: during development, it's more important to see the changes as quickly
+		as possible 
 		 		-->
-		<!-- Automatic Restart: when changes are made, developer needs to manually build the project 
+		<!-- Automatic Restart: when changes are made, developer needs to
+		manually build the project 
 				and deploy/start the application for new changes to take effect.
-				spring-boot-devtools automates this process, whenever files change in the classpath, 
+				spring-boot-devtools automates this process, whenever files change in the
+		classpath, 
 				applications using spring-boot-devtools will cause the application to restart
 				-->
 		<!-- Live Reload: embedded LiveReload server that is used to trigger 
 				a browser refresh when a resource is changed. 
 				Install of LiveReload plugin for Browser is needed
-				https://chrome.google.com/webstore/detail/remotelivereload/jlppknnillhjgiengoigajegdpieppei?hl=en-GB.
+		https://chrome.google.com/webstore/detail/remotelivereload/jlppknnillhjgiengoigajegdpieppei?hl=en-GB.
 				-->
-		<!-- Global Settings: configure global settings that are not coupled with any application.
+		<!-- Global Settings: configure global settings that are not coupled
+		with any application.
 				use file spring-boot-devtools.properties located at $HOME
 				-->
-		<!-- Remote Applications: Remote Debugging via HTTP (Remote Debug Tunnel)
+		<!-- Remote Applications: Remote Debugging via HTTP (Remote Debug
+		Tunnel)
 				-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<dependency>
-   		 	<groupId>org.jsoup</groupId>
-   		 	<artifactId>jsoup</artifactId>
-    		<version>1.14.2</version>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.14.2</version>
 		</dependency>
 
 		<!-- DB related dependencies -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.6</version>
+			<version>8.0.33</version>
 			<!--  <scope>runtime</scope> -->
 		</dependency>
-		
+
 		<!-- webjar bootstrap and jquery dependencies -->
-        <dependency>
-        <groupId>org.webjars</groupId>
-        <artifactId>bootstrap</artifactId>
-        <version>4.0.0</version> <!-- Prilagodite verziju po potrebi -->
-    </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.2.1</version>
-        </dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>4.0.0</version> <!-- Prilagodite verziju po potrebi -->
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.2.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
-			<finalName>TravelOrganisation</finalName>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-        				<mainClass>com.ftn.TravelOrganisation.TravelOrganisationApplication</mainClass>
-    					<excludeDevtools>false</excludeDevtools>
-    				</configuration>	
-				</plugin>
-			</plugins>
+		<finalName>TravelOrganisation</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<mainClass>
+						com.ftn.TravelOrganisation.TravelOrganisationApplication</mainClass>
+					<excludeDevtools>false</excludeDevtools>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>

@@ -1,15 +1,20 @@
 package com.ftn.TravelOrganisation.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Destinacija {
 
+	@Id
 	private Long id;
 	private String grad;
 	private String drzava;
 	private String kontinent;
 
+	public Destinacija() {
 
-	public Destinacija(){
-		
 	}
 
 	public Destinacija(Long id, String grad, String drzava, String kontinent) {
@@ -19,17 +24,13 @@ public class Destinacija {
 		this.drzava = drzava;
 		this.kontinent = kontinent;
 
-
 	}
-	
 
-
-	
 	@Override
 	public String toString() {
-	    return id + ";" + grad + ";" + drzava + ";" + kontinent;
+		return id + ";" + grad + ";" + drzava + ";" + kontinent;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -62,7 +63,4 @@ public class Destinacija {
 		this.kontinent = kontinent;
 	}
 
-
-	
-	
 }

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.2
+    container_name: travel-organisation-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: travel-organisation-db
+      MYSQL_USER: travel-organisation
+      MYSQL_PASSWORD: 123
+    volumes:
+      - ./travel-organisation:/var/lib/mysql
+    ports:
+      - "3307:3306"
