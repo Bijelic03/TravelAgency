@@ -1,20 +1,22 @@
 package com.ftn.TravelOrganisation.model;
 
+//@Entity
 public class PrevoznoSredstvo {
 
-	
+	//@Id
 	private Long id;
 	private int brojSedista;
+
+	// za ovo nisam siguran
+	//@OneToOne(mappedBy = "prevoznoSredstvo")
 	private Destinacija krajnjaDestinacija;
 	private String opis;
 	private PrevoznoSredstvoTipEnum prevoznoSredstvo;
-	
-	
-	
+
 	public PrevoznoSredstvo() {
-		
+
 	}
-	
+
 	public PrevoznoSredstvo(Long id, int brojSedista, Destinacija krajnjaDestinacija, String opis,
 			PrevoznoSredstvoTipEnum prevoznoSredstvo) {
 		super();
@@ -24,8 +26,6 @@ public class PrevoznoSredstvo {
 		this.opis = opis;
 		this.prevoznoSredstvo = prevoznoSredstvo;
 	}
-	
-	
 
 	public Long getId() {
 		return id;
@@ -66,7 +66,5 @@ public class PrevoznoSredstvo {
 	public void setPrevoznoSredstvo(PrevoznoSredstvoTipEnum prevoznoSredstvo) {
 		this.prevoznoSredstvo = prevoznoSredstvo;
 	}
-	
-	
-	
+
 }

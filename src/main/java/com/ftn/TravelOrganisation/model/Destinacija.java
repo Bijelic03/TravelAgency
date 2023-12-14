@@ -1,13 +1,8 @@
 package com.ftn.TravelOrganisation.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
 public class Destinacija {
 
-	@Id
 	private Long id;
 	private String grad;
 	private String drzava;

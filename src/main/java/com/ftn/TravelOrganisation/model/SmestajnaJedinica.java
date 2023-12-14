@@ -2,8 +2,8 @@ package com.ftn.TravelOrganisation.model;
 
 import java.util.List;
 
-public class SmestajnaJedinica {
 
+public class SmestajnaJedinica {
 	private Long id;
 	private String naziv;
 	private int kapacitet;
@@ -11,6 +11,7 @@ public class SmestajnaJedinica {
 	private List<Recenzija>  recenzije;
 	private List<SmestajnaJedinicaUslugaEnum> usluge;
 	private String opis;
+	private SmestajnaJedinicaTipEnum tipSmestajneJedinice;
 	
 	
 	

@@ -41,6 +41,7 @@
 	<dependencies>
 		<!-- Add typical dependencies for a web application -->
 		<!-- uključivanje Spring Web modula -->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -50,10 +51,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+
 
 
 		<!-- Add dependencies for tomcat container -->
