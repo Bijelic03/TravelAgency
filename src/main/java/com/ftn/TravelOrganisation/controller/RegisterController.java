@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ftn.TravelOrganisation.model.Korisnik;
+import com.ftn.TravelOrganisation.repository.KorisnikRepository;
 import com.ftn.TravelOrganisation.service.RegisterService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;

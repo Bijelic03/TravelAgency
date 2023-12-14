@@ -24,6 +24,7 @@ import org.springframework.web.context.ServletContextAware;
 
 import com.ftn.TravelOrganisation.bean.SecondConfiguration.ApplicationMemory;
 import com.ftn.TravelOrganisation.model.Destinacija;
+import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
 import com.ftn.TravelOrganisation.service.DestinacijeService;
 
 
@@ -39,9 +40,12 @@ public class DestinacijeController {
 	
 	private final DestinacijeService destinacijeService;
 	 
+	private final DestinacijaRepository destinacijaRepository;
+	
 	@Autowired
-	public DestinacijeController(ServletContext servletContext, DestinacijeService destinacijeService) {
+	public DestinacijeController(ServletContext servletContext, DestinacijeService destinacijeService, DestinacijaRepository destinacijaRepository) {
 		this.destinacijeService = destinacijeService;
+		this.destinacijaRepository = destinacijaRepository;
 		this.bURL = servletContext.getContextPath();
 	}
 
@@ -53,7 +57,7 @@ public class DestinacijeController {
 	@ResponseBody
 	public void sveDestinacije(ServletResponse response) throws IOException {
 
-		List<Destinacija> listaDestinacija = destinacijeService.findAll();
+		List<Destinacija> listaDestinacija = destinacijaRepository.findAll();
 		PrintWriter out = response.getWriter();
 		out.write("<!DOCTYPE html>\r\n"
 				+ "<html>\r\n"
@@ -129,19 +133,19 @@ public class DestinacijeController {
 
 	@PostMapping("/add")
 	public void addDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response) throws IOException {
-		destinacijeService.save(destinacija);
+		destinacijaRepository.save(destinacija);
 		response.sendRedirect(bURL+ "/destinacije");
 	}
 	
 	@PostMapping("/edit")
 	public void editDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response) throws IOException {
-		destinacijeService.update(destinacija);
+		destinacijaRepository.update(destinacija);
 		response.sendRedirect(bURL+ "/destinacije");
 	}
 	
 	@PostMapping(value="/delete")
 	public void delete(@RequestParam Long id, HttpServletResponse response) throws IOException {		
-		Destinacija deleted = destinacijeService.delete(id);
+		destinacijaRepository.delete(id);
 		response.sendRedirect(bURL+"/destinacije");
 	}
 
@@ -151,7 +155,7 @@ public class DestinacijeController {
 
 		//Destinacije destinacije = (Destinacije) memorijaAplikacije.get(DestinacijeService.DESTINACIJE_KEY);
 
-		Destinacija destinacija = destinacijeService.returnOne(id);
+		Destinacija destinacija = destinacijaRepository.findOne(id);
 
 		PrintWriter out = response.getWriter();
 

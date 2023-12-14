@@ -1,6 +1,5 @@
 package com.ftn.TravelOrganisation.repository.impl;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +18,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.ftn.TravelOrganisation.model.Destinacija;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
 
@@ -27,11 +25,11 @@ import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
 public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	private class DestinacijaRowCallBackHandler implements RowCallbackHandler {
 
 		private Map<Long, Destinacija> destinacije = new LinkedHashMap<>();
-		
+
 		@Override
 		public void processRow(ResultSet resultSet) throws SQLException {
 			int index = 1;
@@ -39,7 +37,6 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 			String grad = resultSet.getString(index++);
 			String drzava = resultSet.getString(index++);
 			String kontinent = resultSet.getString(index++);
-
 
 			Destinacija destinacija = destinacije.get(id);
 			if (destinacija == null) {
@@ -53,13 +50,11 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 		}
 
 	}
-	
+
 	@Override
 	public Destinacija findOne(Long id) {
-		String sql = 
-				"SELECT k.id, k.naziv, k.registarskiBrojPrimerka, k.jezik, k.brojStranica, k.izdata FROM knjige k " + 
-				"WHERE k.id = ? " + 
-				"ORDER BY k.id";
+		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d " + "WHERE d.id = ? "
+				+ "ORDER BY d.id";
 
 		DestinacijaRowCallBackHandler rowCallbackHandler = new DestinacijaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler, id);
@@ -69,9 +64,7 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 
 	@Override
 	public List<Destinacija> findAll() {
-		String sql = 
-				"SELECT k.id, k.naziv, k.registarskiBrojPrimerka, k.jezik, k.brojStranica, k.izdata FROM knjige k " + 
-				"ORDER BY k.id";
+		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d  " + "ORDER BY d.id";
 
 		DestinacijaRowCallBackHandler rowCallbackHandler = new DestinacijaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler);
@@ -83,10 +76,10 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 	@Override
 	public int save(Destinacija destinacija) {
 		PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
-			
+
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				String sql = "INSERT INTO destinacije (id, grad, drzava, kontinent) VALUES (?, ?, ?, ?";
+				String sql = "INSERT INTO destinacije (grad, drzava, kontinent) VALUES (?, ?, ?)";
 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				int index = 1;
@@ -100,24 +93,24 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 		};
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		boolean uspeh = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
-		return uspeh?1:0;
+		return uspeh ? 1 : 0;
 	}
-	
+
 	@Transactional
 	@Override
-	public int update(Destinacija destinacija) {		
-		String sql = "UPDATE destinacije SET grad = ?, drzava = ?, jezik = ?, kontinent = ? WHERE id = ?";	
-		boolean uspeh = jdbcTemplate.update(sql, destinacija.getGrad(), destinacija.getDrzava(), destinacija.getKontinent()) == 1;
-		
-		return uspeh?1:0;
+	public int update(Destinacija destinacija) {
+		String sql = "UPDATE destinacije SET grad = ?, drzava = ?, kontinent = ? WHERE id = ?";
+		boolean uspeh = jdbcTemplate.update(sql, destinacija.getGrad(), destinacija.getDrzava(),
+				destinacija.getKontinent(), destinacija.getId()) == 1;
+
+		return uspeh ? 1 : 0;
 	}
-	
+
 	@Transactional
 	@Override
 	public int delete(Long id) {
 		String sql = "DELETE FROM destinacije WHERE id = ?";
 		return jdbcTemplate.update(sql, id);
 	}
-	
-	
+
 }
