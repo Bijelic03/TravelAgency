@@ -38,6 +38,7 @@ public class Korisnik {
 	private boolean blokiran;
 
 	public Korisnik() {
+		this.email = "aaa";
 	}
 
 	// konstruktor koriscen u citanju txt-a
@@ -90,19 +91,20 @@ public class Korisnik {
 
 
 	private LocalDateTime convertStringToLocalDateTime(String localDateTimeString) {
-		if (localDateTimeString == null || localDateTimeString.equalsIgnoreCase("null")) {
-			return null;
-		}
+	    if (localDateTimeString == null || localDateTimeString.equalsIgnoreCase("null")) {
+	        return null;
+	    }
 
-		try {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-			return LocalDateTime.parse(localDateTimeString, formatter);
-		} catch (DateTimeParseException e) {
-			System.err.println("Nije moguće konvertovati string u LocalDateTime: " + localDateTimeString);
-			e.printStackTrace();
-			return null;
-		}
+	    try {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	        return LocalDateTime.parse(localDateTimeString, formatter);
+	    } catch (DateTimeParseException e) {
+	        System.err.println("Nije moguće konvertovati string u LocalDateTime: " + localDateTimeString);
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
+
 
 	@Override
 	public String toString() {

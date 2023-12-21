@@ -4,15 +4,13 @@
 <head>
 	<!-- Dodaj link za učitavanje Tailwind CSS-a -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-	
 </head>
 
-<body class="">
 
-	<header class="">
-		<nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+	<header class="bg-gray-900">
+		<nav class="mx-auto flex max-w-6xl items-center justify-between p-4 lg:px-6" aria-label="Global">
 			<div class="flex lg:flex-1">
-				<a href="#" class="-m-1.5 p-1.5">
+				<a href="/TravelOrganisation" class="-m-1.5 p-1.5">
 					<span class="sr-only">Your Company</span>
 					<img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="">
 				</a>
@@ -33,14 +31,19 @@
 
 				<a th:href="@{/putovanja}" class=" text-sm font-semibold leading-6 text-white">Putavanja</a>
 				<a th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white">Destinacije</a>
-				<a th:href="@{/register}" class="text-sm font-semibold leading-6 text-white">Registracija</a>
-				<a th:href="@{/profil}" class="text-sm font-semibold leading-6 text-white">Profil</a>
+				<a th:href="@{/register}" th:if="${session.prijavljeni_korisnik == null}" class="text-sm font-semibold leading-6 text-white">Registracija</a>
+				<a th:href="@{/profil}" th:if="${session.prijavljeni_korisnik != null}"
+					th:text="${session.prijavljeni_korisnik.korisnickoIme}" class="text-sm font-semibold leading-6 text-white"></a>
+			
+
 
 
 			</div>
 			<div class="hidden lg:flex lg:flex-1 lg:justify-end">
-				<a href="login" class="text-sm font-semibold leading-6 text-white">Log in <span
-						aria-hidden="true">&rarr;</span></a>
+				<a href="login" th:if="${session.prijavljeni_korisnik == null}"
+					class="text-sm font-semibold leading-6 text-white">Prijavi se</a>
+				<a href="logout" th:if="${session.prijavljeni_korisnik != null}"
+					class="text-sm font-semibold leading-6 text-white">Odjavi se</a>
 			</div>
 		</nav>
 		<!-- Mobile menu, show/hide based on menu open state. -->
@@ -108,6 +111,5 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
 		crossorigin="anonymous"></script>
-</body>
 
 </html>

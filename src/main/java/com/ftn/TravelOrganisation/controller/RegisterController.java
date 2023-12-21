@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -31,7 +33,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 @RequestMapping("register")
 public class RegisterController {
 
-	
+	public static final String PRIJAVLJENI_KORISNIK = "prijavljeni_korisnik";
+
 	private final String bURL;
 
 	
@@ -57,26 +60,32 @@ public class RegisterController {
 
 
 
-	
 	@GetMapping
 	public String showRegistrationForm(Model model) {
 	    model.addAttribute("korisnik", new Korisnik());
 	    model.addAttribute("userAlreadyExists", false);
+	    model.addAttribute("showModal", false);
 	    return "register";
 	}
 
-	@PostMapping
-	public String register(@ModelAttribute("korisnik") Korisnik korisnik, Model model) {
 
+	@PostMapping
+	public String register(@ModelAttribute("korisnik") Korisnik korisnik, Model model, HttpSession session, HttpServletRequest request) {
 	    if (!registerService.alreadyRegistered(korisnik.getKorisnickoIme())) {
 	        registerService.register(korisnik);
-	        return "redirect:/register";
+	        session = request.getSession(true);
+	        session.setAttribute(PRIJAVLJENI_KORISNIK, korisnik);
+
+	        return "redirect:/";
 	    } else {
-	    	System.out.println("vec postoji taj user");
+	        System.out.println("Već postoji korisnik sa tim korisničkim imenom.");
 	        model.addAttribute("userAlreadyExists", true);
-	        return "redirect:/register";
+	        model.addAttribute("showModal", true);
+	        return "register";
 	    }
 	}
+
+
 
 	
 

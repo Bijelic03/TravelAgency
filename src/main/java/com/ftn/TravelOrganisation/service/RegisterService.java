@@ -8,5 +8,5 @@ import com.ftn.TravelOrganisation.model.Korisnik;
 public interface RegisterService {
 	public void register(Korisnik korisnik);
 	public boolean alreadyRegistered(String korisnickoIme);
-	public void login(String korisnickoIme, String sifra);
+	public Korisnik login(String korisnickoIme, String sifra);
 }

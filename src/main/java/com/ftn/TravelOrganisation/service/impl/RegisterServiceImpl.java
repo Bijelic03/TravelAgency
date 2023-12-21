@@ -46,12 +46,16 @@ public class RegisterServiceImpl implements RegisterService {
 	}
 
 	@Override
-	public void login(String korisnickoIme, String sifra) {
+	public Korisnik login(String korisnickoIme, String sifra) {
 		Korisnik prijavljeniKorisnik = korisnikRepository.findByKorisnickoImeAndSifra(korisnickoIme, sifra);
 		if (prijavljeniKorisnik != null) {
 			System.out.println("korisnik se prijavio");
+			return prijavljeniKorisnik;
+
 		} else {
 			System.out.println("korisnik se nije prijavio");
+			return prijavljeniKorisnik;
+
 		}
 	}
 

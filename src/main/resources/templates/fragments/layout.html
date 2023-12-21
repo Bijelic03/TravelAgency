@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html th:fragment="zajednickaStranica(title, centralniDiv)">
+<head>
+	    <script src="https://cdn.tailwindcss.com"></script>
+
+	<meta charset="UTF-8">
+	<title th:replace="${title}">neki naslov koji se menja</title>
+</head>
+<body>
+<div th:insert="fragments/header :: header"></div>
+
+<div class="p-10 bg-fixed bg-center " style="background-image: url('https://cdn.discordapp.com/attachments/831510841152897038/1183903207781572608/20cbf31ecf279ccab1a3264a2cec80c6.png?ex=658a06c8&is=657791c8&hm=4b12cea11c96f453286f664f737730538982d61880948d0a80b9df4e1feca9a2&')">
+<div  th:replace="${centralniDiv}">centralni deo koji se menja</div>
+</div>
+<div th:insert="fragments/footer :: footer"></div>
+
+</body>
+</html>

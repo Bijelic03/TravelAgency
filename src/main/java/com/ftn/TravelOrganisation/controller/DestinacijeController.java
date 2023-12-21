@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ftn.TravelOrganisation.bean.SecondConfiguration.ApplicationMemory;
 import com.ftn.TravelOrganisation.model.Destinacija;
@@ -55,48 +56,13 @@ public class DestinacijeController {
 
 	@GetMapping
 	@ResponseBody
-	public void sveDestinacije(ServletResponse response) throws IOException {
-
-		List<Destinacija> listaDestinacija = destinacijaRepository.findAll();
-		PrintWriter out = response.getWriter();
-		out.write("<!DOCTYPE html>\r\n"
-				+ "<html>\r\n"
-				+ "\r\n"
-				+ "<head>\r\n"
-				+ "    <meta charset=\"UTF-8\" />\r\n"
-				+ "    <base href=\"/TravelOrganisation/\" />\r\n"
-				+ "    <title>Sve knjige</title>\r\n"
-				+ "\r\n"
-				+ "</head>\r\n"
-				+ "\r\n"
-				+ "<body>\r\n"
-				+ "	\r\n"
-				+ "	<table border=\"2\">\r\n"
-				+ "		<tr border=\"1\">\r\n"
-				+ "			<th>Grad</th>\r\n"
-				+ "			<th>Drzava</th>\r\n"
-				+ "			<th>Kontinent</th>\r\n"
-				+ "		</tr>\r\n");
-				for(int i = 0; i < listaDestinacija.size(); i++) {
-					out.write( "		<tr border=\"1\">\r\n"
-							+ "			<td>" +listaDestinacija.get(i).getGrad()+"</td>\r\n"
-							+ "			<td>"+listaDestinacija.get(i).getDrzava()+"</td>\r\n"
-							+ "			<td>"+listaDestinacija.get(i).getKontinent()+"</td>\r\n"
-							+ "			<td><form method=\"POST\" action=\"destinacije/izmeni\"><Input name=\"id\" type=\"hidden\" value=" + listaDestinacija.get(i).getId() + ">"
-									+ "</input><input type=\"submit\" value=\"izmeni\"></input></form></td>\r\n"
-							+ "			<td><form method=\"POST\" action=\"destinacije/delete\"><Input name=\"id\"  type=\"hidden\" value=" + listaDestinacija.get(i).getId() + ">"
-									+ "</input><input type=\"submit\" value=\"obrisi\"></input></form></td>\r\n"
-							+ "		</tr>\r\n");
-				}
-				out.write(
-				 "	</table>\r\n"
-				+ " <a href=\"destinacije/dodaj\"><button>Dodaj</button></a>"
-				+ "\r\n"
-				+ "</body>\r\n"
-				+ "\r\n"
-				+ "</html>\r\n"
-				+ "");
+	public ModelAndView sveDestinacije() {
+	    ModelAndView rezultat = new ModelAndView("destinacije");
+	    List<Destinacija> listaDestinacija = destinacijaRepository.findAll();
+	    rezultat.addObject("listaDestinacija", listaDestinacija); // Dodajemo listu pod imenom "listaDestinacija"
+	    return rezultat;
 	}
+
 
 
 	@GetMapping("/dodaj")
