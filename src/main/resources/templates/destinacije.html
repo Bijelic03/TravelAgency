@@ -2,35 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title th:text="'Fleksibilni layout'"></title>
+	<title th:text="'Destinacije'"></title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 
 <body>
 
 	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
-		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
-			<table class="text-gray-900 min-w-full bg-white border border-gray-300">
-				<thead>
-					<tr>
+		<div th:fragment="centralniDiv" class="px-20 flex items-center justify-center min-h-screen">
+			<div
+							class="col-span-2 mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:grid-cols-3 xl:gap-x-3">
 
-						<th class="py-2 px-4 border-b">Grad</th>
-						<th class="py-2 px-4 border-b">Država</th>
-						<th class="py-2 px-4 border-b">Kontinent</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="destinacija : ${listaDestinacija}">
+			<div  th:each="destinacija : ${listaDestinacija}">
+				<div th:insert="fragments/card :: destinacijaCard" th:with="destinacija=${destinacija}"></div>
 
-						<td class="text-center py-2 px-4 border" th:text="${destinacija.grad}"></td>
-						<td class="text-center py-2 px-4 border" th:text="${destinacija.drzava}"></td>
-						<td class="text-center py-2 px-4 border" th:text="${destinacija.kontinent}"></td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	</div>
-
+		</div>
+</div>
 </body>
 
 </html>

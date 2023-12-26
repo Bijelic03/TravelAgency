@@ -1,38 +1,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
+
+<head>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-	
+
 </head>
-	<body>
 
-				<div th:fragment="card" class="group relative">
-    <!-- Slika destinacije -->
-    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-        <a href="/destinacija/1">
-            <img src="https://cdn.discordapp.com/attachments/831510841152897038/1182141007962325074/674925.png?ex=65839d9b&amp;is=6571289b&amp;hm=7fb7fe9b02cd3063a51a257f050412507a52ccf48e24277a9ca5a89f5e43d6b4&amp;"
-                alt="Slika destinacije"
-                class="h-full w-full object-cover object-center lg:h-full lg:w-full">
-        </a>
-    </div>
+<body>
 
-    <!-- Opis destinacije -->
-    <div class="mt-4 flex justify-between">
-        <div>
-            <!-- Link ka stranici za pregled putovanja za izabranu destinaciju -->
-            <h3 class="text-sm text-gray-700">
-                <a href="/destinacija/1">
-                    <span aria-hidden="true" class="absolute inset-0"></span>
-                    <span>Ime destinacije</span>
-                </a>
-            </h3>
-            <!-- Ostali detalji o destinaciji -->
-            <p class="mt-1 text-sm text-gray-500">Kategorija destinacije</p>
-            <p class="mt-1 text-sm text-gray-500">Prevozno sredstvo</p>
-        </div>
-        <!-- Cena destinacije -->
-        <p class="text-sm font-medium text-gray-900">$500</p>
-    </div>
-</div>
+	<div th:fragment="card" class="group relative">
+		<!-- Slika destinacije -->
+		<div
+			class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+			<a href="/destinacija/1">
+				<img src="https://cdn.discordapp.com/attachments/831510841152897038/1182141007962325074/674925.png?ex=65839d9b&amp;is=6571289b&amp;hm=7fb7fe9b02cd3063a51a257f050412507a52ccf48e24277a9ca5a89f5e43d6b4&amp;"
+					alt="Slika destinacije" class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+			</a>
+		</div>
 
-	</body>
+		<!-- Opis destinacije -->
+		<div class="mt-4 flex justify-between">
+			<div>
+				<!-- Link ka stranici za pregled putovanja za izabranu destinaciju -->
+				<h3 class="text-sm text-gray-700">
+					<a href="/destinacija/1">
+						<span aria-hidden="true" class="absolute inset-0"></span>
+						<span>Ime destinacije</span>
+					</a>
+				</h3>
+				<!-- Ostali detalji o destinaciji -->
+				<p class="mt-1 text-sm text-gray-500">Kategorija destinacije</p>
+				<p class="mt-1 text-sm text-gray-500">Prevozno sredstvo</p>
+			</div>
+			<!-- Cena destinacije -->
+			<p class="text-sm font-medium text-gray-900">$500</p>
+		</div>
+	</div>
+
+
+	<div th:fragment="destinacijaCard" class="bg-white rounded-md group relative">
+		<a th:href="@{/destinacija/detalji/{id}(id=${destinacija.id})}">
+
+			<div
+				class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+				<img src="https://cdn.discordapp.com/attachments/831510841152897038/1182141007962325074/674925.png?ex=65839d9b&amp;is=6571289b&amp;hm=7fb7fe9b02cd3063a51a257f050412507a52ccf48e24277a9ca5a89f5e43d6b4&amp;"
+					alt="Slika destinacije" class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+			</div>
+
+			<div class="px-4 pb-5 mt-4 flex justify-between">
+				<div class="flex flex-row">
+					<div class="pr-5">
+						<span aria-hidden="true" class="absolute inset-0"></span>
+						<p>Grad: </p>
+						<p class="text-md" th:text="${destinacija.grad}"></p>
+					</div>
+					<div class="pr-5">
+						<p>Država: </p>
+						<p class=" text-md" th:text="${destinacija.drzava}"></p>
+
+					</div>
+					<div class="pr-5">
+						<p>Kontinent: </p>
+						<p class=" text-md " th:text="${destinacija.kontinent}"></p>
+
+					</div>
+				</div>
+				<p class="text-sm font-medium">$500</p>
+			</div>
+		</a>
+	</div>
+
+</body>
+
 </html>
