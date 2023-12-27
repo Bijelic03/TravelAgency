@@ -59,19 +59,12 @@ public class DestinacijeController {
 
 	@GetMapping("destinacije/dodaj")
 	@ResponseBody
-	public void dodajDestinaciju(HttpServletResponse response) throws IOException {
-		PrintWriter out = response.getWriter();
+	public ModelAndView dodajDestinaciju(HttpServletResponse response) throws IOException {
 
-		out.write("<!DOCTYPE html>\r\n" + "<html>\r\n" + "\r\n" + "<head>\r\n" + "    <meta charset=\"UTF-8\" />\r\n"
-				+ "    <base href=\"/TravelOrganisation/\" />\r\n" + "    <title>Sve knjige</title>\r\n" + "\r\n"
-				+ "</head>\r\n" + "\r\n" + "<body>\r\n" + "	\r\n"
-				+ "	<form action=\"destinacije/add\" method=\"POST\">\r\n" + "		<label>Grad</label>\r\n"
-				+ "		<input name=\"grad\"></input>\r\n" + "		<label>Drzava</label>\r\n"
-				+ "		<input name=\"drzava\"></input>\r\n" + "		<label>Kontinent</label>\r\n"
-				+ "		<input name=\"kontinent\"></input>\r\n" + "     <input type=\"submit\" value=\"Dodaj\"></input>"
-				+ "	</form>\r\n" + "\r\n" + "</body>\r\n" + "\r\n" + "</html>\r\n");
+		ModelAndView rezultat = new ModelAndView("addDestinacija");
+		return rezultat;
+		
 	}
-
 	@PostMapping("destinacije/add")
 	public void addDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response)
 			throws IOException {
@@ -79,7 +72,7 @@ public class DestinacijeController {
 		response.sendRedirect(bURL + "/destinacije");
 	}
 
-	@PostMapping("/edit")
+	@PostMapping("destinacije/edit")
 	public void editDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response)
 			throws IOException {
 		destinacijaRepository.update(destinacija);
@@ -94,36 +87,17 @@ public class DestinacijeController {
 
 	@PostMapping("destinacije/izmeni")
 	@ResponseBody
-	public void izmeniDestinaciju(HttpServletResponse response, Long id) throws IOException {
+	public ModelAndView izmeniDestinaciju(HttpServletResponse response, Long id) throws IOException {
 
 		// Destinacije destinacije = (Destinacije)
 		// memorijaAplikacije.get(DestinacijeService.DESTINACIJE_KEY);
 
 		Destinacija destinacija = destinacijaRepository.findOne(id);
 
-		PrintWriter out = response.getWriter();
-
-		out.write("<!DOCTYPE html>\r\n" + "<html>\r\n" + "\r\n" + "<head>\r\n" + "    <meta charset=\"UTF-8\" />\r\n"
-				+ "    <base href=\"/TravelOrganisation/\" />\r\n" + "    <title>Sve knjige</title>\r\n" + "\r\n"
-				+ "</head>\r\n" + "\r\n" + "<body>\r\n" + "	\r\n"
-				+ "	<form action=\"destinacije/edit\" method=\"POST\">\r\n"
-				+ "		<input type=\"hidden\" name=\"id\" value=" + destinacija.getId() + " ></input>\r\n"
-				+ "		<label>Grad</label>\r\n" + "		<input value=" + destinacija.getGrad()
-				+ " name=\"grad\"></input>\r\n" + "		<label>Drzava</label>\r\n" + "		<input value="
-				+ destinacija.getDrzava() + " name=\"drzava\"></input>\r\n" + "		<label>Kontinent</label>\r\n"
-				+ "		<input value=" + destinacija.getKontinent() + " name=\"kontinent\"></input>\r\n"
-				+ "     <input type=\"submit\" value=\"Izmeni\"></input>"
-
-				+ "	</form>\r\n" + "\r\n" + "</body>\r\n" + "\r\n" + "</html>\r\n" + "");
-
-	}
-
-	@GetMapping("/destinacija/detalji/{id}")
-	public ModelAndView prikaziDestinaciju(@PathVariable Long id) {
-		ModelAndView rezultat = new ModelAndView("fragments/destinacija");
-		Destinacija destinacija = destinacijaRepository.findOne(id);
-		rezultat.addObject("destinacija", destinacija);
+		ModelAndView rezultat = new ModelAndView("editDestinacija");
+		rezultat.addObject("destinacija", destinacija); 
 		return rezultat;
+
 
 	}
 

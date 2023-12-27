@@ -9,17 +9,47 @@
 <body>
 
 	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
-		<div th:fragment="centralniDiv" class="px-20 flex items-center justify-center min-h-screen">
-			<div
-							class="col-span-2 mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:grid-cols-3 xl:gap-x-3">
+		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
+			<table class="text-gray-900 min-w-full bg-white border border-gray-300">
+				<thead>
+					<tr>
 
-			<div  th:each="destinacija : ${listaDestinacija}">
-				<div th:insert="fragments/card :: destinacijaCard" th:with="destinacija=${destinacija}"></div>
+						<th class="py-2 px-4 border-b">Grad</th>
+						<th class="py-2 px-4 border-b">Država</th>
+						<th class="py-2 px-4 border-b">Kontinent</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="destinacija : ${listaDestinacija}">
+						<td class="text-center py-2 px-2 border" th:text="${destinacija.grad}"></td>
+						<td class="text-center py-2 px-2 border" th:text="${destinacija.drzava}"></td>
+						<td class="text-center py-2 px-2 border" th:text="${destinacija.kontinent}"></td>
+						<td class="text-center py-2 px-2 border">
+							<form action="destinacije/delete" method="POST">
+								<input type="hidden" name="id" th:value="${destinacija.id}"></input>
+								<button>Obriši</button>
+							</form>
+						</td>
+						<td class="text-center py-2 px-2 border">
+							<form action="destinacije/izmeni" method="POST">
+								<input type="hidden" name="id" th:value="${destinacija.id}"></input>
+								<button>Izmeni</button>
+							</form>
+						</td>
+
+
+					</tr>
+				</tbody>
+			</table>
+			<a class="bg-white" th:href="@{/destinacije/dodaj}">
+				<button type="button">Dodaj destinaciju</button>
+			</a>
 
 		</div>
+
 	</div>
-		</div>
-</div>
+
 </body>
 
 </html>

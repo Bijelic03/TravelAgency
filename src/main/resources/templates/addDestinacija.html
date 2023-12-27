@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Dodaj destinaciju</title>
+</head>
+
+<body>
+	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+		<div th:fragment="centralniDiv" class="bg-blue-100 flex items-center justify-center min-h-screen">
+
+    <form action="add" method="POST">
+        <label>Grad</label>
+        <input name="grad"  />
+        <label>Drzava</label>
+        <input name="drzava" />
+        <label>Kontinent</label>
+        <input name="kontinent" />
+        <input type="submit" value="Dodaj" />
+    </form>
+		</div>
+	</div>
+</body>
+
+</html>

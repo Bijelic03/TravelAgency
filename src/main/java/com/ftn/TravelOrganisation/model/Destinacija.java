@@ -1,6 +1,5 @@
 package com.ftn.TravelOrganisation.model;
 
-
 public class Destinacija {
 
 	private Long id;
@@ -18,7 +17,6 @@ public class Destinacija {
 		this.grad = grad;
 		this.drzava = drzava;
 		this.kontinent = kontinent;
-
 	}
 
 	@Override

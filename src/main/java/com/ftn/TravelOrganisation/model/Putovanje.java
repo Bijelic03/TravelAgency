@@ -1,21 +1,20 @@
 package com.ftn.TravelOrganisation.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 
 
-//@Entity
 public class Putovanje {
 
-	//@Id
+
 	private Long id;
-	private Long sifraPutovanja;
-	//@OneToOne
-	//@JoinColumn(name = "destinacija_id")
+
 	private Destinacija destinacija;
-	//@OneToOne
-	//@JoinColumn(name = "prevozno_sredstvo_id")
+
 	private PrevoznoSredstvo prevoznoSredstvo;
 	
 	private List<SmestajnaJedinica> smestajnaJedinice;
@@ -25,12 +24,11 @@ public class Putovanje {
 	private int brojNocenja;
 	private Double cenaAranzmana;
 
-	public Putovanje(Long id, Long sifraPutovanja, Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
+	public Putovanje(Long id, Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
 			List<SmestajnaJedinica> smestajnaJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
 			LocalDateTime vremePolaska, LocalDateTime vremePovratka, int brojNocenja, Double cenaAranzmana) {
 		super();
 		this.id = id;
-		this.sifraPutovanja = sifraPutovanja;
 		this.destinacija = destinacija;
 		this.prevoznoSredstvo = prevoznoSredstvo;
 		this.smestajnaJedinice = smestajnaJedinice;
@@ -41,6 +39,54 @@ public class Putovanje {
 		this.cenaAranzmana = cenaAranzmana;
 	}
 
+
+
+	public Putovanje(Long id, Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
+			KategorijaPutovanjaEnum kategorijaPutovanja, String vremePolaskaStr, String vremePovratkaStr,
+			String brojNocenja, String cenaAranzmana) {
+
+		this.id = id;
+		this.destinacija = destinacija;
+		this.prevoznoSredstvo = prevoznoSredstvo;
+		this.kategorijaPutovanja = kategorijaPutovanja;
+		this.vremePolaska = convertStringToLocalDateTime(vremePolaskaStr);
+		this.vremePovratka = convertStringToLocalDateTime(vremePovratkaStr);
+		this.brojNocenja = Integer.parseInt(brojNocenja);
+		this.cenaAranzmana = Double.parseDouble(cenaAranzmana);
+	
+	}
+	
+
+	
+	private LocalDateTime convertStringToLocalDateTime(String localDateTimeString) {
+	    if (localDateTimeString == null || localDateTimeString.equalsIgnoreCase("null")) {
+	        return null;
+	    }
+
+	    try {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	        return LocalDateTime.parse(localDateTimeString, formatter);
+	    } catch (DateTimeParseException e) {
+	        System.err.println("Nije moguće konvertovati string u LocalDateTime: " + localDateTimeString);
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	
+	 @Override
+	    public String toString() {
+	        return "Putovanje{" +
+	                "id=" + id +
+	                ", destinacija=" + destinacija +
+	                ", prevoznoSredstvo=" + prevoznoSredstvo +
+	                ", kategorijaPutovanja=" + kategorijaPutovanja +
+	                ", vremePolaska='" + vremePolaska + '\'' +
+	                ", vremePovratka='" + vremePovratka + '\'' +
+	                ", brojNocenja='" + brojNocenja + '\'' +
+	                ", cenaAranzmana='" + cenaAranzmana + '\'' +
+	                '}';
+	    }
+
 	public Long getId() {
 		return id;
 	}
@@ -49,13 +95,9 @@ public class Putovanje {
 		this.id = id;
 	}
 
-	public Long getSifraPutovanja() {
-		return sifraPutovanja;
-	}
 
-	public void setSifraPutovanja(Long sifraPutovanja) {
-		this.sifraPutovanja = sifraPutovanja;
-	}
+
+
 
 	public Destinacija getDestinacija() {
 		return destinacija;

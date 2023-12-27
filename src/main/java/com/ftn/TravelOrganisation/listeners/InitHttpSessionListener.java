@@ -23,7 +23,6 @@ public class InitHttpSessionListener implements HttpSessionListener {
 //		//pri kreiranju sesije inicijalizujemo je ili radimo neke dodatne aktivnosti
 		Korisnik prijavljeniKorisnik = null;
 		HttpSession session  = arg0.getSession();
-		System.out.println("session id korisnika je "+session.getId());
 		session.setAttribute(LoginController.PRIJAVLJENI_KORISNIK, prijavljeniKorisnik);
 		
 //		

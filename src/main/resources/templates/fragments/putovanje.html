@@ -2,7 +2,7 @@
 
 <head>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-	<title th:text="'Destinacije'"></title>
+	<title th:text="'Putovanje'"></title>
 
 </head>
 
@@ -16,36 +16,31 @@
 					<div
 						class="lg:bg-gray-50 dark:lg:bg-darker lg:p-16 rounded-[4rem] space-y-6 md:flex flex-row-reverse md:gap-6 justify-center md:space-y-0 lg:items-center">
 						<div class="md:5/12 lg:w-1/2">
-							<img src="images/pie.svg" alt="image" loading="lazy" width="" height="" />
+							<img src="https://cdn.discordapp.com/attachments/831510841152897038/1182141007962325074/674925.png?ex=65839d9b&amp;is=6571289b&amp;hm=7fb7fe9b02cd3063a51a257f050412507a52ccf48e24277a9ca5a89f5e43d6b4&amp;"
+								alt="Slika destinacije"
+								class="h-full w-full object-cover object-center lg:h-full lg:w-full">
 						</div>
 						<div class="md:7/12 lg:w-1/2">
-							<h2 th:text="${destinacija.grad}" class="text-3xl font-bold text-gray-900 md:text-4xl">
-
-							</h2>
-							<p class="my-8 text-gray-600 ">
-								Nobis minus voluptatibus pariatur dignissimos libero quaerat iure expedita at?
-								Asperiores nemo possimus nesciunt dicta veniam aspernatur quam mollitia.
-							</p>
+							<h2 th:text="${putovanje.destinacija.grad}"
+								class="text-3xl font-bold text-gray-900 md:text-4xl"></h2>
+							<p th:text="${putovanje.prevoznoSredstvo.prevoznoSredstvo}" class="my-8 text-gray-600 "></p>
 							<div class="divide-y space-y-4 divide-gray-100 ">
 								<div class="mt-8 flex gap-4 md:items-center">
-
 									<div class="w-5/6">
 										<h4 class="font-semibold text-lg text-gray-700">Država: </h4>
-
-											<h4 th:text="${destinacija.drzava}"
-												class="font-semibold text-lg text-gray-700">
-												</h4>
-
+										<h4 th:text="${putovanje.destinacija.drzava}"
+											class="font-semibold text-lg text-gray-700"></h4>
 									</div>
 								</div>
 								<div class="pt-4 flex gap-4 md:items-center">
 									<h4 class="font-semibold text-lg text-gray-700">Kontinent: </h4>
-
-										<h4 th:text="${destinacija.kontinent}"
-											class="font-semibold text-lg text-gray-700">
-											</h4>
-
-
+									<h4 th:text="${putovanje.destinacija.kontinent}"
+										class="font-semibold text-lg text-gray-700"></h4>
+								</div>
+																<div class="pt-4 flex gap-4 md:items-center">
+									<h4 class="font-semibold text-lg text-gray-700">Cena: </h4>
+									<h4 th:text="${putovanje.cenaAranzmana}"
+										class="font-semibold text-lg text-gray-700"></h4>
 								</div>
 							</div>
 						</div>
