@@ -28,10 +28,17 @@ public class PutovanjaController {
 	@Autowired
 	private	PutovanjeRepository putovanjeRepository;
 
-	
+	@GetMapping("/putovanja")
+	public ModelAndView prikaziPutovanja() {
+		ModelAndView rezultat = new ModelAndView("putovanjaPage");
+		List<Putovanje> putovanja = putovanjeRepository.findAll();
+		rezultat.addObject("listaPutovanja", putovanja);
+		return rezultat;
+
+	}
 	
 	@GetMapping("/putovanje/detalji/{id}")
-	public ModelAndView prikaziDestinaciju(@PathVariable Long id) {
+	public ModelAndView prikaziPutovanje(@PathVariable Long id) {
 		ModelAndView rezultat = new ModelAndView("fragments/putovanje");
 		System.out.println(id);
 		Putovanje putovanje = putovanjeRepository.findOne(id);

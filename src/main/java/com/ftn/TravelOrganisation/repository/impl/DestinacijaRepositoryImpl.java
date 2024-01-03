@@ -50,7 +50,7 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 		}
 
 	}
-
+	
 	@Override
 	public Destinacija findOne(Long id) {
 		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d " + "WHERE d.id = ? "

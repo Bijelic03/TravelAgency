@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+	<title th:text="'Putovanje'"></title>
+
+</head>
+
+<body>
+	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+
+		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
+
+	
+		</div>
+	</div>
+
+</body>
+
+</html>

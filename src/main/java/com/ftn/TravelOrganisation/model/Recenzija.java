@@ -3,25 +3,32 @@ package com.ftn.TravelOrganisation.model;
 import java.time.LocalDate;
 
 
-//@Entity
 public class Recenzija {
-	//@Id
 	private Long id;
 	private int ocena;
 	private String komentar;
 	private LocalDate datumRecenzije;
-	// @ManyToOne
-	// @JoinColumn(name = "korisnik_id")
+	private SmestajnaJedinica smestajnaJedinica;
 	private Korisnik autorRecenzije;
 
-	public Recenzija(Long id, int ocena, String komentar, LocalDate datumRecenzije, Korisnik autorRecenzije) {
+	public Recenzija(Long id, int ocena, String komentar, LocalDate datumRecenzije, Korisnik autorRecenzije, SmestajnaJedinica smestajnaJedinica) {
 		super();
 		this.id = id;
 		this.ocena = ocena;
 		this.komentar = komentar;
 		this.datumRecenzije = datumRecenzije;
 		this.autorRecenzije = autorRecenzije;
+		this.smestajnaJedinica =smestajnaJedinica;
 	}
+
+	public Recenzija(Long id, int ocena, String komentar, String datumRecenzijeStr, Korisnik autorRecenzije, SmestajnaJedinica smestajnaJedinica) {
+		this.id = id;
+		this.ocena = ocena;
+		this.komentar = komentar;
+		this.datumRecenzije = datumRecenzije;
+		this.autorRecenzije = autorRecenzije;
+		this.smestajnaJedinica =smestajnaJedinica;	
+		}
 
 	public Long getId() {
 		return id;
@@ -61,6 +68,14 @@ public class Recenzija {
 
 	public void setAutorRecenzije(Korisnik autorRecenzije) {
 		this.autorRecenzije = autorRecenzije;
+	}
+
+	public SmestajnaJedinica getSmestajnaJedinica() {
+		return smestajnaJedinica;
+	}
+
+	public void setSmestajnaJedinica(SmestajnaJedinica smestajnaJedinica) {
+		this.smestajnaJedinica = smestajnaJedinica;
 	}
 
 }

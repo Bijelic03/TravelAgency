@@ -16,7 +16,7 @@ public class SmestajnaJedinica {
 	
 	
 	public SmestajnaJedinica(Long id, String naziv, int kapacitet, Destinacija destinacija, List<Recenzija> recenzije,
-			List<SmestajnaJedinicaUslugaEnum> usluge, String opis) {
+			List<SmestajnaJedinicaUslugaEnum> usluge, String opis, SmestajnaJedinicaTipEnum smestajnaJedinicaTipEnum) {
 		super();
 		this.id = id;
 		this.naziv = naziv;
@@ -25,10 +25,24 @@ public class SmestajnaJedinica {
 		this.recenzije = recenzije;
 		this.usluge = usluge;
 		this.opis = opis;
+		this.tipSmestajneJedinice = smestajnaJedinicaTipEnum;
 	}
 	
 	
 	
+
+
+
+
+
+	
+
+
+
+
+
+
+
 
 	public Long getId() {
 		return id;

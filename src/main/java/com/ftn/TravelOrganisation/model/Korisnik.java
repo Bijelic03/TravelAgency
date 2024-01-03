@@ -7,6 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 
+import com.ftn.TravelOgranisation.util.DateUtil;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -52,8 +53,8 @@ public class Korisnik {
 		this.prezime = prezime;
 		this.adresa = adresa;
 		this.brojTelefona = brojTelefona;
-		this.datumRodjenja = stringToDate(datumRodjenja);
-		this.datumVremeRegistracije = convertStringToLocalDateTime(datumVremeRegistracije);
+		this.datumRodjenja = DateUtil.stringToDate(datumRodjenja);
+		this.datumVremeRegistracije = DateUtil.stringToLocalDateTime(datumVremeRegistracije);
 		this.uloga = stringToEnum(uloga);
 		this.blokiran = blokiran;
 	}
@@ -68,7 +69,7 @@ public class Korisnik {
 		this.prezime = prezime;
 		this.adresa = adresa;
 		this.brojTelefona = brojTelefona;
-		this.datumRodjenja = stringToDate(datumRodjenja);
+		this.datumRodjenja = DateUtil.stringToDate(datumRodjenja);
 	}
 
 	public Korisnik(Long id, String korisnickoIme, String sifra, String email, String ime, String prezime,
@@ -90,20 +91,7 @@ public class Korisnik {
 
 
 
-	private LocalDateTime convertStringToLocalDateTime(String localDateTimeString) {
-	    if (localDateTimeString == null || localDateTimeString.equalsIgnoreCase("null")) {
-	        return null;
-	    }
 
-	    try {
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	        return LocalDateTime.parse(localDateTimeString, formatter);
-	    } catch (DateTimeParseException e) {
-	        System.err.println("Nije moguće konvertovati string u LocalDateTime: " + localDateTimeString);
-	        e.printStackTrace();
-	        return null;
-	    }
-	}
 
 
 	@Override
@@ -116,22 +104,11 @@ public class Korisnik {
 		return builder.toString();
 	}
 
-	public KorisnikUloga stringToEnum(String ulogaString) {
+	private KorisnikUloga stringToEnum(String ulogaString) {
 		return KorisnikUloga.valueOf(ulogaString);
 	}
 
-	public LocalDate stringToDate(String datumString) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		return LocalDate.parse(datumString, formatter);
-	}
 
-	public LocalDateTime stringToLocalDateTime(String localDateTimeString) {
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
-		return LocalDateTime.parse(localDateTimeString, formatter);
-
-	}
 
 	public Long getId() {
 		return id;
