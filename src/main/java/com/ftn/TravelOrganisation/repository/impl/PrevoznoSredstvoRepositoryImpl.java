@@ -80,9 +80,21 @@ public class PrevoznoSredstvoRepositoryImpl implements PrevoznoSredstvoRepositor
 
 	@Override
 	public List<PrevoznoSredstvo> findAll() {
-		String sql = "SELECT * FROM putovanja  ORDER BY id";
+		String sql = "SELECT * FROM prevozna_sredstva  ORDER BY id";
 		PrevoznoSredstvoRowCallBackHandler rowCallbackHandler = new PrevoznoSredstvoRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler);
+
+		List<PrevoznoSredstvo> prevoznaSredstva = rowCallbackHandler.getprevoznaSredstva();
+
+		return prevoznaSredstva;
+
+	}
+
+	@Override
+	public List<PrevoznoSredstvo> findByDestinacijeId(Long id) {
+		String sql = "SELECT * FROM prevozna_sredstva WHERE krajnja_destinacija_id = ? ";
+		PrevoznoSredstvoRowCallBackHandler rowCallbackHandler = new PrevoznoSredstvoRowCallBackHandler();
+		jdbcTemplate.query(sql, rowCallbackHandler, id);
 
 		List<PrevoznoSredstvo> prevoznaSredstva = rowCallbackHandler.getprevoznaSredstva();
 

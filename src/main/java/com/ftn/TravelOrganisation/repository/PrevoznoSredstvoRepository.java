@@ -8,5 +8,5 @@ import com.ftn.TravelOrganisation.model.Putovanje;
 public interface PrevoznoSredstvoRepository {
 public PrevoznoSredstvo findOne(Long id);
 public List<PrevoznoSredstvo> findAll();
-
+public List<PrevoznoSredstvo> findByDestinacijeId(Long id);
 }

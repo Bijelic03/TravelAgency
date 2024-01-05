@@ -1,20 +1,29 @@
 package com.ftn.TravelOrganisation.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Interval {
 
 	private Long id;
 	private Long idPutovanja;
-	private LocalDateTime vremePolaska;
-	private LocalDateTime vremePovratka;
+	private LocalDate vremePolaska;
+	private LocalDate vremePovratka;
+	private int brojNocenja;
 
-	public Interval(Long id, Long idPutovanja, LocalDateTime vremePolaska, LocalDateTime vremePovratka) {
+	public Interval(Long id, Long idPutovanja, LocalDate vremePolaska, LocalDate vremePovratka, int brojNocenja) {
 		super();
 		this.id = id;
-		this.setIdPutovanja(idPutovanja);
+		this.idPutovanja =idPutovanja;
 		this.vremePolaska = vremePolaska;
 		this.vremePovratka = vremePovratka;
+		this.brojNocenja = brojNocenja;
+	}
+
+	public Interval(LocalDate datumPolaska, LocalDate datumPovratka, int brojNocenja) {
+		this.vremePolaska = datumPolaska;
+		this.vremePovratka = datumPovratka;
+		this.brojNocenja = brojNocenja;
+
 	}
 
 	public Long getId() {
@@ -25,19 +34,19 @@ public class Interval {
 		this.id = id;
 	}
 
-	public LocalDateTime getVremePolaska() {
+	public LocalDate getVremePolaska() {
 		return vremePolaska;
 	}
 
-	public void setVremePolaska(LocalDateTime vremePolaska) {
+	public void setVremePolaska(LocalDate vremePolaska) {
 		this.vremePolaska = vremePolaska;
 	}
 
-	public LocalDateTime getVremePovratka() {
+	public LocalDate getVremePovratka() {
 		return vremePovratka;
 	}
 
-	public void setVremePovratka(LocalDateTime vremePovratka) {
+	public void setVremePovratka(LocalDate vremePovratka) {
 		this.vremePovratka = vremePovratka;
 	}
 
@@ -47,6 +56,14 @@ public class Interval {
 
 	public void setIdPutovanja(Long idPutovanja) {
 		this.idPutovanja = idPutovanja;
+	}
+
+	public int getBrojNocenja() {
+		return brojNocenja;
+	}
+
+	public void setBrojNocenja(int brojNocenja) {
+		this.brojNocenja = brojNocenja;
 	}
 
 }

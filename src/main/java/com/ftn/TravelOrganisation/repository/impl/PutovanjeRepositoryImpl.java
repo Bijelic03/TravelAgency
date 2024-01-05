@@ -1,17 +1,26 @@
 package com.ftn.TravelOrganisation.repository.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ftn.TravelOgranisation.util.DateUtil;
 import com.ftn.TravelOrganisation.model.Destinacija;
@@ -53,7 +62,6 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 			Long destinacijaId = resultSet.getLong(index++);
 			Long prevoznoSredstvoId = resultSet.getLong(index++);
 			String kategorijaPutovanjaStr = resultSet.getString(index++);
-			int brojNocenja = resultSet.getInt(index++);
 			Double cenaAranzmana = resultSet.getDouble(index++);
 
 			Destinacija destinacija = destinacijaId != null ? destinacijaRepository.findOne(destinacijaId) : null;
@@ -73,7 +81,7 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 			List<Interval> listaTermina = getTerminiByPutovanjeId(id);
 
 			Putovanje putovanje = new Putovanje(id, destinacija, prevoznoSredstvo, smestajneJedinice,
-					kategorijaPutovanja, listaTermina, brojNocenja, cenaAranzmana);
+					kategorijaPutovanja, listaTermina, cenaAranzmana);
 
 			// Dodajte putovanje u mapu putovanja sa proverom null vrednosti
 			if (id != null && putovanje != null) {
@@ -99,11 +107,12 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 			Long idPutovanja = resultSet.getLong(index++);
 			String vremePolaskaStr = resultSet.getString(index++);
 			String vremePovratkaStr = resultSet.getString(index++);
+			int brojNocenja = resultSet.getInt(index++);
 
-			LocalDateTime vremePolaska = DateUtil.stringToLocalDateTime(vremePolaskaStr);
-			LocalDateTime vremePovratka = DateUtil.stringToLocalDateTime(vremePovratkaStr);
+			LocalDate vremePolaska = DateUtil.stringToDate(vremePolaskaStr);
+			LocalDate vremePovratka = DateUtil.stringToDate(vremePovratkaStr);
 
-			Interval interval = new Interval(id, idPutovanja, vremePolaska, vremePovratka);
+			Interval interval = new Interval(id, idPutovanja, vremePolaska, vremePovratka, brojNocenja);
 
 			if (id != null && interval != null) {
 				listaTermina.add(interval);
@@ -116,7 +125,7 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 		}
 
 	}
-	
+
 	private List<Interval> getTerminiByPutovanjeId(Long id) {
 		String sql = "SELECT * FROM termini " + "WHERE putovanje_id = ? ";
 
@@ -133,7 +142,6 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 		@Override
 		public void processRow(ResultSet resultSet) throws SQLException {
 			int index = 1;
-			Long id = resultSet.getLong(index++);
 			Long putovanjeId = resultSet.getLong(index++);
 			Long smestajId = resultSet.getLong(index++);
 
@@ -154,6 +162,93 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 		jdbcTemplate.query(sql, rowCallbackHandler, id);
 
 		return rowCallbackHandler.getSmestajneJedinice();
+	}
+
+	@Transactional
+	@Override
+	public int saveTermin(Interval interval, Long putovanjeId) {
+		PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				String sql = "INSERT INTO termini (putovanje_id, vreme_polaska, vreme_povratka, broj_nocenja) VALUES (?, ?, ?, ?)";
+
+				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				int index = 1;
+				preparedStatement.setLong(index++, putovanjeId);
+				preparedStatement.setDate(index++, java.sql.Date.valueOf(interval.getVremePolaska()));
+				preparedStatement.setDate(index++, java.sql.Date.valueOf(interval.getVremePovratka()));
+				preparedStatement.setInt(index++, interval.getBrojNocenja());
+
+				return preparedStatement;
+			}
+
+		};
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		boolean uspeh = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
+		return uspeh ? 1 : 0;
+	}
+
+	@Transactional
+	@Override
+	public int saveSmestajnaJedinicaPutovanje(SmestajnaJedinica smestajnaJedinica, Long idPutovanja) {
+		PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				String sql = "INSERT INTO smestaj_putovanja (putovanje_id, smestaj_id) VALUES (?, ?)";
+
+				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				int index = 1;
+				preparedStatement.setLong(index++, idPutovanja);
+				preparedStatement.setLong(index++, smestajnaJedinica.getId());
+
+				return preparedStatement;
+			}
+
+		};
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		boolean uspeh = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
+		return uspeh ? 1 : 0;
+	}
+
+	@Transactional
+	@Override
+	public int savePutovanje(Putovanje putovanje) {
+
+		PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				String sql = "INSERT INTO putovanja (destinacija_id, prevozno_sredstvo_id, kategorija_putovanja, cena_aranzmana) VALUES (?, ?, ?, ?)";
+
+				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				int index = 1;
+				preparedStatement.setLong(index++, putovanje.getDestinacija().getId());
+				preparedStatement.setLong(index++, putovanje.getPrevoznoSredstvo().getId());
+				preparedStatement.setString(index++, putovanje.getKategorijaPutovanja().name());
+				preparedStatement.setDouble(index++, putovanje.getCenaAranzmana());
+
+				return preparedStatement;
+			}
+
+		};
+
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		boolean uspeh = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
+
+		// Dobijanje generisanog ID-a putovanja
+		Long putovanjeId = keyHolder.getKey().longValue();
+
+		for (Interval termin : putovanje.getListaTermina()) {
+			saveTermin(termin, putovanjeId);
+		}
+
+		for (SmestajnaJedinica smestajnaJedinica : putovanje.getSmestajneJedinice()) {
+			saveSmestajnaJedinicaPutovanje(smestajnaJedinica, putovanjeId);
+		}
+
+		return uspeh ? 1 : 0;
 	}
 
 	@Override

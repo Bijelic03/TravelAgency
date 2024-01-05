@@ -61,7 +61,11 @@
 			Može se koristiti i Jetty veb kontejner sa spring-boot-starter-jetty, ili
 			Undertow sa spring-boot-starter-undertow.
 			-->
-
+  <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <!-- Prilagodite verziju prema vašim potrebama -->
+    </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
@@ -164,6 +168,20 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
 			<version>3.2.1</version>
+		</dependency>
+		        <dependency>
+        	<groupId>org.webjars</groupId>
+        	<artifactId>jquery-ui</artifactId>
+        	<version>1.12.1</version>
+    	</dependency> 
+		<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>webjars-locator-core</artifactId>
+</dependency>
+		<dependency>
+			<groupId>com.ftn</groupId>
+			<artifactId>Biblioteka</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

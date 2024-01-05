@@ -17,14 +17,12 @@ public class Putovanje {
 	private List<SmestajnaJedinica> smestajnaJedinice;
 	private KategorijaPutovanjaEnum kategorijaPutovanja;
 	private List<Interval> listaTermina;
-	private LocalDateTime vremePolaska;
-	private LocalDateTime vremePovratka;
-	private int brojNocenja;
+
 	private Double cenaAranzmana;
 
 	public Putovanje(Long id, Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
 			List<SmestajnaJedinica> smestajnaJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
-			List<Interval> listaTermina, int brojNocenja, Double cenaAranzmana) {
+			List<Interval> listaTermina, Double cenaAranzmana) {
 		super();
 		this.id = id;
 		this.destinacija = destinacija;
@@ -32,18 +30,19 @@ public class Putovanje {
 		this.smestajnaJedinice = smestajnaJedinice;
 		this.kategorijaPutovanja = kategorijaPutovanja;
 		this.setListaTermina(listaTermina);
-		this.brojNocenja = brojNocenja;
 		this.cenaAranzmana = cenaAranzmana;
 	}
-
-
-
-	@Override
-	public String toString() {
-		return "Putovanje{" + "id=" + id + ", destinacija=" + destinacija + ", prevoznoSredstvo=" + prevoznoSredstvo
-				+ ", kategorijaPutovanja=" + kategorijaPutovanja + ", vremePolaska='" + vremePolaska + '\''
-				+ ", vremePovratka='" + vremePovratka + '\'' + ", brojNocenja='" + brojNocenja + '\''
-				+ ", cenaAranzmana='" + cenaAranzmana + '\'' + '}';
+	
+	public Putovanje( Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
+			List<SmestajnaJedinica> smestajnaJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
+			List<Interval> listaTermina, Double cenaAranzmana) {
+		super();
+		this.destinacija = destinacija;
+		this.prevoznoSredstvo = prevoznoSredstvo;
+		this.smestajnaJedinice = smestajnaJedinice;
+		this.kategorijaPutovanja = kategorijaPutovanja;
+		this.setListaTermina(listaTermina);
+		this.cenaAranzmana = cenaAranzmana;
 	}
 
 	public Long getId() {
@@ -86,30 +85,6 @@ public class Putovanje {
 		this.kategorijaPutovanja = kategorijaPutovanja;
 	}
 
-	public LocalDateTime getVremePolaska() {
-		return vremePolaska;
-	}
-
-	public void setVremePolaska(LocalDateTime vremePolaska) {
-		this.vremePolaska = vremePolaska;
-	}
-
-	public LocalDateTime getVremePovratka() {
-		return vremePovratka;
-	}
-
-	public void setVremePovratka(LocalDateTime vremePovratka) {
-		this.vremePovratka = vremePovratka;
-	}
-
-	public int getBrojNocenja() {
-		return brojNocenja;
-	}
-
-	public void setBrojNocenja(int brojNocenja) {
-		this.brojNocenja = brojNocenja;
-	}
-
 	public Double getCenaAranzmana() {
 		return cenaAranzmana;
 	}
@@ -118,13 +93,9 @@ public class Putovanje {
 		this.cenaAranzmana = cenaAranzmana;
 	}
 
-
-
 	public List<Interval> getListaTermina() {
 		return listaTermina;
 	}
-
-
 
 	public void setListaTermina(List<Interval> listaTermina) {
 		this.listaTermina = listaTermina;

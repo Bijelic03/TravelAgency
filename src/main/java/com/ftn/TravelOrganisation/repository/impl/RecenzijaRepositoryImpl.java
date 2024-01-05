@@ -72,7 +72,7 @@ public class RecenzijaRepositoryImpl implements RecenzijaRepository {
 	public List<Recenzija> getBySmestajId(Long id) {
 
 		// izmeni upit
-		String sql = "SELECT * FROM recenzije" + " WHERE smestajna_jedinica_id = ?" + "ORDER BY d.id";;
+		String sql = "SELECT * FROM recenzije" + " WHERE smestajna_jedinica_id = ? " + "ORDER BY id";;
 		
 
 		RecenzijaRowCallBackHandler rowCallbackHandler = new RecenzijaRowCallBackHandler();

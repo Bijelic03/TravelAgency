@@ -2,18 +2,376 @@
 
 <head>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-	<title th:text="'Putovanje'"></title>
+	<title th:text="'Dodaj putovanje'"></title>
+
+	<script src=https://code.jquery.com/jquery-3.6.0.js></script>
+	<script>
+		var destinacije = /*[[${destinacije}]]*/ 'destinacije';
+	</script>
+
 
 </head>
 
 <body>
 	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
 
-		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
+		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen bg-white">
 
-	
+			<form>
+				<div class="space-y-12">
+					<div class="border-b border-gray-900/10 pb-12">
+						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900">Dodavanje putovanja</h1>
+
+						<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+							<div class="sm:col-span-5">
+								<label for="country"
+									class="block text-sm font-medium leading-6 text-gray-900">Kategorija
+									putovanja</label>
+								<div class="mt-2">
+									<select id="kategorijaSelect" name="kategorijaSelect"
+										onchange="onKategorijaChanged()"
+										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+										<option value="" selected="true" disabled="disabled">Izaberite kategoriju
+										</option>
+
+										<option
+											th:each="kategorija : ${T(com.ftn.TravelOrganisation.model.KategorijaPutovanjaEnum).values()}"
+											th:text="${kategorija.displayName}">
+										</option>
+
+									</select>
+								</div>
+							</div>
+
+							<div class="sm:col-span-5">
+								<label for="country"
+									class="block text-sm font-medium leading-6 text-gray-900">Destinacija</label>
+								<div class="mt-2">
+									<select id="destinacijaSelect" name="destinacijaSelect"
+										onchange="onDestinacijaChanged()"
+										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+										<option value="" selected="true" disabled="disabled">Izaberite destinaciju
+										</option>
+
+										<option th:each="destinacija : ${destinacije}" th:value="${destinacija.id}"
+											th:text="${destinacija.grad}">
+										</option>
+
+									</select>
+								</div>
+							</div>
+
+							<div class="sm:col-span-5">
+								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">Prevozno
+									sredstvo</label>
+								<div class="mt-2">
+									<select onchange="onPrevoznoSredstvoChanged()" id="prevozSelect" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+
+									</select>
+								</div>
+							</div>
+
+
+
+						</div>
+						<div class="mt-10 space-y-10">
+							<fieldset>
+								<legend class="text-sm font-semibold leading-6 text-gray-900">Smeštajne jedinice
+								</legend>
+								<div id="smestaj" class="mt-6 space-y-6">
+
+
+
+								</div>
+							</fieldset>
+
+						</div>
+						<div class="flex items-center	 flex-row mt-10 ">
+
+							<div class="mb-4 pr-5">
+								<label class="block text-sm font-medium text-gray-600">Datum
+									polaska</label>
+								<input id="datumPolaska" type="date" class="mt-1 p-2 w-full border rounded-md" />
+							</div>
+							<div class="mb-4 pr-5">
+								<label class="block text-sm font-medium text-gray-600">Datum
+									povratka</label>
+								<input id="datumPovratka" type="date" class="mt-1 p-2 w-full border rounded-md" />
+							</div>
+							<div class="mb-4 pr-5 pt-5">
+								<button disabled="true" id="dodajTerminButton" type="button"
+									class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Dodaj
+									termin</button>
+
+
+
+							</div>
+						</div>
+						<div class="mb-4 pr-5">
+							<label class="block text-sm font-medium text-gray-600 mb-1">Izabrani termini</label>
+							<table class="w-full text-sm text-left rtl:text-right text-gray-500">
+
+								<thead class="text-xs text-gray-700 uppercase  border border-gray-900/10  ">
+									<tr class=" border border-gray-900/10">
+										<th scope="col" class="px-6 py-3  border border-gray-900/10">
+											Vreme polaska
+										</th>
+										<th scope="col" class="px-6 py-3  border border-gray-900/10">
+											Vreme povratka
+										</th>
+
+
+
+									</tr>
+								</thead>
+								<tbody id="dateTableBody">
+
+
+
+								</tbody>
+							</table>
+						</div>
+
+						<div class="sm:col-span-5">
+							<label for="country" class="block text-sm font-medium leading-6 text-gray-900">
+								Cena po danu</label>
+							<div class="mt-2">
+								<input id="cena" type="number" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+									placeholder="rsd">
+							</div>
+						</div>
+					</div>
+
+
+
+				</div>
+
+				<div class="mt-6 flex items-center justify-end gap-x-6">
+					<button type="button" class="text-sm font-semibold leading-6 text-gray-900">Odustani</button>
+					<button id="kreirajbutton"
+						class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Kreiraj</button>
+				</div>
+			</form>
 		</div>
 	</div>
+
+	<script>
+
+		var intervali = []
+		var idIntervala = 0
+		var dateButton = $('#dodajTerminButton')
+		var deleteDateButton = $('#deleteDateButton')
+		var kreirajbutton = $('#kreirajbutton')
+		var chosenDestinacijaId = null
+		var chosenPrevozId = null
+		var selectedSmestaji = []
+		var chosenKategorijaId = null
+		var cena = null
+
+		kreirajbutton.click(function () {
+
+			updateSelectedSmestaj()
+
+			if (chosenDestinacijaId === null || chosenPrevozId === null || $.isEmptyObject(selectedSmestaji) || $.isEmptyObject(intervali) || $('#cena').val() === null) {
+				console.log("niste popunili sve");
+
+
+
+				return false;
+			}
+			else {
+
+			
+
+				var dataToSend = {
+					kategorija: chosenKategorija,
+					destinacijaId: chosenDestinacijaId,
+					prevoznoSredstvoId: chosenPrevozId,
+					selectedSmestaji: JSON.stringify(selectedSmestaji),
+					intervali: JSON.stringify(intervali),
+					cena: $('#cena').val()
+				}
+
+				$.ajax({
+					type: 'POST',
+					url: '/TravelOrganisation/putovanja/add',
+					contentType: 'application/json',
+					data: JSON.stringify(dataToSend),
+					success: function (data) {
+						console.log('Uspešno poslato na server:', data);
+						window.location.href = "/TravelOrganisation";
+					},
+					error: function (error) {
+						console.error('Greška prilikom slanja na server:', error);
+					}
+				});
+
+
+				return false;
+			}
+		})
+
+
+
+		function onKategorijaChanged() {
+			chosenKategorija = $('#kategorijaSelect').find(":selected").val();
+		}
+
+		function updateSelectedSmestaj() {
+			$('#smestaj > div > div > input').each(function () {
+				if ($(this).is(":checked")) {
+					selectedSmestaji.push($(this).attr('id'))
+				}
+
+			})
+		}
+
+
+		$(document).ready(function () {
+
+			var dodajTerminButton = $('#dodajTerminButton')
+			var datumPolaska = null
+			var datumPovratka = null
+
+			$('#datumPolaska').change(function () {
+
+				dateChanged()
+			})
+			$('#datumPovratka').change(function () {
+				dateChanged()
+			})
+
+
+		})
+
+
+		function dateChanged() {
+			datumPolaska = $('#datumPolaska').val()
+			datumPovratka = $('#datumPovratka').val()
+			console.log($('#datumPolaska').val())
+			if (datumPolaska && datumPovratka) {
+				if (new Date(datumPolaska) <= new Date(datumPovratka)) {
+					dateButton.toggleClass("bg-green-600");
+					dateButton.prop('disabled', false)
+				}
+			}
+		}
+		console.log(deleteDateButton.val())
+
+
+
+		$(document).on('click', '.deleteDateButton', function () {
+
+			var clickedButton = $(this);
+			var clickedIntervalId = clickedButton.val();
+			intervali = intervali.filter(function (interval) {
+				return interval.id != clickedIntervalId;
+			});
+
+			$('#' + clickedIntervalId).remove();
+
+			return false;
+		});
+
+		dateTableBody = $('#dateTableBody');
+
+		function onPrevoznoSredstvoChanged() {
+			chosenPrevozId = $('#prevozSelect').find(":selected").val();
+
+		}
+
+		dateButton.click(function () {
+			var interval = {
+				id: idIntervala,
+				datumPolaska: datumPolaska,
+				datumPovratka: datumPovratka
+			}
+			idIntervala++
+			intervali.push(interval)
+
+			dateTableBody.append($('<tr>', {
+				id: interval.id,
+				html: '<td scope="row" class="px-6 py-4  whitespace-nowrap border border-gray-900/10">' + formatDate(interval.datumPolaska) + '</td>' +
+					'<td class="px-6 py-4   whitespace-nowrap border border-gray-900/10">' + formatDate(interval.datumPovratka) + '</td>' +
+					'<td class="px-6 py-4 font-medium whitespace-nowrap border border-gray-900/10"><button type="button" class="deleteDateButton" value=' + interval.id + '>Obriši</button></td>'
+			}));
+
+			function formatDate(dateString) {
+				var options = {year: 'numeric', month: '2-digit', day: '2-digit'};
+				var formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+				return formattedDate;
+			}
+
+
+			dateButton.toggleClass("bg-green-600");
+			dateButton.prop('disabled', true)
+			$('#datumPolaska').val("")
+			$('#datumPovratka').val("")
+			datumPolaska = null
+			datumPovratka = null
+
+			return false;
+		});
+
+		function onDestinacijaChanged() {
+			chosenDestinacijaId = $('#destinacijaSelect').find(":selected").val();
+
+			$.ajax({
+				type: 'GET',
+				url: '/TravelOrganisation/putovanja/getPrevoznoSredstvoOptions?destinacijaId=' + chosenDestinacijaId,
+				dataType: 'json',
+				success: function (data) {
+					$('#prevozSelect').empty();
+
+					$('#prevozSelect').append($('<option>', {
+						value: "",
+						selected: "true",
+						text: "Izaberite prevozno sredstvo",
+						disabled: "disabled"
+					}));
+
+
+
+					$.each(data, function (index, prevoznoSredstvo) {
+						$('#prevozSelect').append($('<option>', {
+							value: prevoznoSredstvo.id,
+							text: prevoznoSredstvo.prevoznoSredstvo
+						}));
+					});
+				}
+			});
+			$.ajax({
+				type: 'GET',
+				url: '/TravelOrganisation/putovanja/getSmestajOptions?destinacijaId=' + chosenDestinacijaId,
+				dataType: 'json',
+				success: function (data) {
+					$('#smestaj').empty();
+
+					$.each(data, function (index, smestaj) {
+
+						$('#smestaj').append($('<div>', {
+							class: 'relative flex gap-x-3',
+							html: '<div class="flex h-6 items-center">' +
+								'<input id="' + smestaj.id + '" name="smestaj" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">' +
+								'</div>' +
+								'<div class="text-sm leading-6">' +
+								'<label for="smestaj_' + smestaj.id + '" class="font-medium text-gray-900">' + smestaj.naziv + '</label>' +
+								'<p class="text-gray-500">' + smestaj.opis + '</p>' +
+								'</div>'
+						}));
+					});
+				}
+			});
+
+		}
+
+
+
+
+	</script>
 
 </body>
 
