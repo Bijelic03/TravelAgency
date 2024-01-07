@@ -20,34 +20,27 @@
 			<form>
 				<div class="space-y-12">
 					<div class="border-b border-gray-900/10 pb-12">
-						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900">Dodavanje smeštaja</h1>
+						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900">Dodavanje prevoznog sredstva
+						</h1>
 
 						<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
 
-							<div class="sm:col-span-5">
-								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">
-									Naziv smeštaja</label>
-								<div class="mt-2">
-									<input id="naziv" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-								</div>
-							</div>
+
 
 							<div class="sm:col-span-5">
 								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">Tip
 									smeštaja
 								</label>
 								<div class="mt-2">
-									<select id="tipSmestaja" name="tipSmestaja"
+									<select id="tipPrevoza" name="tipPrevoza"
 										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
 										<option value="" selected="true" disabled="disabled">Izaberite kategoriju
 										</option>
 
 										<option
-											th:each="kategorija : ${T(com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum).values()}"
-											th:id="kategorija" th:value="${kategorija}"
-											th:text="${kategorija.displayName}">
+											th:each="tip : ${T(com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum).values()}"
+											th:id="tip" th:value="${tip}" th:text="${tip.displayName}">
 										</option>
 
 									</select>
@@ -76,51 +69,25 @@
 
 
 						</div>
-						<div class="mt-10 space-y-10">
-							<fieldset>
-								<legend class="text-sm font-semibold leading-6 text-gray-900">Usluge
-								</legend>
-								<div id="usluge" class="mt-6 space-y-6">
-
-
-									<div th:each="usluga : ${T(com.ftn.TravelOrganisation.model.SmestajnaJedinicaUslugaEnum).values()}"
-										class="relative flex gap-x-3">
-
-										<div class="flex h-6 items-center">
-											<input th:id="${usluga}" name="smestaj" type="checkbox"
-												class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-										</div>
-										<div class="text-sm leading-6">
-											<label class="font-medium text-gray-900"
-												th:text="${usluga.displayName}"></label>
-											<p class="text-gray-500"> </p>
-										</div>
-
-									</div>
-
-							</fieldset>
-
+						<div class="sm:col-span-5">
+							<label for="country" class="block text-sm font-medium leading-6 text-gray-900">
+								Broj sedišta</label>
+							<div class="mt-2">
+								<input id="brojSedista" type="number" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+							</div>
 						</div>
+
+
 
 
 
 						<div class="sm:col-span-5">
 							<label class="block text-sm font-medium leading-6 text-gray-900">
-								Kapacitet</label>
-							<div class="mt-2">
-								<input id="kapacitet" type="number" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-									placeholder="0">
-							</div>
-						</div>
-						
-							<div class="sm:col-span-5">
-							<label  class="block text-sm font-medium leading-6 text-gray-900">
 								Opis</label>
 							<div class="mt-2">
 								<input id="opis" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-									>
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
 							</div>
 						</div>
 					</div>
@@ -144,43 +111,38 @@
 
 	var kreirajbutton = $('#kreirajbutton')
 	var chosenDestinacijaId = null
-	var selectedUsluge = [];
-	var naziv = null;
-	var tipSmestaja = null;
-	var kapacitet = null;
+	var tip = null;
 	var opis = null;
+	var brojSedista = null
 
 	kreirajbutton.click(function () {
 		chosenDestinacijaId = $('#destinacijaSelect').find(":selected").val();
-		naziv = $('#naziv').val()
-		tipSmestaja = $('#tipSmestaja').find(":selected").val();
-		kapacitet = $('#kapacitet').val();
+		tip = $('#tipPrevoza').find(":selected").val();
+		brojSedista = $('#brojSedista').val();
 		opis = $('#opis').val();
-		updateSelectedUsluge()
 
+		console.log(chosenDestinacijaId, tip, brojSedista, opis)
 
-		if (kapacitet <= 0) {
-			console.log("Niste dobro uneli kapacitet!")
+		if (brojSedista <= 0) {
+			console.log("Niste dobro uneli broj sedista!")
 
 			return false;
 
 		}
 
 		else {
-			if (naziv == null || tipSmestaja == null || chosenDestinacijaId == null || $.isEmptyObject(selectedUsluge) || kapacitet == null || opis == null) {
+			if (tip == null || chosenDestinacijaId == null || brojSedista == null || opis == null) {
 
 				console.log("niste popunili sve");
 
 				return false;
 			}
 			else {
-
+				console.log("usao u else")
 				var dataToSend = {
-					naziv: naziv,
-					tipSmestaja: tipSmestaja,
+					tip: tip,
 					chosenDestinacijaId: chosenDestinacijaId,
-					selectedUsluge: JSON.stringify(selectedUsluge),
-					kapacitet: kapacitet,
+					brojSedista: brojSedista,
 					opis: opis
 				}
 
@@ -188,7 +150,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: '/TravelOrganisation/smestaj/add',
+					url: '/TravelOrganisation/prevoz/add',
 					contentType: 'application/json',
 					data: JSON.stringify(dataToSend),
 					success: function (data) {
@@ -207,14 +169,7 @@
 	})
 
 
-	function updateSelectedUsluge() {
-		$('#usluge > div > div > input').each(function () {
-			if ($(this).is(":checked")) {
-				selectedUsluge.push($(this).attr('id'))
-			}
 
-		})
-	}
 </script>
 
 </html>

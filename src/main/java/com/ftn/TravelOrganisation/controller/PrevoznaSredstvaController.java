@@ -1,6 +1,5 @@
 package com.ftn.TravelOrganisation.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,74 +17,61 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftn.TravelOrganisation.model.Destinacija;
-import com.ftn.TravelOrganisation.model.Interval;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvo;
+import com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinicaUslugaEnum;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
-import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
-import com.ftn.TravelOrganisation.repository.SmestajnaJedinicaRepository;
+import com.ftn.TravelOrganisation.repository.PrevoznoSredstvoRepository;
 
 @Controller
-@RequestMapping("smestaj")
-public class SmestajController {
+@RequestMapping("prevoz")
+public class PrevoznaSredstvaController {
 
 	DestinacijaRepository destinacijaRepository;
-	SmestajnaJedinicaRepository smestajnaJedinicaRepository;
+	PrevoznoSredstvoRepository prevoznoSredstvoRepository;
 
 	@Autowired
-	public SmestajController(DestinacijaRepository destinacijaRepository, SmestajnaJedinicaRepository smestajnaJedinicaRepository) {
-		this.smestajnaJedinicaRepository = smestajnaJedinicaRepository;
+	public PrevoznaSredstvaController(DestinacijaRepository destinacijaRepository,
+			PrevoznoSredstvoRepository prevoznoSredstvoRepository) {
+
+		this.prevoznoSredstvoRepository = prevoznoSredstvoRepository;
 		this.destinacijaRepository = destinacijaRepository;
 	}
 
 	@GetMapping("/dodaj")
-	public ModelAndView dodajSmestaj() {
-		ModelAndView rezultat = new ModelAndView("fragments/addSmestaj");
+	public ModelAndView dodajPrevoz() {
+		ModelAndView rezultat = new ModelAndView("fragments/addPrevoz");
 
 		List<Destinacija> destinacije = destinacijaRepository.findAll();
 		rezultat.addObject("destinacije", destinacije);
 		return rezultat;
-
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<String> dodajSmestaj(@RequestBody String smestajRequest, HttpServletResponse response) {
+	public ResponseEntity<String> addPrevoz(@RequestBody String prevozRequest, HttpServletResponse response) {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonNode = objectMapper.readTree(smestajRequest);
+			System.out.println("ovde");
 
-			String naziv = jsonNode.get("naziv").asText();
-			String tipSmestajaStr = jsonNode.get("tipSmestaja").asText();
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(prevozRequest);
+
+			String tip = jsonNode.get("tip").asText();
 			Long destinacijaId = jsonNode.get("chosenDestinacijaId").asLong();
-			String selectedUslugeJson = jsonNode.get("selectedUsluge").asText();
 			String opis = jsonNode.get("opis").asText();
-			int kapacitet = jsonNode.get("kapacitet").asInt();
+			int brojSedista = jsonNode.get("brojSedista").asInt();
 
 			Destinacija destinacija = destinacijaRepository.findOne(destinacijaId);
-			SmestajnaJedinicaTipEnum tipSmestaja = SmestajnaJedinicaTipEnum.valueOf(tipSmestajaStr);
+			PrevoznoSredstvoTipEnum prevoznoSredstvoTipEnum = PrevoznoSredstvoTipEnum.valueOf(tip);
 
-			List<String> uslugeStr;
-			try {
-				uslugeStr = objectMapper.readValue(selectedUslugeJson, new TypeReference<List<String>>() {
-				});
-				List<SmestajnaJedinicaUslugaEnum> usluge = uslugeStr.stream()
-						.map(usluga -> SmestajnaJedinicaUslugaEnum.valueOf(usluga)).collect(Collectors.toList());
+			PrevoznoSredstvo prevoznoSredstvo = new PrevoznoSredstvo(brojSedista, destinacija, opis,
+					prevoznoSredstvoTipEnum);
 
-				SmestajnaJedinica smestajnaJedinica = new SmestajnaJedinica(naziv, kapacitet, destinacija, usluge, opis,
-						tipSmestaja);
-				
-				smestajnaJedinicaRepository.save(smestajnaJedinica);
-
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			prevoznoSredstvoRepository.save(prevoznoSredstvo);
 
 		} catch (Exception e) {
 			e.printStackTrace();

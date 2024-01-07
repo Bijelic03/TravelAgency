@@ -1,7 +1,10 @@
 package com.ftn.TravelOrganisation.repository.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,8 +14,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ftn.TravelOgranisation.util.DateUtil;
 import com.ftn.TravelOrganisation.model.Destinacija;
@@ -100,6 +106,34 @@ public class PrevoznoSredstvoRepositoryImpl implements PrevoznoSredstvoRepositor
 
 		return prevoznaSredstva;
 
+	}
+	
+	@Transactional
+	@Override
+	public int save(PrevoznoSredstvo prevoznoSredstvo) {
+		PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				String sql = "INSERT INTO prevozna_sredstva (broj_sedista, krajnja_destinacija_id, opis, prevozno_sredstvo_tip) VALUES (?, ?, ?, ?)";
+
+				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				int index = 1;
+						
+					
+				
+				preparedStatement.setInt(index++, prevoznoSredstvo.getBrojSedista());
+				preparedStatement.setLong(index++, prevoznoSredstvo.getKrajnjaDestinacija().getId());
+				preparedStatement.setString(index++, prevoznoSredstvo.getOpis());
+				preparedStatement.setString(index++, prevoznoSredstvo.getPrevoznoSredstvo().toString());
+
+				return preparedStatement;
+			}
+
+		};
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		boolean success = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
+		return success ? 1 : 0;
 	}
 
 }

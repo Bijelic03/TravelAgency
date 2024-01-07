@@ -13,14 +13,21 @@ public class PrevoznoSredstvo {
 	private String opis;
 	private PrevoznoSredstvoTipEnum prevoznoSredstvo;
 
-	public PrevoznoSredstvo() {
 
-	}
 
 	public PrevoznoSredstvo(Long id, int brojSedista, Destinacija krajnjaDestinacija, String opis,
 			PrevoznoSredstvoTipEnum prevoznoSredstvo) {
 		super();
 		this.id = id;
+		this.brojSedista = brojSedista;
+		this.krajnjaDestinacija = krajnjaDestinacija;
+		this.opis = opis;
+		this.prevoznoSredstvo = prevoznoSredstvo;
+	}
+	
+	public PrevoznoSredstvo( int brojSedista, Destinacija krajnjaDestinacija, String opis,
+			PrevoznoSredstvoTipEnum prevoznoSredstvo) {
+		super();
 		this.brojSedista = brojSedista;
 		this.krajnjaDestinacija = krajnjaDestinacija;
 		this.opis = opis;

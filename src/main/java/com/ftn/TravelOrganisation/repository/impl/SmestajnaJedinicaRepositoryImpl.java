@@ -136,7 +136,7 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 				
 				uslugeStr = uslugeStr.substring(1, uslugeStr.length() - 1);
 						
-						
+					
 				
 				preparedStatement.setString(index++, smestajnaJedinica.getNaziv());
 				preparedStatement.setInt(index++, smestajnaJedinica.getKapacitet());
