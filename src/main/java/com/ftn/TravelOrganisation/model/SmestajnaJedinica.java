@@ -2,19 +2,16 @@ package com.ftn.TravelOrganisation.model;
 
 import java.util.List;
 
-
 public class SmestajnaJedinica {
 	private Long id;
 	private String naziv;
 	private int kapacitet;
 	private Destinacija destinacija;
-	private List<Recenzija>  recenzije;
+	private List<Recenzija> recenzije;
 	private List<SmestajnaJedinicaUslugaEnum> usluge;
 	private String opis;
 	private SmestajnaJedinicaTipEnum tipSmestajneJedinice;
-	
-	
-	
+
 	public SmestajnaJedinica(Long id, String naziv, int kapacitet, Destinacija destinacija, List<Recenzija> recenzije,
 			List<SmestajnaJedinicaUslugaEnum> usluge, String opis, SmestajnaJedinicaTipEnum smestajnaJedinicaTipEnum) {
 		super();
@@ -25,24 +22,19 @@ public class SmestajnaJedinica {
 		this.recenzije = recenzije;
 		this.usluge = usluge;
 		this.opis = opis;
-		this.tipSmestajneJedinice = smestajnaJedinicaTipEnum;
+		this.setTipSmestajneJedinice(smestajnaJedinicaTipEnum);
 	}
-	
-	
-	
 
-
-
-
-
-	
-
-
-
-
-
-
-
+	public SmestajnaJedinica(String naziv, int kapacitet, Destinacija destinacija,
+			List<SmestajnaJedinicaUslugaEnum> usluge, String opis, SmestajnaJedinicaTipEnum smestajnaJedinicaTipEnum) {
+		super();
+		this.naziv = naziv;
+		this.kapacitet = kapacitet;
+		this.destinacija = destinacija;
+		this.usluge = usluge;
+		this.opis = opis;
+		this.setTipSmestajneJedinice(smestajnaJedinicaTipEnum);
+	}
 
 	public Long getId() {
 		return id;
@@ -99,6 +91,13 @@ public class SmestajnaJedinica {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
-	
-	
+
+	public SmestajnaJedinicaTipEnum getTipSmestajneJedinice() {
+		return tipSmestajneJedinice;
+	}
+
+	public void setTipSmestajneJedinice(SmestajnaJedinicaTipEnum tipSmestajneJedinice) {
+		this.tipSmestajneJedinice = tipSmestajneJedinice;
+	}
+
 }

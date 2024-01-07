@@ -251,7 +251,6 @@
 		function dateChanged() {
 			datumPolaska = $('#datumPolaska').val()
 			datumPovratka = $('#datumPovratka').val()
-			console.log($('#datumPolaska').val())
 			if (datumPolaska && datumPovratka) {
 				if (new Date(datumPolaska) <= new Date(datumPovratka)) {
 					dateButton.toggleClass("bg-green-600");
@@ -259,7 +258,6 @@
 				}
 			}
 		}
-		console.log(deleteDateButton.val())
 
 
 

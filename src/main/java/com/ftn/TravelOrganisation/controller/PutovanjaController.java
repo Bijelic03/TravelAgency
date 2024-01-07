@@ -156,7 +156,6 @@ public class PutovanjaController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Greška prilikom parsiranja JSON-a.");
 		}
 
-
 	}
 
 	@GetMapping("/putovanja/detalji/{id}")

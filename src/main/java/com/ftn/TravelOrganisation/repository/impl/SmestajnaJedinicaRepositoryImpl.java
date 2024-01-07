@@ -1,7 +1,10 @@
 package com.ftn.TravelOrganisation.repository.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -11,10 +14,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ftn.TravelOrganisation.model.Destinacija;
+import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.Recenzija;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum;
@@ -56,7 +63,7 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 
 			SmestajnaJedinicaTipEnum smestajnaJedinicaTipEnum = SmestajnaJedinicaTipEnum.valueOf(tip);
 
-			String[] uslugeId = uslugeStr.split(",");
+			String[] uslugeId = uslugeStr.split(", ");
 
 			List<SmestajnaJedinicaUslugaEnum> usluge = new ArrayList<SmestajnaJedinicaUslugaEnum>();
 			for (String usluga : uslugeId) {
@@ -87,7 +94,7 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 		SmestajnaJedinicaRowCallBackHandler rowCallbackHandler = new SmestajnaJedinicaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler, id);
 
-	//	return rowCallbackHandler.getSmestajneJedinice().get(0);
+		// return rowCallbackHandler.getSmestajneJedinice().get(0);
 		return null;
 	}
 
@@ -100,7 +107,7 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 
 		return rowCallbackHandler.getSmestajneJedinice();
 	}
-	
+
 	@Override
 	public List<SmestajnaJedinica> getSmestajneJediniceByIds(List<Long> ids) {
 		String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
@@ -111,6 +118,40 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 		jdbcTemplate.query(sql, rowCallbackHandler, ids.toArray());
 
 		return rowCallbackHandler.getSmestajneJedinice();
+	}
+
+	@Transactional
+	@Override
+	public int save(SmestajnaJedinica smestajnaJedinica) {
+		PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				String sql = "INSERT INTO smestajne_jedinice (naziv, kapacitet, destinacija_id, opis, tip, usluge) VALUES (?, ?, ?, ?, ?, ?)";
+
+				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				int index = 1;
+
+				String uslugeStr = smestajnaJedinica.getUsluge().toString();
+				
+				uslugeStr = uslugeStr.substring(1, uslugeStr.length() - 1);
+						
+						
+				
+				preparedStatement.setString(index++, smestajnaJedinica.getNaziv());
+				preparedStatement.setInt(index++, smestajnaJedinica.getKapacitet());
+				preparedStatement.setLong(index++, smestajnaJedinica.getDestinacija().getId());
+				preparedStatement.setString(index++, smestajnaJedinica.getOpis());
+				preparedStatement.setString(index++, smestajnaJedinica.getTipSmestajneJedinice().toString());
+				preparedStatement.setString(index++, uslugeStr);
+
+				return preparedStatement;
+			}
+
+		};
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		boolean success = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
+		return success ? 1 : 0;
 	}
 
 }

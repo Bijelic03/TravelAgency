@@ -1,0 +1,221 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+	<title th:text="'Dodaj smeštaj'"></title>
+
+	<script src=https://code.jquery.com/jquery-3.6.0.js></script>
+	<script>
+		var destinacije = /*[[${destinacije}]]*/ 'destinacije';
+	</script>
+
+
+</head>
+
+<body>
+	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+
+		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen bg-white">
+
+			<form>
+				<div class="space-y-12">
+					<div class="border-b border-gray-900/10 pb-12">
+						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900">Dodavanje smeštaja</h1>
+
+						<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+
+							<div class="sm:col-span-5">
+								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">
+									Naziv smeštaja</label>
+								<div class="mt-2">
+									<input id="naziv" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+								</div>
+							</div>
+
+							<div class="sm:col-span-5">
+								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">Tip
+									smeštaja
+								</label>
+								<div class="mt-2">
+									<select id="tipSmestaja" name="tipSmestaja"
+										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+										<option value="" selected="true" disabled="disabled">Izaberite kategoriju
+										</option>
+
+										<option
+											th:each="kategorija : ${T(com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum).values()}"
+											th:id="kategorija" th:value="${kategorija}"
+											th:text="${kategorija.displayName}">
+										</option>
+
+									</select>
+								</div>
+							</div>
+
+							<div class="sm:col-span-5">
+								<label for="country"
+									class="block text-sm font-medium leading-6 text-gray-900">Destinacija</label>
+								<div class="mt-2">
+									<select id="destinacijaSelect" name="destinacijaSelect"
+										onchange="onDestinacijaChanged()"
+										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+										<option value="" selected="true" disabled="disabled">Izaberite destinaciju
+										</option>
+
+										<option th:each="destinacija : ${destinacije}" th:value="${destinacija.id}"
+											th:text="${destinacija.grad}">
+										</option>
+
+									</select>
+								</div>
+							</div>
+
+
+
+
+
+						</div>
+						<div class="mt-10 space-y-10">
+							<fieldset>
+								<legend class="text-sm font-semibold leading-6 text-gray-900">Usluge
+								</legend>
+								<div id="usluge" class="mt-6 space-y-6">
+
+
+									<div th:each="usluga : ${T(com.ftn.TravelOrganisation.model.SmestajnaJedinicaUslugaEnum).values()}"
+										class="relative flex gap-x-3">
+
+										<div class="flex h-6 items-center">
+											<input th:id="${usluga}" name="smestaj" type="checkbox"
+												class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+										</div>
+										<div class="text-sm leading-6">
+											<label class="font-medium text-gray-900"
+												th:text="${usluga.displayName}"></label>
+											<p class="text-gray-500"> </p>
+										</div>
+
+									</div>
+
+							</fieldset>
+
+						</div>
+
+
+
+						<div class="sm:col-span-5">
+							<label class="block text-sm font-medium leading-6 text-gray-900">
+								Kapacitet</label>
+							<div class="mt-2">
+								<input id="kapacitet" type="number" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+									placeholder="0">
+							</div>
+						</div>
+						
+							<div class="sm:col-span-5">
+							<label  class="block text-sm font-medium leading-6 text-gray-900">
+								Opis</label>
+							<div class="mt-2">
+								<input id="opis" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+									>
+							</div>
+						</div>
+					</div>
+
+
+
+				</div>
+
+				<div class="mt-6 flex items-center justify-end gap-x-6">
+					<button type="button" class="text-sm font-semibold leading-6 text-gray-900">Odustani</button>
+					<button id="kreirajbutton"
+						class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Kreiraj</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+</body>
+<script>
+
+	var kreirajbutton = $('#kreirajbutton')
+	var chosenDestinacijaId = null
+	var selectedUsluge = [];
+	var naziv = null;
+	var tipSmestaja = null;
+	var kapacitet = null;
+	var opis = null;
+
+	kreirajbutton.click(function () {
+		chosenDestinacijaId = $('#destinacijaSelect').find(":selected").val();
+		naziv = $('#naziv').val()
+		tipSmestaja = $('#tipSmestaja').find(":selected").val();
+		kapacitet = $('#kapacitet').val();
+		opis = $('#opis').val();
+		updateSelectedUsluge()
+
+
+		if (kapacitet <= 0) {
+			console.log("Niste dobro uneli kapacitet!")
+
+			return false;
+
+		}
+
+		else {
+			if (naziv == null || tipSmestaja == null || chosenDestinacijaId == null || $.isEmptyObject(selectedUsluge) || kapacitet == null || opis == null) {
+
+				console.log("niste popunili sve");
+
+				return false;
+			}
+			else {
+
+				var dataToSend = {
+					naziv: naziv,
+					tipSmestaja: tipSmestaja,
+					chosenDestinacijaId: chosenDestinacijaId,
+					selectedUsluge: JSON.stringify(selectedUsluge),
+					kapacitet: kapacitet,
+					opis: opis
+				}
+
+
+
+				$.ajax({
+					type: 'POST',
+					url: '/TravelOrganisation/smestaj/add',
+					contentType: 'application/json',
+					data: JSON.stringify(dataToSend),
+					success: function (data) {
+						console.log('Uspešno poslato na server:', data);
+						window.location.href = "/TravelOrganisation";
+					},
+					error: function (error) {
+						console.error('Greška prilikom slanja na server:', error);
+					}
+				});
+
+
+				return false;
+			}
+		}
+	})
+
+
+	function updateSelectedUsluge() {
+		$('#usluge > div > div > input').each(function () {
+			if ($(this).is(":checked")) {
+				selectedUsluge.push($(this).attr('id'))
+			}
+
+		})
+	}
+</script>
+
+</html>
