@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title th:text="'Korisnici'"></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+	<script src=https://code.jquery.com/jquery-3.6.0.js></script>
+
+</head>
+
+<body>
+
+	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
+			<div th:replace="~{fragments/korisniciTableRows :: table}"></div>
+			<div id="ulogaMenu"
+				class="hidden  right-5 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+				role="menu" aria-orientation="vertical" aria-labelledby="ulogaMenuButton" tabindex="-1">
+
+				<div class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+					role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+					<div class="py-1" role="none">
+						<button th:each="uloga : ${T(com.ftn.TravelOrganisation.model.KorisnikUloga).values()}" href="#"
+							class="uloga font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
+							th:value="${uloga}" th:text="${uloga.displayName}" tabindex="-1" id="menu-item-0"></button>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
+
+<script th:inline="javascript">
+
+	rows = null
+
+
+
+	$(document).ready(function () {
+
+		$(document).on('click', '.blok', function () {
+			var userId = $(this).val();
+
+			$.ajax({
+				type: 'POST',
+				url: '/TravelOrganisation/korisnici/block',
+				data: {id: userId},
+				success: function (updatedData) {
+					if (updatedData == null) {
+						return
+					}
+
+					var rowElement = $('#row-' + userId);
+
+					rowElement.find('.blok').remove();
+
+					var buttonElement = '';
+					if (updatedData.blokiran) {
+						buttonElement = '<button class="blok" value="' + updatedData.id + '">Odblokiraj</button>';
+					} else {
+						buttonElement = '<button class="blok" value="' + updatedData.id + '">Blokiraj</button>';
+					}
+
+					rowElement.find('td:last-child').html(buttonElement);
+				},
+				error: function (error) {
+					console.error('Greška prilikom slanja na server:', error);
+				}
+			});
+
+			return false;
+		});
+	});
+
+
+
+
+	$(document).on('click', '.uloga', function () {
+		var button = $(this)
+		var selectedUloga = button.val()
+		$.ajax({
+			type: 'GET',
+			url: '/TravelOrganisation/korisnici/getByUloga?selectedUloga=' + selectedUloga,
+			success: function (updatedData) {
+				console.log('Uspešno poslato na server:', updatedData);
+
+
+				$('#korisniciTable').empty();
+				$('#korisniciTable').append(updatedData);
+			},
+			error: function (error) {
+				console.error('Greška prilikom slanja na server:', error);
+			}
+		});
+	});
+
+
+
+
+	$(document).ready(function () {
+		function sortTable(header) {
+			rows = $('#korisniciTable tbody tr').get();
+
+			var sortProperty = $(header).attr('data-sort-property');
+			var sortDirection = $(header).attr('data-sort-direction');
+
+			$(header).attr('data-sort-direction', sortDirection === 'ASC' ? 'DESC' : 'ASC');
+
+			$('#arrowUp').toggle(sortDirection === 'ASC');
+			$('#arrowDown').toggle(sortDirection === 'DESC');
+
+
+			rows.sort(function (a, b) {
+				var aValue = $(a).find('[data-property="' + sortProperty + '"]').text().toUpperCase();
+				var bValue = $(b).find('[data-property="' + sortProperty + '"]').text().toUpperCase();
+
+				return sortDirection === 'ASC' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+			});
+
+			// Postavite sortirane redove u tabelu
+			$('#korisniciTable tbody').empty().append(rows);
+		}
+
+		window.sortTable = sortTable;
+	});
+
+	$(document).on('click', '#ulogaButton', function () {
+		console.log("kliknuto")
+
+		$("#ulogaMenu").css({
+			top: $("#ulogaButton").offset().top + $("#ulogaButton").outerHeight(),
+			left: $("#ulogaButton").offset().left
+		});
+		$("#ulogaMenu").toggle();
+
+	});
+
+
+
+
+	function handleSearch() {
+		const searchText = $("#userSearch").val()
+		$.ajax({
+			type: 'GET',
+			url: '/TravelOrganisation/korisnici/getByKorisnickoIme?userSearch=' + searchText,
+			success: function (updatedData) {
+				$('#korisniciTable').empty();
+				$('#korisniciTable').append(updatedData);
+			},
+			error: function (error) {
+				console.error('Greška prilikom slanja na server:', error);
+			}
+		})
+	}
+
+
+
+</script>
+
+
+
+
+</html>

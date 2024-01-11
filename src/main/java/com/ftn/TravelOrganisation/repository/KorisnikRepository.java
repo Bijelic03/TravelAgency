@@ -3,6 +3,7 @@ package com.ftn.TravelOrganisation.repository;
 import java.util.List;
 
 import com.ftn.TravelOrganisation.model.Korisnik;
+import com.ftn.TravelOrganisation.model.KorisnikUloga;
 
 public interface KorisnikRepository {
 
@@ -17,4 +18,10 @@ public interface KorisnikRepository {
     public int update(Korisnik korisnik);
 
     public int delete(Long id);
+
+	public int toggleBlock(Korisnik korisnik);
+
+	public List<Korisnik> findByUloga(KorisnikUloga uloga);
+
+	public List<Korisnik> findByKorisnickoImeContains(String userSearch);
 }

@@ -205,4 +205,8 @@ public class Korisnik {
 	public void setBlokiran(boolean blokiran) {
 		this.blokiran = blokiran;
 	}
+	
+	public boolean isAdmin() {
+		return uloga == KorisnikUloga.ADMINISTRATOR ? true : false;
+	}
 }
