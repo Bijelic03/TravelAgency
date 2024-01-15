@@ -2,36 +2,53 @@ package com.ftn.TravelOrganisation.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.KorisnikUloga;
+import com.ftn.TravelOrganisation.model.Putovanje;
 import com.ftn.TravelOrganisation.repository.KorisnikRepository;
+import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
 import com.ftn.TravelOrganisation.service.KorisnikService;
+import com.mysql.cj.Session;
 
 @Controller
-@RequestMapping("korisnici")
+@RequestMapping("")
 public class KorisniciController {
+
+	public static final String PRIJAVLJENI_KORISNIK = "prijavljeni_korisnik";
 
 	KorisnikRepository korisnikRepository;
 	KorisnikService korisnikService;
+	PutovanjeRepository putovanjeRepository;
+	HttpSession session;
 
 	@Autowired
-	public KorisniciController(KorisnikRepository korisnikRepository, KorisnikService korisnikService) {
+	public KorisniciController(KorisnikRepository korisnikRepository, KorisnikService korisnikService,
+			PutovanjeRepository putovanjeRepository, HttpSession session) {
 		this.korisnikService = korisnikService;
 		this.korisnikRepository = korisnikRepository;
+		this.putovanjeRepository = putovanjeRepository;
+		this.session = session;
 	}
 
-	@GetMapping("")
+	@GetMapping("korisnici")
 	public ModelAndView pregledKorisnika() {
 		ModelAndView rezultat = new ModelAndView("korisnici");
 		List<Korisnik> listaKorisnika = korisnikRepository.findAll();
@@ -39,7 +56,22 @@ public class KorisniciController {
 		return rezultat;
 	}
 
-	@PostMapping("/block")
+	@GetMapping("profil")
+	public ModelAndView pregledProfila(HttpSession session) {
+		Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
+		if (prijavljeniKorisnik == null) {
+			// Ako korisnik nije prijavljen, preusmeri ga na stranicu za prijavu
+			return new ModelAndView("redirect:/login"); // Promenite "login" sa stvarnom putanjom do stranice za prijavu
+		}
+
+		ModelAndView rezultat = new ModelAndView("profil");
+		List<Putovanje> listaPutovanja = putovanjeRepository.findAll();
+
+		rezultat.addObject("listaPutovanja", listaPutovanja);
+		return rezultat;
+	}
+
+	@PostMapping("korisnici/block")
 	@ResponseBody
 	public ResponseEntity<Korisnik> blockKorisnika(@RequestParam Long id) {
 		Korisnik updatedKorisnik = korisnikRepository.findOne(id);
@@ -49,7 +81,46 @@ public class KorisniciController {
 
 	}
 
-	@GetMapping("/getByUloga")
+	@PostMapping("korisnici/edit")
+	public ResponseEntity<String> edit(@RequestBody String jsonData, HttpSession session, HttpServletRequest request) {
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(jsonData);
+
+			String ime = jsonNode.get("ime").asText();
+			String prezime = jsonNode.get("prezime").asText();
+			String email = jsonNode.get("email").asText();
+			String sifra = jsonNode.get("sifra").asText();
+			String brTelefona = jsonNode.get("brTelefona").asText();
+
+			System.out.println(ime);
+			System.out.println(prezime);
+			System.out.println(email);
+			System.out.println(sifra);
+			System.out.println(brTelefona);
+
+			Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
+
+			prijavljeniKorisnik.setIme(ime);
+			prijavljeniKorisnik.setPrezime(prezime);
+			prijavljeniKorisnik.setEmail(email);
+			prijavljeniKorisnik.setSifra(sifra);
+			prijavljeniKorisnik.setBrojTelefona(brTelefona);
+
+			session.setAttribute(PRIJAVLJENI_KORISNIK, prijavljeniKorisnik);
+
+			korisnikRepository.update(prijavljeniKorisnik);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Greška prilikom parsiranja JSON-a.");
+		}
+
+		return ResponseEntity.ok("Putovanje uspešno dodato!");
+	}
+
+	@GetMapping("korisnici/getByUloga")
 	public String getByUloga(@RequestParam String selectedUloga, Model model) {
 		KorisnikUloga uloga = KorisnikUloga.valueOf(selectedUloga);
 		List<Korisnik> updatedLista = korisnikRepository.findByUloga(uloga);
@@ -57,7 +128,7 @@ public class KorisniciController {
 		return "fragments/korisniciTableRows :: table";
 	}
 
-	@GetMapping("/getByKorisnickoIme")
+	@GetMapping("korisnici/getByKorisnickoIme")
 	public String getByKorisnickoIme(@RequestParam String userSearch, Model model) {
 
 		List<Korisnik> updatedLista = korisnikRepository.findByKorisnickoImeContains(userSearch);

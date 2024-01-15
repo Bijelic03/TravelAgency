@@ -171,7 +171,7 @@ public class KorisnikRepositoryImpl implements KorisnikRepository {
 				+ "WHERE id = ?";
 		boolean uspeh = jdbcTemplate.update(sql, korisnik.getKorisnickoIme(), korisnik.getSifra(), korisnik.getEmail(),
 				korisnik.getIme(), korisnik.getPrezime(), korisnik.getAdresa(), korisnik.getBrojTelefona(),
-				korisnik.getDatumRodjenja(), korisnik.getDatumVremeRegistracije(), korisnik.getUloga(),
+				korisnik.getDatumRodjenja(), korisnik.getDatumVremeRegistracije(), korisnik.getUloga().toString(),
 				korisnik.isBlokiran(), korisnik.getId()) == 1;
 
 		return uspeh ? 1 : 0;
