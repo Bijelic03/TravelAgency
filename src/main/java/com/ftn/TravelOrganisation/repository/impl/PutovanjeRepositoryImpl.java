@@ -30,6 +30,7 @@ import com.ftn.TravelOrganisation.model.PrevoznoSredstvo;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum;
 import com.ftn.TravelOrganisation.model.Putovanje;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
+import com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
 import com.ftn.TravelOrganisation.repository.PrevoznoSredstvoRepository;
 import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
@@ -105,25 +106,27 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 			int index = 1;
 			Long id = resultSet.getLong(index++);
 			Long idPutovanja = resultSet.getLong(index++);
+
 			String vremePolaskaStr = resultSet.getString(index++);
 			String vremePovratkaStr = resultSet.getString(index++);
-			int brojNocenja = resultSet.getInt(index++);
 
 			LocalDate vremePolaska = DateUtil.stringToDate(vremePolaskaStr);
 			LocalDate vremePovratka = DateUtil.stringToDate(vremePovratkaStr);
+
+			// LocalDate vremePolaska = resultSet.getDate(index++).toLocalDate();
+			// LocalDate vremePovratka = resultSet.getDate(index++).toLocalDate();
+			int brojNocenja = resultSet.getInt(index++);
 
 			Interval interval = new Interval(id, idPutovanja, vremePolaska, vremePovratka, brojNocenja);
 
 			if (id != null && interval != null) {
 				listaTermina.add(interval);
 			}
-
 		}
 
 		protected List<Interval> getListaTermina() {
 			return listaTermina;
 		}
-
 	}
 
 	private List<Interval> getTerminiByPutovanjeId(Long id) {
@@ -279,6 +282,126 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 		}
 
 		return putovanja;
+	}
+
+	@Override
+	public List<Putovanje> filterBy(Double cenaDo, Double cenaOd, LocalDate datumPolaska, LocalDate datumPovratka,
+			String nazivDestinacije, String sifraPutovanja, List<SmestajnaJedinicaTipEnum> smestajiEnum,
+			List<PrevoznoSredstvoTipEnum> prevoziEnum, List<KategorijaPutovanjaEnum> kategorijeEnum, int brOsoba,
+			int brNocenja) {
+
+		StringBuilder sqlBuilder = new StringBuilder(
+				"SELECT p.* , t.vreme_polaska, t.vreme_povratka, t.broj_nocenja, sj.tip, sj.kapacitet, ps.prevozno_sredstvo_tip "
+						+ "FROM putovanja p LEFT JOIN prevozna_sredstva ps ON p.prevozno_sredstvo_id = ps.id "
+						+ " left JOIN smestaj_putovanja sp ON p.id = sp.putovanje_id "
+						+ "LEFT JOIN smestajne_jedinice sj ON sp.smestaj_id = sj.id LEFT JOIN termini t ON p.id = t.putovanje_id  "
+						+ "  WHERE 1=1");
+
+		List<Object> queryParams = new ArrayList<>();
+
+		if (nazivDestinacije != null) {
+			Destinacija destinacija = destinacijaRepository.findByGrad(nazivDestinacije);
+			Long idDestinacije = destinacija.getId();
+			sqlBuilder.append(" AND p.destinacija_id like ?");
+			queryParams.add(idDestinacije);
+		}
+
+		if (cenaOd != null) {
+			sqlBuilder.append(" AND p.cena_aranzmana >= ?");
+			queryParams.add(cenaOd);
+		}
+
+		if (cenaDo != null) {
+			sqlBuilder.append(" AND p.cena_aranzmana <= ?");
+			queryParams.add(cenaDo);
+		}
+
+		if (sifraPutovanja != null) {
+			sqlBuilder.append(" AND p.id like ?");
+			queryParams.add(sifraPutovanja);
+		}
+
+		if (brNocenja != 0) {
+			sqlBuilder.append(" AND t.broj_nocenja > ?");
+			queryParams.add(brNocenja);
+		}
+
+		if (brOsoba != 0) {
+			sqlBuilder.append(" AND sj.kapacitet > ?");
+			queryParams.add(brOsoba);
+		}
+
+		if (datumPolaska != null && datumPovratka != null) {
+			System.out.println("oba datuma");
+			sqlBuilder.append(" AND t.vreme_polaska BETWEEN ? AND ? AND t.vreme_povratka BETWEEN ? AND ?");
+			queryParams.add(datumPolaska);
+			queryParams.add(datumPovratka);
+			queryParams.add(datumPolaska);
+			queryParams.add(datumPovratka);
+		} else {
+			if (datumPolaska != null) {
+				System.out.println("datum polaska");
+
+				sqlBuilder.append(" AND t.vreme_polaska <= ?");
+				queryParams.add(datumPolaska);
+			}
+
+			if (datumPovratka != null) {
+				System.out.println("datum povratka");
+
+				sqlBuilder.append(" AND t.vreme_povratka >= ?");
+				queryParams.add(datumPovratka);
+			}
+		}
+
+		if (kategorijeEnum != null) {
+			String placeholders = String.join(",", Collections.nCopies(kategorijeEnum.size(), "?"));
+
+			sqlBuilder.append(" AND p.kategorija_putovanja IN (" + placeholders + ")");
+			for (KategorijaPutovanjaEnum kategorija : kategorijeEnum) {
+				queryParams.add(kategorija.toString());
+
+			}
+		}
+
+		if (smestajiEnum != null) {
+			String placeholders = String.join(",", Collections.nCopies(smestajiEnum.size(), "?"));
+
+			sqlBuilder.append(" AND sj.tip IN (" + placeholders + ")");
+			for (SmestajnaJedinicaTipEnum smestajTip : smestajiEnum) {
+				queryParams.add(smestajTip.toString());
+
+			}
+		}
+
+		if (prevoziEnum != null) {
+			String placeholders = String.join(",", Collections.nCopies(prevoziEnum.size(), "?"));
+
+			sqlBuilder.append(" AND ps.prevozno_sredstvo_tip IN (" + placeholders + ")");
+			for (PrevoznoSredstvoTipEnum prevozEnum : prevoziEnum) {
+				queryParams.add(prevozEnum.toString());
+
+			}
+		}
+
+		/*
+		 * if (datumPolaska != null) { sqlBuilder.append(
+		 * " AND EXISTS (SELECT 1 FROM termini WHERE putovanje_id = putovanja.id AND vreme_polaska >= ?)"
+		 * ); queryParams.add(datumPolaska.toString()); }
+		 * 
+		 * if (datumPovratka != null) { sqlBuilder.append(
+		 * " AND EXISTS (SELECT 1 FROM termini WHERE putovanje_id = putovanja.id AND vreme_povratka <= ?)"
+		 * ); queryParams.add(datumPovratka.toString()); }
+		 */
+
+		System.out.println(queryParams);
+		System.out.println(sqlBuilder);
+		String sql = sqlBuilder.toString();
+
+		PutovanjeRowCallBackHandler rowCallbackHandler = new PutovanjeRowCallBackHandler();
+		jdbcTemplate.query(sql, rowCallbackHandler, queryParams.toArray());
+
+		return rowCallbackHandler.getPutovanja();
 	}
 
 }

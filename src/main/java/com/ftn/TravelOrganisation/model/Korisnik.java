@@ -13,7 +13,6 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
 public class Korisnik {
 
 	private Long id;
@@ -32,10 +31,10 @@ public class Korisnik {
 	private LocalDateTime datumVremeRegistracije;
 	private KorisnikUloga uloga;
 
-	//private List<Putovanje> listaZelja;
+	// private List<Putovanje> listaZelja;
 
 //	private List<Rezervacija> rezervacije;
-	//private LoyaltyKartica loyaltyKartica;
+	// private LoyaltyKartica loyaltyKartica;
 	private boolean blokiran;
 
 	public Korisnik() {
@@ -44,7 +43,8 @@ public class Korisnik {
 
 	// konstruktor koriscen u citanju txt-a
 	public Korisnik(Long id, String korisnickoIme, String sifra, String email, String ime, String prezime,
-			String adresa, String brojTelefona, String datumRodjenja, String datumVremeRegistracije, String uloga, Boolean blokiran) {
+			String adresa, String brojTelefona, String datumRodjenja, String datumVremeRegistracije, String uloga,
+			Boolean blokiran) {
 		this.id = id;
 		this.korisnickoIme = korisnickoIme;
 		this.sifra = sifra;
@@ -89,11 +89,6 @@ public class Korisnik {
 		this.blokiran = blokiran;
 	}
 
-
-
-
-
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -107,8 +102,6 @@ public class Korisnik {
 	private KorisnikUloga stringToEnum(String ulogaString) {
 		return KorisnikUloga.valueOf(ulogaString);
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -205,8 +198,14 @@ public class Korisnik {
 	public void setBlokiran(boolean blokiran) {
 		this.blokiran = blokiran;
 	}
-	
-	public boolean isAdmin() {
-		return uloga == KorisnikUloga.ADMINISTRATOR ? true : false;
+
+	public boolean getIsAdmin() {
+	    return uloga == KorisnikUloga.ADMINISTRATOR;
 	}
+
+
+	public boolean getIsMenadzer() {
+		return uloga == KorisnikUloga.MENADZER ? true : false;
+	}
+
 }

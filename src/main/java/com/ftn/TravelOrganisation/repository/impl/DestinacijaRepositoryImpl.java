@@ -113,4 +113,15 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 		return jdbcTemplate.update(sql, id);
 	}
 
+	@Override
+	public Destinacija findByGrad(String nazivDestinacije) {
+		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d " + "WHERE d.grad = ? "
+				+ "ORDER BY d.id";
+
+		DestinacijaRowCallBackHandler rowCallbackHandler = new DestinacijaRowCallBackHandler();
+		jdbcTemplate.query(sql, rowCallbackHandler, nazivDestinacije);
+
+		return rowCallbackHandler.getDestinacije().get(0);
+	}
+
 }

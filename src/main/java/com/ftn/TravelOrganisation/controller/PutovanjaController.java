@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,13 +30,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.ftn.TravelOrganisation.model.Destinacija;
 import com.ftn.TravelOrganisation.model.Interval;
 import com.ftn.TravelOrganisation.model.KategorijaPutovanjaEnum;
 import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvo;
+import com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum;
 import com.ftn.TravelOrganisation.model.Putovanje;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
+import com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
 import com.ftn.TravelOrganisation.repository.PrevoznoSredstvoRepository;
 import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
@@ -193,6 +197,95 @@ public class PutovanjaController {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return "Greška prilikom pretvaranja u JSON.";
+		}
+
+	}
+
+	@PostMapping("putovanja/filter")
+	public String getPutovanjaByFilter(@RequestBody String filterJson, Model model) {
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(filterJson);
+
+			Double cenaDo = jsonNode.get("cenaDo").asDouble();
+			Double cenaOd = jsonNode.get("cenaOd").asDouble();
+			LocalDate datumPolaska = jsonNode.get("datumPolaska").asText() == "" ? null
+					: LocalDate.parse(jsonNode.get("datumPolaska").asText());
+
+			LocalDate datumPovratka = jsonNode.get("datumPovratka").asText() == "" ? null
+					: LocalDate.parse(jsonNode.get("datumPovratka").asText());
+
+			String nazivDestinacije = jsonNode.get("nazivDestinacije") != null
+					? jsonNode.get("nazivDestinacije").asText()
+					: null;
+			String sifraPutovanja = jsonNode.get("sifraPutovanja") != null ? jsonNode.get("sifraPutovanja").asText()
+					: null;
+			String selectedPrevozi = jsonNode.get("selectedPrevozi").asText();
+			String selectedSmestaji = jsonNode.get("selectedSmestaji").asText();
+			String selectedKategorije = jsonNode.get("selectedkategorije").asText();
+			int brNocenja = jsonNode.get("brNocenja").asInt();
+			int brOsoba = jsonNode.get("brOsoba").asInt();
+			List<SmestajnaJedinicaTipEnum> smestajiEnum = objectMapper.readValue(selectedSmestaji,
+					new TypeReference<List<SmestajnaJedinicaTipEnum>>() {
+					});
+
+			List<PrevoznoSredstvoTipEnum> prevoziEnum = objectMapper.readValue(selectedPrevozi,
+					new TypeReference<List<PrevoznoSredstvoTipEnum>>() {
+					});
+
+			List<KategorijaPutovanjaEnum> kategorijeEnum = objectMapper.readValue(selectedKategorije,
+					new TypeReference<List<KategorijaPutovanjaEnum>>() {
+					});
+			if (cenaDo == 0) {
+				cenaDo = null;
+			}
+			if (cenaOd == 0) {
+				cenaOd = null;
+			}
+
+			if (smestajiEnum.isEmpty()) {
+				smestajiEnum = null;
+			}
+			if (prevoziEnum.isEmpty()) {
+				prevoziEnum = null;
+			}
+			if (kategorijeEnum.isEmpty()) {
+				kategorijeEnum = null;
+			}
+
+			if (sifraPutovanja == "null") {
+				sifraPutovanja = null;
+			}
+
+			if (nazivDestinacije == "null") {
+				nazivDestinacije = null;
+			}
+
+			System.out.println(cenaDo);
+			System.out.println(cenaOd);
+			System.out.println(datumPolaska);
+			System.out.println(datumPovratka);
+			System.out.println(nazivDestinacije);
+			System.out.println(smestajiEnum);
+			System.out.println(prevoziEnum);
+			System.out.println(kategorijeEnum);
+			System.out.println(brOsoba);
+			System.out.println(brNocenja);
+			List<Putovanje> filteredPutovanja = putovanjeRepository.filterBy(cenaDo, cenaOd, datumPolaska,
+					datumPovratka, nazivDestinacije, sifraPutovanja, smestajiEnum, prevoziEnum, kategorijeEnum, brOsoba,
+					brNocenja);
+
+			model.addAttribute("listaPutovanja", filteredPutovanja);
+			return "fragments/putovanja :: listaPutovanja";
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println("ovde");
+			List<Putovanje> putovanja = putovanjeRepository.findAll();
+			model.addAttribute("listaPutovanja", putovanja);
+			return "fragments/putovanja :: listaPutovanja";
+
 		}
 
 	}

@@ -15,4 +15,6 @@ public int save(Destinacija destinacija);
 public int update(Destinacija destinacija);
 
 public int delete(Long id);
+
+public Destinacija findByGrad(String nazivDestinacije);
 }

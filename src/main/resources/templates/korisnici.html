@@ -14,10 +14,10 @@
 		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
 			<div th:replace="~{fragments/korisniciTableRows :: table}"></div>
 			<div id="ulogaMenu"
-				class="hidden  right-5 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+				class="hidden relative  z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
 				role="menu" aria-orientation="vertical" aria-labelledby="ulogaMenuButton" tabindex="-1">
 
-				<div class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+				<div class="relative  z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
 					role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
 					<div class="py-1" role="none">
 						<button th:each="uloga : ${T(com.ftn.TravelOrganisation.model.KorisnikUloga).values()}" href="#"
@@ -132,8 +132,8 @@
 		console.log("kliknuto")
 
 		$("#ulogaMenu").css({
-			top: $("#ulogaButton").offset().top + $("#ulogaButton").outerHeight(),
-			left: $("#ulogaButton").offset().left
+			//	top: $("#ulogaButton").offset().top - $("#ulogaButton").outerHeight(),
+			//		left: $("#ulogaButton").offset().left
 		});
 		$("#ulogaMenu").toggle();
 

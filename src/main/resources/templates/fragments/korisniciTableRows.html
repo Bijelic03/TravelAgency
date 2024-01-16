@@ -49,7 +49,7 @@
 			<td class="text-center py-2 px-2 border" th:text="${korisnik.uloga}" data-property="uloga"></td>
 			<td class="text-center py-2 px-2 border">
 				<button class="blok" th:value="${korisnik.id}" th:if="${korisnik.blokiran}">Odblokiraj</button>
-				<button  class="blok" th:value="${korisnik.id}" th:unless="${korisnik.isAdmin() || korisnik.blokiran}">Blokiraj</button>
+				<button  class="blok" th:value="${korisnik.id}" th:unless="${korisnik.isAdmin || korisnik.blokiran}">Blokiraj</button>
 			</td>
 		</tr>
 	</tbody>
