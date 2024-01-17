@@ -82,6 +82,7 @@ public class PutovanjaController {
 	public ModelAndView prikaziPutovanja() {
 		ModelAndView rezultat = new ModelAndView("putovanjaPage");
 		List<Putovanje> putovanja = putovanjeRepository.findAll();
+		System.out.println("putovanjaa");
 		rezultat.addObject("listaPutovanja", putovanja);
 		return rezultat;
 

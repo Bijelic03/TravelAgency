@@ -37,7 +37,8 @@
 	</div>
 
 
-	<div th:fragment="putovanjeCard" class="bg-white rounded-md group relative">
+	<div th:fragment="putovanjeCard" class="bg-white rounded-md group relative"
+		th:attr="data-cena=${putovanje.cenaAranzmana}, data-destinacija=${putovanje.destinacija.grad}, data-prevoz=${putovanje.prevoznoSredstvo.prevoznoSredstvo}, data-kategorija=${putovanje.kategorijaPutovanja}">
 		<a th:href="@{/putovanja/detalji/{id}(id=${putovanje.id})}">
 
 			<div
@@ -47,26 +48,26 @@
 			</div>
 
 			<div class="px-4 pb-5 mt-4 flex justify-between">
-            <div class="flex flex-row">
-                <div class="pr-5">
-                    <span aria-hidden="true" class="absolute inset-0"></span>
-                    <p>Grad: </p>
-                    <p class="text-md" th:text="${putovanje.destinacija.grad}"></p>
-                </div>
-                <div class="pr-5">
-                    <p>Cena: </p>
-                    <p class="text-md" th:text="${putovanje.cenaAranzmana}"></p>
-                </div>
+				<div class="flex flex-row">
+					<div class="pr-5">
+						<span aria-hidden="true" class="absolute inset-0"></span>
+						<p>Grad: </p>
+						<p class="text-md" th:text="${putovanje.destinacija.grad}"></p>
+					</div>
+					<div class="pr-5">
+						<p>Cena: </p>
+						<p class="text-md" data-property="cena" th:text="${putovanje.cenaAranzmana}"></p>
+					</div>
 
-                <div class="pr-5">
-                    <p>Kategorija: </p>
-                    <p class="text-md" th:text="${putovanje.kategorijaPutovanja}"></p>
-                </div>
-                <div class="pr-5">
-                    <p>Prevozno sredstvo: </p>
-                    <p class="text-md" th:text="${putovanje.prevoznoSredstvo.prevoznoSredstvo}"></p>
-                </div>
-            </div>
+					<div class="pr-5">
+						<p>Kategorija: </p>
+						<p class="text-md" th:text="${putovanje.kategorijaPutovanja}"></p>
+					</div>
+					<div class="pr-5">
+						<p>Prevozno sredstvo: </p>
+						<p class="text-md" th:text="${putovanje.prevoznoSredstvo.prevoznoSredstvo}"></p>
+					</div>
+				</div>
 			</div>
 		</a>
 	</div>
