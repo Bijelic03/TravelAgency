@@ -22,8 +22,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.KorisnikUloga;
+import com.ftn.TravelOrganisation.model.LoyaltyKartica;
 import com.ftn.TravelOrganisation.model.Putovanje;
 import com.ftn.TravelOrganisation.repository.KorisnikRepository;
+import com.ftn.TravelOrganisation.repository.LoyaltyKarticaRepository;
 import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
 import com.ftn.TravelOrganisation.service.KorisnikService;
 import com.mysql.cj.Session;
@@ -37,37 +39,57 @@ public class KorisniciController {
 	KorisnikRepository korisnikRepository;
 	KorisnikService korisnikService;
 	PutovanjeRepository putovanjeRepository;
+	LoyaltyKarticaRepository loyaltyKarticaRepository;
 	HttpSession session;
 
 	@Autowired
 	public KorisniciController(KorisnikRepository korisnikRepository, KorisnikService korisnikService,
-			PutovanjeRepository putovanjeRepository, HttpSession session) {
+			PutovanjeRepository putovanjeRepository, LoyaltyKarticaRepository loyaltyKarticaRepository,
+			HttpSession session) {
 		this.korisnikService = korisnikService;
 		this.korisnikRepository = korisnikRepository;
 		this.putovanjeRepository = putovanjeRepository;
+		this.loyaltyKarticaRepository = loyaltyKarticaRepository;
 		this.session = session;
 	}
 
 	@GetMapping("korisnici")
 	public ModelAndView pregledKorisnika() {
 		ModelAndView rezultat = new ModelAndView("korisnici");
+		List<LoyaltyKartica> listaKartica = loyaltyKarticaRepository.findAll();
 		List<Korisnik> listaKorisnika = korisnikRepository.findAll();
+		rezultat.addObject("listaKartica", listaKartica);
 		rezultat.addObject("listaKorisnika", listaKorisnika);
 		return rezultat;
+	}
+
+	@PostMapping("korisnici/acceptKartica")
+	public ResponseEntity<String> acceptKartica(@RequestParam Long id) {
+		loyaltyKarticaRepository.acceptKartica(id);
+		return ResponseEntity.ok("Kartica accepted successfully");
+	}
+	
+	@PostMapping("korisnici/rejectKartica")
+	public ResponseEntity<String> rejectKartica(@RequestParam Long id) {
+		loyaltyKarticaRepository.rejectKartica(id);
+		return ResponseEntity.ok("Kartica rejected successfully");
 	}
 
 	@GetMapping("profil")
 	public ModelAndView pregledProfila(HttpSession session) {
 		Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
 		if (prijavljeniKorisnik == null) {
-			// Ako korisnik nije prijavljen, preusmeri ga na stranicu za prijavu
-			return new ModelAndView("redirect:/login"); // Promenite "login" sa stvarnom putanjom do stranice za prijavu
+
+			return new ModelAndView("redirect:/login");
 		}
 
+		LoyaltyKartica loyaltyKartica = loyaltyKarticaRepository.findByKorisnikId(prijavljeniKorisnik.getId());
 		ModelAndView rezultat = new ModelAndView("profil");
 		List<Putovanje> listaPutovanja = putovanjeRepository.findAll();
 
 		rezultat.addObject("listaPutovanja", listaPutovanja);
+		rezultat.addObject("kartica", loyaltyKartica);
+
 		return rezultat;
 	}
 
@@ -78,6 +100,24 @@ public class KorisniciController {
 		korisnikRepository.toggleBlock(updatedKorisnik);
 		updatedKorisnik.setBlokiran(!updatedKorisnik.isBlokiran());
 		return ResponseEntity.ok(updatedKorisnik);
+
+	}
+
+	@PostMapping("korisnici/loyaltyCardApplication")
+	@ResponseBody
+	public ResponseEntity<Boolean> loyaltyCardApplication(@RequestParam String id) {
+
+		Korisnik korisnik = korisnikRepository.findOne(Long.parseLong(id));
+
+		LoyaltyKartica novaKartica = new LoyaltyKartica(5, korisnik, false);
+		if (loyaltyKarticaRepository.save(novaKartica) == 1) {
+			System.out.println("dodan");
+
+			return ResponseEntity.ok(true);
+		} else {
+			return ResponseEntity.ok(false);
+
+		}
 
 	}
 
@@ -93,12 +133,6 @@ public class KorisniciController {
 			String email = jsonNode.get("email").asText();
 			String sifra = jsonNode.get("sifra").asText();
 			String brTelefona = jsonNode.get("brTelefona").asText();
-
-			System.out.println(ime);
-			System.out.println(prezime);
-			System.out.println(email);
-			System.out.println(sifra);
-			System.out.println(brTelefona);
 
 			Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
 

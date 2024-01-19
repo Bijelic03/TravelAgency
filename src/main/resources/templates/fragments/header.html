@@ -20,11 +20,12 @@
 
 
 			<a th:href="@{/putovanja}" class=" text-sm font-semibold leading-6 text-white">Putavanja</a>
-			<a th:href="@{/putovanja/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj putovanje</a>
-			<a th:href="@{/smestaj/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj smeštaj</a>
-			<a th:href="@{/prevoz/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj prevoz</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}" th:href="@{/putovanja/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj putovanje</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}" th:href="@{/smestaj/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj smeštaj</a>
+			<a  th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"  th:href="@{/prevoz/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj prevoz</a>
+			<a  th:if="${session.prijavljeni_korisnik != null && session.prijavljeni_korisnik.isAdmin}" th:href="@{/korisnici}" class=" text-sm font-semibold leading-6 text-white">Korisnici</a>
 
-			<a th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white">Destinacije</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}" th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white">Destinacije</a>
 			<a th:href="@{/register}" th:if="${session.prijavljeni_korisnik == null}"
 				class="text-sm font-semibold leading-6 text-white">Registracija</a>
 			<a href="/TravelOrganisation/profil" th:if="${session.prijavljeni_korisnik != null}"

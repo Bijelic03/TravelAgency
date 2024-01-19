@@ -203,6 +203,9 @@ public class Korisnik {
 	    return uloga == KorisnikUloga.ADMINISTRATOR;
 	}
 
+	public boolean getIsPutnik() {
+	    return uloga == KorisnikUloga.PUTNIK;
+	}
 
 	public boolean getIsMenadzer() {
 		return uloga == KorisnikUloga.MENADZER ? true : false;
