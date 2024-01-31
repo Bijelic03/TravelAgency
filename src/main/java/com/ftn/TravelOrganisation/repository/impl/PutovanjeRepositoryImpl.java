@@ -129,13 +129,23 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 		}
 	}
 
-	private List<Interval> getTerminiByPutovanjeId(Long id) {
+	public List<Interval> getTerminiByPutovanjeId(Long id) {
 		String sql = "SELECT * FROM termini " + "WHERE putovanje_id = ? ";
 
 		ListaTerminaRowCallBackHandler rowCallbackHandler = new ListaTerminaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler, id);
 
 		return rowCallbackHandler.getListaTermina();
+	}
+	
+	@Override
+	public Interval findOneTermin(Long id) {
+		String sql = "SELECT * FROM termini t " + "WHERE t.id = ? ";
+
+		ListaTerminaRowCallBackHandler rowCallbackHandler = new ListaTerminaRowCallBackHandler();
+		jdbcTemplate.query(sql, rowCallbackHandler, id);
+
+		return rowCallbackHandler.getListaTermina().get(0);
 	}
 
 	public class SmestajPutovanjaRowCallBackHandler implements RowCallbackHandler {
@@ -147,9 +157,8 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 			int index = 1;
 			Long putovanjeId = resultSet.getLong(index++);
 			Long smestajId = resultSet.getLong(index++);
-
+			
 			smestajneJedinice.add(smestajnaJedinicaRepository.findOne(smestajId));
-
 		}
 
 		protected List<SmestajnaJedinica> getSmestajneJedinice() {
@@ -163,7 +172,7 @@ public class PutovanjeRepositoryImpl implements PutovanjeRepository {
 
 		SmestajPutovanjaRowCallBackHandler rowCallbackHandler = new SmestajPutovanjaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler, id);
-
+		System.out.println(rowCallbackHandler.getSmestajneJedinice());
 		return rowCallbackHandler.getSmestajneJedinice();
 	}
 

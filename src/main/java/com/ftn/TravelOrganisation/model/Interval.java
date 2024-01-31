@@ -13,7 +13,7 @@ public class Interval {
 	public Interval(Long id, Long idPutovanja, LocalDate vremePolaska, LocalDate vremePovratka, int brojNocenja) {
 		super();
 		this.id = id;
-		this.idPutovanja =idPutovanja;
+		this.idPutovanja = idPutovanja;
 		this.vremePolaska = vremePolaska;
 		this.vremePovratka = vremePovratka;
 		this.brojNocenja = brojNocenja;

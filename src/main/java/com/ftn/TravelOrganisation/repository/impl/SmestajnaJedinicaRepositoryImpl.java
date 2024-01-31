@@ -94,8 +94,7 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 		SmestajnaJedinicaRowCallBackHandler rowCallbackHandler = new SmestajnaJedinicaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler, id);
 
-		// return rowCallbackHandler.getSmestajneJedinice().get(0);
-		return null;
+		return rowCallbackHandler.getSmestajneJedinice().get(0);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.ftn.TravelOrganisation.controller.LoginController;
 import com.ftn.TravelOrganisation.model.Korisnik;
+import com.ftn.TravelOrganisation.model.Rezervacija;
 
 @Component
 public class InitHttpSessionListener implements HttpSessionListener {
@@ -22,10 +23,11 @@ public class InitHttpSessionListener implements HttpSessionListener {
 //		
 //		//pri kreiranju sesije inicijalizujemo je ili radimo neke dodatne aktivnosti
 		Korisnik prijavljeniKorisnik = null;
+		List <Rezervacija> shoppingCart =  null;
 		HttpSession session  = arg0.getSession();
 		session.setAttribute(LoginController.PRIJAVLJENI_KORISNIK, prijavljeniKorisnik);
-		
-//		
+		session.setAttribute("shoppingCart", shoppingCart);
+
 	}
 	
 	/** kod koji se izvrsava po brisanju sesije */
@@ -34,6 +36,7 @@ public class InitHttpSessionListener implements HttpSessionListener {
 		
 	}
 
+	
 }
 
 

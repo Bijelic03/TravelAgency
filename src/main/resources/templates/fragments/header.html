@@ -20,17 +20,29 @@
 
 
 			<a th:href="@{/putovanja}" class=" text-sm font-semibold leading-6 text-white">Putavanja</a>
-			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}" th:href="@{/putovanja/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj putovanje</a>
-			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}" th:href="@{/smestaj/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj smeštaj</a>
-			<a  th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"  th:href="@{/prevoz/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj prevoz</a>
-			<a  th:if="${session.prijavljeni_korisnik != null && session.prijavljeni_korisnik.isAdmin}" th:href="@{/korisnici}" class=" text-sm font-semibold leading-6 text-white">Korisnici</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
+				th:href="@{/putovanja/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj putovanje</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
+				th:href="@{/smestaj/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj smeštaj</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
+				th:href="@{/prevoz/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj prevoz</a>
+			<a th:if="${session.prijavljeni_korisnik != null && session.prijavljeni_korisnik.isAdmin}"
+				th:href="@{/korisnici}" class=" text-sm font-semibold leading-6 text-white">Korisnici</a>
 
-			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}" th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white">Destinacije</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
+				th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white">Destinacije</a>
 			<a th:href="@{/register}" th:if="${session.prijavljeni_korisnik == null}"
 				class="text-sm font-semibold leading-6 text-white">Registracija</a>
 			<a href="/TravelOrganisation/profil" th:if="${session.prijavljeni_korisnik != null}"
 				th:text="${session.prijavljeni_korisnik.korisnickoIme}"
 				class="text-sm font-semibold leading-6 text-white"></a>
+
+			<a th:href="@{/putovanja/shoppingCart}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+					viewBox="0 0 24 24" fill="white">
+					<path
+						d="M10 19.5c0 .829-.672 1.5-1.5 1.5s-1.5-.671-1.5-1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5zm3.5-1.5c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm1.336-5l1.977-7h-16.813l2.938 7h11.898zm4.969-10l-3.432 12h-12.597l.839 2h13.239l3.474-12h1.929l.743-2h-4.195z" />
+				</svg>
+				</ath:href="@{ /register}">
 
 
 

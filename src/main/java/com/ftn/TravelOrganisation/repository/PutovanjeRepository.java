@@ -20,6 +20,10 @@ public interface PutovanjeRepository {
 	public int saveSmestajnaJedinicaPutovanje(SmestajnaJedinica smestajnaJedinica, Long idPutovanja);
 
 	public int saveTermin(Interval interval, Long putovanjeId);
+	
+	public List<Interval> getTerminiByPutovanjeId(Long id);
+	
+	public Interval findOneTermin(Long id);
 
 	public List<Putovanje> filterBy(Double cenaDo, Double cenaOd, LocalDate datumPolaska, LocalDate datumPovratka,
 			String nazivDestinacije, String sifraPutovanja, List<SmestajnaJedinicaTipEnum> smestajiEnum,

@@ -1,0 +1,195 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+	<title th:text="'Shopping cart'"></title>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+	<style>
+		/* Dodajte stilove po potrebi */
+	</style>
+</head>
+
+<body>
+	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+
+		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen bg-white">
+			<div id="shoppingCart" th:attr="korisnik=${session.prijavljeni_korisnik}"
+				th:if="${session.shoppingCart != null and not session.shoppingCart.isEmpty()}">
+				<!-- Add overflow-x-auto class to make the table responsive -->
+				<div class="overflow-x-auto">
+					<table class="min-w-full bg-white border border-gray-300 max-w-screen-md mx-auto">
+						<thead>
+							<tr>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Destinacija</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Šifra putovanja</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Prevozno sredstvo</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Smeštajna jedinica</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Cena</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Broj putnika</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Broj nocenja</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Datum polaska</th>
+								<th
+									class="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									Datum povratka</th>
+
+								<th class="px-6 py-3 border-b border-gray-300 bg-gray-100"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:id="rezervacija.id" th:each="rezervacija, iterStat : ${session.shoppingCart}">
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o putovanju -->
+									<span th:text="${rezervacija.putovanje.destinacija.grad}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o putovanju -->
+									<span th:text="${rezervacija.putovanje.id}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o putovanju -->
+									<span th:text="${rezervacija.putovanje.prevoznoSredstvo.prevoznoSredstvo}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o putovanju -->
+									<span th:text="${rezervacija.smestajnaJedinica.naziv}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o putovanju -->
+									<span th:text="${rezervacija.cena}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz broja putnika -->
+									<span th:text="${rezervacija.brojPutnika}"></span>
+									<!-- Dugme za menjanje broja putnika -->
+									<button  th:onclick="'javascript:changePassengerCount(' + ${iterStat.index} + ', ' + ${rezervacija.id} + ');'">Promeni</button>
+
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o intervalu -->
+									<span th:text="${rezervacija.termin.brojNocenja}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o intervalu -->
+									<span th:text="${rezervacija.termin.vremePolaska}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Prikaz informacija o intervalu -->
+									<span th:text="${rezervacija.termin.vremePovratka}"></span>
+								</td>
+								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+									<!-- Dugme za izbacivanje iz shopping cart-a -->
+									<button
+										th:onclick="'javascript:removeFromCart(' + ${iterStat.index} + ');'">Izbaci</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>Total: <span></span></p>
+				<button onclick="checkout()">Završi kupovinu</button>
+			</div>
+			<div th:unless="${session.shoppingCart != null and not session.shoppingCart.isEmpty()}">
+				<p>Shopping cart je prazan.</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Implementirajte funkcije za promenu broja putnika i izbacivanje iz shopping cart-a
+		function changePassengerCount(index, rezervacijaId) {
+
+			console.log(rezervacijaId);
+
+			console.log(index + " index")
+			$("#promeniBrPutnika").show();
+		}
+
+		function removeFromCart(index) {
+			// Implementacija logike za izbacivanje iz shopping cart-a
+			alert('Implementirajte izbacivanje stavke broj ' + (index + 1) + ' iz shopping cart-a.');
+		}
+
+		function checkout() {
+			korisnik = $("#prikazPutovanja").attr("korisnik")
+
+			if (korisnik != undefined) {
+				alert('Implementirajte završetak kupovine.');
+
+			}
+			else {
+				window.location.href = "/TravelOrganisation/login";
+			}
+		}
+
+		function getTotal() {
+			// Implementacija logike za računanje ukupne cene
+			var total = 0;
+			// Dodajte logiku za sabiranje cena svih stavki u korpi
+			return total;
+		}
+
+
+		$(document).ready(function () {
+			// When the "Otkazi" button is clicked, hide the modal
+			$('#cancelReservationBttn').click(function () {
+				$('#promeniBrPutnika').hide();
+			});
+		});
+
+		$(document).ready(function () {
+			// When the "Otkazi" button is clicked, hide the modal
+			$('#changeBttn').click(function () {
+
+
+				$('#promeniBrPutnika').hide();
+			});
+		});
+	</script>
+
+	<div hidden id="promeniBrPutnika" class=" modal fixed top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
+
+		<div class="modal-content p-6 bg-white border border-2">
+			<h2 class="text-2xl font-bold mb-4">Broj putnika</h2>
+
+
+
+			<div>
+
+				<div class="mb-4">
+					<label for="numberOfPassengers" class="block text-sm font-semibold text-gray-600">Broj
+						putnika:</label>
+					<input onchange="handleChangeBrojPutnika()" min="0" type="number" id="brojPutnika"
+						class="mt-1 p-2 border rounded-md w-full" required>
+
+				</div>
+
+
+				<button id="changeBttn" class="bg-blue-500 text-white px-4 py-2 rounded-full">
+					Potvrdi</button>
+				<button id="cancelReservationBttn" class="bg-blue-500 text-white px-4 py-2 rounded-full">
+					Otkaži</button>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -14,32 +14,32 @@ public class Putovanje {
 
 	private PrevoznoSredstvo prevoznoSredstvo;
 
-	private List<SmestajnaJedinica> smestajnaJedinice;
+	private List<SmestajnaJedinica> smestajneJedinice;
 	private KategorijaPutovanjaEnum kategorijaPutovanja;
 	private List<Interval> listaTermina;
 
 	private Double cenaAranzmana;
 
 	public Putovanje(Long id, Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
-			List<SmestajnaJedinica> smestajnaJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
+			List<SmestajnaJedinica> smestajneJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
 			List<Interval> listaTermina, Double cenaAranzmana) {
 		super();
 		this.id = id;
 		this.destinacija = destinacija;
 		this.prevoznoSredstvo = prevoznoSredstvo;
-		this.smestajnaJedinice = smestajnaJedinice;
+		this.smestajneJedinice = smestajneJedinice;
 		this.kategorijaPutovanja = kategorijaPutovanja;
 		this.setListaTermina(listaTermina);
 		this.cenaAranzmana = cenaAranzmana;
 	}
 	
 	public Putovanje( Destinacija destinacija, PrevoznoSredstvo prevoznoSredstvo,
-			List<SmestajnaJedinica> smestajnaJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
+			List<SmestajnaJedinica> smestajneJedinice, KategorijaPutovanjaEnum kategorijaPutovanja,
 			List<Interval> listaTermina, Double cenaAranzmana) {
 		super();
 		this.destinacija = destinacija;
 		this.prevoznoSredstvo = prevoznoSredstvo;
-		this.smestajnaJedinice = smestajnaJedinice;
+		this.smestajneJedinice = smestajneJedinice;
 		this.kategorijaPutovanja = kategorijaPutovanja;
 		this.setListaTermina(listaTermina);
 		this.cenaAranzmana = cenaAranzmana;
@@ -70,11 +70,11 @@ public class Putovanje {
 	}
 
 	public List<SmestajnaJedinica> getSmestajneJedinice() {
-		return smestajnaJedinice;
+		return smestajneJedinice;
 	}
 
-	public void setSmestajneJedinice(List<SmestajnaJedinica> smestajnaJedinice) {
-		this.smestajnaJedinice = smestajnaJedinice;
+	public void setSmestajneJedinice(List<SmestajnaJedinica> smestajneJedinice) {
+		this.smestajneJedinice = smestajneJedinice;
 	}
 
 	public KategorijaPutovanjaEnum getKategorijaPutovanja() {

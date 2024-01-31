@@ -30,7 +30,8 @@ public class LoginController {
 	@PostMapping("/login")
 	public String login(@RequestParam String korisnickoIme, @RequestParam String sifra, HttpSession session, HttpServletRequest request) {
 
-	    session.invalidate();
+	    session.removeAttribute(PRIJAVLJENI_KORISNIK);
+
 
 	    session = request.getSession(true);
 
@@ -45,7 +46,7 @@ public class LoginController {
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-	    session.invalidate();
+	    session.removeAttribute(PRIJAVLJENI_KORISNIK);
 	    return "redirect:/";
 	}
 

@@ -1,5 +1,7 @@
 package com.ftn.TravelOrganisation.controller;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvo;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum;
 import com.ftn.TravelOrganisation.model.Putovanje;
+import com.ftn.TravelOrganisation.model.Rezervacija;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
@@ -93,6 +96,13 @@ public class PutovanjaController {
 		ModelAndView rezultat = new ModelAndView("fragments/addPutovanje");
 		List<Destinacija> destinacije = destinacijaRepository.findAll();
 		rezultat.addObject("destinacije", destinacije);
+		return rezultat;
+
+	}
+
+	@GetMapping("/putovanja/shoppingCart")
+	public ModelAndView prikaziShoppingCart() {
+		ModelAndView rezultat = new ModelAndView("shoppingCart");
 		return rezultat;
 
 	}
@@ -163,11 +173,57 @@ public class PutovanjaController {
 
 	}
 
+	@PostMapping("/putovanja/reservation/addToWishlist")
+	public ResponseEntity<String> dodajRezervacijuUWishlist(@RequestBody String reservationRequest, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String decodedReservationRequest = URLDecoder.decode(reservationRequest, StandardCharsets.UTF_8.toString());
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(decodedReservationRequest);
+
+			int brojPutnika = jsonNode.get("brojPutnika").asInt();
+			int brojNocenja = jsonNode.get("brojNocenja").asInt();
+			long smestajId = jsonNode.get("smestajId").asLong();
+
+			Putovanje putovanje = putovanjeRepository.findOne(jsonNode.get("putovanjeId").asLong());
+			Interval termin = putovanjeRepository.findOneTermin(jsonNode.get("intervalId").asLong());
+			System.out.println(smestajId);
+			SmestajnaJedinica smestajnaJedinica = smestajnaJedinicaRepository.findOne(smestajId);
+			Double cena = putovanje.getCenaAranzmana() * brojNocenja * brojPutnika;
+			Rezervacija rezervacija = new Rezervacija(putovanje, brojPutnika, termin, smestajnaJedinica, cena);
+
+			session = request.getSession(true);
+			List<Rezervacija> shoppingCart = (List<Rezervacija>) session.getAttribute("shoppingCart");
+
+			if (shoppingCart == null) {
+				shoppingCart = new ArrayList<>();
+				session.setAttribute("shoppingCart", shoppingCart);
+			}
+			
+			long rezervacijaId = shoppingCart.size()+1;
+			rezervacija.setId(rezervacijaId);
+			shoppingCart.add(rezervacija);
+
+
+
+			return ResponseEntity.ok("Putovanje uspešno dodato!");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Greška prilikom parsiranja JSON-a.");
+		}
+
+	}
+
 	@GetMapping("/putovanja/detalji/{id}")
 	public ModelAndView prikaziPutovanje(@PathVariable Long id) {
 		ModelAndView rezultat = new ModelAndView("fragments/putovanje");
 		Putovanje putovanje = putovanjeRepository.findOne(id);
+		List<Interval> termini = putovanjeRepository.getTerminiByPutovanjeId(id);
 		rezultat.addObject("putovanje", putovanje);
+
+		rezultat.addObject("termini", termini);
 		return rezultat;
 
 	}
@@ -282,7 +338,6 @@ public class PutovanjaController {
 		} catch (Exception e) {
 
 			e.printStackTrace();
-			System.out.println("ovde");
 			List<Putovanje> putovanja = putovanjeRepository.findAll();
 			model.addAttribute("listaPutovanja", putovanja);
 			return "fragments/putovanja :: listaPutovanja";

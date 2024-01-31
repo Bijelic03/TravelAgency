@@ -3,15 +3,59 @@
 <head>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 	<title th:text="'Putovanje'"></title>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 </head>
+<style>
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		/* Higher z-index to appear above other elements */
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgb(0, 0, 0);
+		background-color: rgba(0, 0, 0, 0.4);
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-content {
+		background-color: #fefefe;
+		margin: auto;
+		padding: 20px;
+		border: 1px solid #888;
+		width: 80%;
+		max-width: 600px;
+	}
+
+	.close-modal {
+		color: #aaa;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	.close-modal:hover,
+	.close-modal:focus {
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	}
+</style>
 
 <body>
 	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
 
 		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
 
-			<div class="py-16">
+			<div id="prikazPutovanja"
+				th:attr="korisnik=${session.prijavljeni_korisnik}, putovanjeId=${putovanje.id},  cenaPoDanu=${putovanje.cenaAranzmana} "
+				class="py-16">
 				<div class="xl:container m-auto px-6 text-gray-900 md:px-12 xl:px-16">
 					<div
 						class="lg:bg-gray-50 dark:lg:bg-darker lg:p-16 rounded-[4rem] space-y-6 md:flex flex-row-reverse md:gap-6 justify-center md:space-y-0 lg:items-center">
@@ -37,17 +81,152 @@
 									<h4 th:text="${putovanje.destinacija.kontinent}"
 										class="font-semibold text-lg text-gray-700"></h4>
 								</div>
-																<div class="pt-4 flex gap-4 md:items-center">
+								<div class="pt-4 flex gap-4 md:items-center">
 									<h4 class="font-semibold text-lg text-gray-700">Cena: </h4>
 									<h4 th:text="${putovanje.cenaAranzmana}"
 										class="font-semibold text-lg text-gray-700"></h4>
 								</div>
+
+								<div class="pt-4">
+									<h4 class="font-semibold text-lg text-gray-700">Termini:</h4>
+									<table class="table-auto">
+										<thead>
+											<tr>
+												<th class="px-4 py-2">Vreme Polaska</th>
+												<th class="px-4 py-2">Vreme Povratka</th>
+												<th class="px-4 py-2">Broj Nocenja</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="termin : ${termini}">
+												<td class="border px-4 py-2" th:text="${termin.vremePolaska}"></td>
+												<td class="border px-4 py-2" th:text="${termin.vremePovratka}"></td>
+												<td class="border px-4 py-2" th:text="${termin.brojNocenja}"></td>
+												<td class="border px-4 py-2"> <button
+														th:attr="brojNocenja=${termin.brojNocenja}, intervalId=${termin.id}"
+														class="bg-blue-500 text-white px-4 py-2 rounded-full mt-4 rezervisi-btn">Rezerviši</button>
+												</td>
+
+
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<script>
+				var cenaPoDanu = null
+				var brojNocenja = null
+				var smestajId = null
+				function handleChangeBrojPutnika() {
+					brojPutnika = $("#brojPutnika").val()
+					cenaPoDanu = $("#prikazPutovanja").attr("cenaPoDanu")
+					ukupnaCena = cenaPoDanu * brojNocenja * brojPutnika
+					$("#prikazUkupneCene").text(ukupnaCena);
+					console.log(ukupnaCena)
+				}
+
+				$(document).ready(function () {
+					var ukupnaCena = 0
+
+
+					$(".rezervisi-btn").on("click", function () {
+						korisnik = $("#prikazPutovanja").attr("korisnik")
+						cenaPoDanu = $("#prikazPutovanja").attr("cenaPoDanu")
+						brojNocenja = $(this).attr("brojNocenja")
+						intervalId = $(this).attr("intervalId")
+						smestajId = $('#smestaj').val()
+						
+						console.log(brojNocenja, cenaPoDanu, smestaj)
+						/*	if (korisnik != undefined) {
+								$("#rezervisiModal").show();
+	
+							}
+							else {
+								window.location.href = "/TravelOrganisation/login";
+							}*/
+						$("#rezervisiModal").show();
+
+					});
+
+					$(".close-modal").on("click", function () {
+						$("#rezervisiModal").hide();
+					});
+
+					$("#createReservationBttn").on("click", function () {
+						console.log($("#prikazPutovanja").attr("putovanjeId"))
+						data = {
+							putovanjeId: $("#prikazPutovanja").attr("putovanjeId"),
+							brojNocenja: brojNocenja,
+							brojPutnika: brojPutnika,
+							intervalId: intervalId,
+							smestajId: smestajId
+						}
+
+						$.ajax({
+							type: "POST",
+							url: '/TravelOrganisation/putovanja/reservation/addToWishlist',
+							data: JSON.stringify(data),
+							success: function (data) {
+								console.log('Uspešno poslato na server:', data);
+								$("#rezervisiModal").hide();
+
+							},
+							error: function (error) {
+								console.error('Greška prilikom slanja na server:', error);
+							}
+						})
+
+						return false;
+					})
+
+				});
+			</script>
+
+
+			<div hidden id="rezervisiModal" class="modal ">
+				<div class="modal-content mt-20 p-6">
+					<span class="close-modal">&times;</span>
+					<h2 class="text-2xl font-bold mb-4">Rezervacija putovanja</h2>
+
+					<div class="mb-4">
+						<p class="font-bold">Destinacija: <span th:text="${putovanje.destinacija.grad}"> </span></p>
+						<p class="font-bold">Šifra putovanja: <span th:text="${putovanje.id}"></span></p>
+						<p id="ukupnaCena" class="font-bold">Cena: <span id="prikazUkupneCene"></span></p>
+
+					</div>
+
+					<div>
+
+						<div class="mb-4">
+							<label for="numberOfPassengers" class="block text-sm font-semibold text-gray-600">Broj
+								putnika:</label>
+							<input onchange="handleChangeBrojPutnika()" min="0" type="number" id="brojPutnika"
+								class="mt-1 p-2 border rounded-md w-full" required>
+
+						</div>
+
+						<div class="mb-4">
+							<label class="block text-sm font-semibold text-gray-600">
+								Smeštaj:</label>
+							<select id="smestaj">
+								<option th:value="${smestaj.id}"  th:each="smestaj : ${putovanje.smestajneJedinice}" th:text="${smestaj.naziv}">
+								</option>
+							</select>
+						</div>
+						<button id="createReservationBttn" class="bg-blue-500 text-white px-4 py-2 rounded-full">
+							Potvrdi</button>
+					</div>
+				</div>
+			</div>
+
 		</div>
+
+
 	</div>
 
 </body>
