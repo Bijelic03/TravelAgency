@@ -2,6 +2,9 @@ package com.ftn.TravelOrganisation.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ftn.TravelOrganisation.model.Destinacija;
@@ -32,6 +36,8 @@ import com.ftn.TravelOrganisation.service.DestinacijeService;
 @Controller
 @RequestMapping("")
 public class DestinacijeController {
+
+	public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/img";
 
 	private final String bURL;
 
@@ -66,15 +72,40 @@ public class DestinacijeController {
 	}
 
 	@PostMapping("destinacije/add")
-	public void addDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response)
-			throws IOException {
+	public void addDestinacju(@RequestParam String grad, @RequestParam String drzava, @RequestParam String kontinent,
+			@RequestParam("slika") MultipartFile slika, HttpServletResponse response) throws IOException {
+
+		StringBuilder fileNames = new StringBuilder();
+		Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, slika.getOriginalFilename());
+		fileNames.append(slika.getOriginalFilename());
+
+		Path uploadPath = Paths.get(UPLOAD_DIRECTORY);
+		if (!Files.exists(uploadPath)) {
+			Files.createDirectories(uploadPath);
+		}
+		Files.write(fileNameAndPath, slika.getBytes());
+
+		Destinacija destinacija = new Destinacija(grad, drzava, kontinent, slika.getOriginalFilename());
 		destinacijaRepository.save(destinacija);
+
 		response.sendRedirect(bURL + "/destinacije");
 	}
 
 	@PostMapping("destinacije/edit")
-	public void editDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response)
+	public void editDestinacju(@RequestParam Long id, @RequestParam String grad, @RequestParam String drzava, @RequestParam String kontinent,
+			@RequestParam("slika") MultipartFile slika, HttpServletResponse response)
 			throws IOException {
+		StringBuilder fileNames = new StringBuilder();
+		Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, slika.getOriginalFilename());
+		fileNames.append(slika.getOriginalFilename());
+
+		Path uploadPath = Paths.get(UPLOAD_DIRECTORY);
+		if (!Files.exists(uploadPath)) {
+			Files.createDirectories(uploadPath);
+		}
+		Files.write(fileNameAndPath, slika.getBytes());
+
+		Destinacija destinacija = new Destinacija(id, grad, drzava, kontinent, slika.getOriginalFilename());
 		destinacijaRepository.update(destinacija);
 		response.sendRedirect(bURL + "/destinacije");
 	}

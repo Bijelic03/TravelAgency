@@ -37,10 +37,11 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 			String grad = resultSet.getString(index++);
 			String drzava = resultSet.getString(index++);
 			String kontinent = resultSet.getString(index++);
+			String putanjaSlike = resultSet.getString(index++);
 
 			Destinacija destinacija = destinacije.get(id);
 			if (destinacija == null) {
-				destinacija = new Destinacija(id, grad, drzava, kontinent);
+				destinacija = new Destinacija(id, grad, drzava, kontinent, putanjaSlike);
 				destinacije.put(destinacija.getId(), destinacija); // dodavanje u kolekciju
 			}
 		}
@@ -53,7 +54,7 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 	
 	@Override
 	public Destinacija findOne(Long id) {
-		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d " + "WHERE d.id = ? "
+		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent, d.putanja_slike FROM destinacije d " + "WHERE d.id = ? "
 				+ "ORDER BY d.id";
 
 		DestinacijaRowCallBackHandler rowCallbackHandler = new DestinacijaRowCallBackHandler();
@@ -64,7 +65,7 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 
 	@Override
 	public List<Destinacija> findAll() {
-		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d  " + "ORDER BY d.id";
+		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent, d.putanja_slike FROM destinacije d  " + "ORDER BY d.id";
 
 		DestinacijaRowCallBackHandler rowCallbackHandler = new DestinacijaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler);
@@ -79,13 +80,15 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				String sql = "INSERT INTO destinacije (grad, drzava, kontinent) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO destinacije (grad, drzava, kontinent, putanja_slike) VALUES (?, ?, ?, ?)";
 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				int index = 1;
 				preparedStatement.setString(index++, destinacija.getGrad());
 				preparedStatement.setString(index++, destinacija.getDrzava());
 				preparedStatement.setString(index++, destinacija.getKontinent());
+				preparedStatement.setString(index++, destinacija.getPutanjaSlike());
+
 
 				return preparedStatement;
 			}
@@ -99,9 +102,9 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 	@Transactional
 	@Override
 	public int update(Destinacija destinacija) {
-		String sql = "UPDATE destinacije SET grad = ?, drzava = ?, kontinent = ? WHERE id = ?";
+		String sql = "UPDATE destinacije SET grad = ?, drzava = ?, kontinent = ?, putanja_slike = ? WHERE id = ?";
 		boolean uspeh = jdbcTemplate.update(sql, destinacija.getGrad(), destinacija.getDrzava(),
-				destinacija.getKontinent(), destinacija.getId()) == 1;
+				destinacija.getKontinent(), destinacija.getPutanjaSlike(), destinacija.getId()) == 1;
 
 		return uspeh ? 1 : 0;
 	}
@@ -115,7 +118,7 @@ public class DestinacijaRepositoryImpl implements DestinacijaRepository {
 
 	@Override
 	public Destinacija findByGrad(String nazivDestinacije) {
-		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent FROM destinacije d " + "WHERE d.grad = ? "
+		String sql = "SELECT d.id, d.grad, d.drzava, d.kontinent, d.putanja_slike FROM destinacije d " + "WHERE d.grad = ? "
 				+ "ORDER BY d.id";
 
 		DestinacijaRowCallBackHandler rowCallbackHandler = new DestinacijaRowCallBackHandler();

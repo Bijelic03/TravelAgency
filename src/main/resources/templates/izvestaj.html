@@ -82,31 +82,23 @@
 
 
 
-	<!-- JavaScript script to sum up all values in the "Cena" column and count the number of rows -->
 	<script th:inline="javascript">
-		/*<![CDATA[*/
 		document.addEventListener('DOMContentLoaded', function () {
-			// Function to calculate and update total cost and total reservations
 			function updateTotals() {
-				// Initialize total cost and total reservations
 				var totalCost = 0;
 				var totalReservations = 0;
 
-				// Loop through Thymeleaf model data
-				/*[# th:each="rezervacija : ${rezervacije}"]*/
+
 				{
-					// Get individual values for each row
 					var cenaValue = /*[[${rezervacija.cena}]]*/ 0;
 
-					// Check if the value is a valid number
 					if (!isNaN(cenaValue)) {
 						totalCost += parseFloat(cenaValue);
 						totalReservations++;
 					}
 				}
-				/*[/]*/
+			
 
-				// Update the HTML elements with the calculated total cost and total reservations
 				document.getElementById('totalCost').innerText = new Intl.NumberFormat('en-US', {
 					minimumFractionDigits: 2,
 					maximumFractionDigits: 2
@@ -114,16 +106,12 @@
 				document.getElementById('totalReservations').innerText = totalReservations;
 			}
 
-			// Attach the updateTotals function to the form submission event
 			document.querySelector('form').addEventListener('submit', function (event) {
-				// Prevent the default form submission
-				updateTotals(); // Call the function to update total cost and total reservations
+				updateTotals(); 
 			});
 
-			// Initial update on page load
 			updateTotals();
 		});
-        /*]]>*/
 	</script>
 
 </body>

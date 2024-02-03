@@ -60,9 +60,9 @@
 					<div
 						class="lg:bg-gray-50 dark:lg:bg-darker lg:p-16 rounded-[4rem] space-y-6 md:flex flex-row-reverse md:gap-6 justify-center md:space-y-0 lg:items-center">
 						<div class="md:5/12 lg:w-1/2">
-							<img src="https://cdn.discordapp.com/attachments/831510841152897038/1182141007962325074/674925.png?ex=65839d9b&amp;is=6571289b&amp;hm=7fb7fe9b02cd3063a51a257f050412507a52ccf48e24277a9ca5a89f5e43d6b4&amp;"
-								alt="Destination Image"
+							<img th:src="@{'/img/' + ${putovanje.destinacija.putanjaSlike}}" alt="Slika destinacije"
 								class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+
 						</div>
 						<div class="md:7/12 lg:w-1/2">
 							<h2 th:text="#{travelReserve.modal.destination}"

@@ -76,9 +76,11 @@ public class RegisterController {
 
 			return "redirect:/";
 		} else {
+			
+	        model.addAttribute("registerError", "Već postoji korisnik sa tim korisnickim imenom");
+
 			System.out.println("Već postoji korisnik sa tim korisničkim imenom.");
-			model.addAttribute("userAlreadyExists", true);
-			model.addAttribute("showModal", true);
+
 			return "register";
 		}
 	}

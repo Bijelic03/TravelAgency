@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,21 +29,21 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public String login(@RequestParam String korisnickoIme, @RequestParam String sifra, HttpSession session, HttpServletRequest request) {
-
+	public String login(@RequestParam String korisnickoIme, @RequestParam String sifra, HttpSession session, HttpServletRequest request, Model model) {
 	    session.removeAttribute(PRIJAVLJENI_KORISNIK);
-
-
 	    session = request.getSession(true);
 
 	    Korisnik prijavljeniKorisnik = registerService.login(korisnickoIme, sifra);
 
 	    if (prijavljeniKorisnik != null) {
 	        session.setAttribute(PRIJAVLJENI_KORISNIK, prijavljeniKorisnik);
+	        return "redirect:/";
+	    } else {
+	        model.addAttribute("loginError", "Korisnik ne postoji ili su uneti pogrešni podaci.");
+	        return "login"; // Zamijenajte "your-login-page" imenom vaše login stranice.
 	    }
-
-	    return "redirect:/";
 	}
+
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {

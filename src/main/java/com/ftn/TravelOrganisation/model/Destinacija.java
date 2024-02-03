@@ -6,14 +6,40 @@ public class Destinacija {
 	private String grad;
 	private String drzava;
 	private String kontinent;
+	private String putanjaSlike;
 
 	public Destinacija() {
 
 	}
 
-	public Destinacija(Long id, String grad, String drzava, String kontinent) {
+	public Destinacija(Long id, String grad, String drzava, String kontinent, String putanjaSlike) {
 		super();
 		this.id = id;
+		this.grad = grad;
+		this.drzava = drzava;
+		this.kontinent = kontinent;
+		this.putanjaSlike = putanjaSlike;
+
+	}
+	
+	public Destinacija(String grad, String drzava, String kontinent, String putanjaSlike) {
+		super();
+		this.grad = grad;
+		this.drzava = drzava;
+		this.kontinent = kontinent;
+		this.putanjaSlike = putanjaSlike;
+
+	}
+	
+	public Destinacija(String grad, String drzava, String kontinent) {
+		super();
+		this.grad = grad;
+		this.drzava = drzava;
+		this.kontinent = kontinent;
+	}
+	
+	public Destinacija(Long id, String grad, String drzava, String kontinent) {
+		super();
 		this.grad = grad;
 		this.drzava = drzava;
 		this.kontinent = kontinent;
@@ -54,6 +80,14 @@ public class Destinacija {
 
 	public void setKontinent(String kontinent) {
 		this.kontinent = kontinent;
+	}
+
+	public String getPutanjaSlike() {
+		return putanjaSlike;
+	}
+
+	public void setPutanjaSlike(String putanjaSlike) {
+		this.putanjaSlike = putanjaSlike;
 	}
 
 }
