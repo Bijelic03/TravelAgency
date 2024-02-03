@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.Putovanje;
 import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
 import com.ftn.TravelOrganisation.service.PutovanjaService;
@@ -38,7 +39,11 @@ public class HomeController {
 
 		ModelAndView rezultat = new ModelAndView("home");
 		List<Putovanje> listaPutovanja = putovanjeRepository.findAll();
+		Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
 
+		if (ulogovaniKorisnik == null || ulogovaniKorisnik.getIsPutnik()) {
+			listaPutovanja = putovanjaService.getNepopunjenaPutovanja(listaPutovanja);
+		}
 		rezultat.addObject("listaPutovanja", listaPutovanja);
 		return rezultat;
 	}

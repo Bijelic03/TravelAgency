@@ -37,56 +37,50 @@ public class RegisterController {
 
 	private final String bURL;
 
-	
 	private final RegisterService registerService;
-	 
+
 	@Autowired
 	public RegisterController(ServletContext servletContext, RegisterService registerService) {
 		this.registerService = registerService;
 		this.bURL = servletContext.getContextPath();
 	}
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-	    DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
-	    registrar.setUseIsoFormat(true);
-	    registrar.setDateTimeFormatter(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
+		registrar.setUseIsoFormat(true);
+		registrar.setDateTimeFormatter(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-	    // Use ConversionService to register formatters
-	    FormattingConversionService conversionService = (FormattingConversionService) binder.getConversionService();
-	    registrar.registerFormatters(conversionService);
+		// Use ConversionService to register formatters
+		FormattingConversionService conversionService = (FormattingConversionService) binder.getConversionService();
+		registrar.registerFormatters(conversionService);
 	}
-
-
-
 
 	@GetMapping
 	public String showRegistrationForm(Model model) {
-	    model.addAttribute("korisnik", new Korisnik());
-	    model.addAttribute("userAlreadyExists", false);
-	    model.addAttribute("showModal", false);
-	    return "register";
+		model.addAttribute("korisnik", new Korisnik());
+		model.addAttribute("userAlreadyExists", false);
+		model.addAttribute("showModal", false);
+		return "register";
 	}
-
 
 	@PostMapping
-	public String register(@ModelAttribute("korisnik") Korisnik korisnik, Model model, HttpSession session, HttpServletRequest request) {
-	    if (!registerService.alreadyRegistered(korisnik.getKorisnickoIme())) {
-	        registerService.register(korisnik);
-	        session = request.getSession(true);
-	        session.setAttribute(PRIJAVLJENI_KORISNIK, korisnik);
+	public String register(@ModelAttribute("korisnik") Korisnik korisnik, Model model, HttpSession session,
+			HttpServletRequest request) {
+		if (!registerService.alreadyRegistered(korisnik.getKorisnickoIme())) {
+			registerService.register(korisnik);
 
-	        return "redirect:/";
-	    } else {
-	        System.out.println("Već postoji korisnik sa tim korisničkim imenom.");
-	        model.addAttribute("userAlreadyExists", true);
-	        model.addAttribute("showModal", true);
-	        return "register";
-	    }
+			session = request.getSession(true);
+
+			session.setAttribute(PRIJAVLJENI_KORISNIK, korisnik);
+
+			return "redirect:/";
+		} else {
+			System.out.println("Već postoji korisnik sa tim korisničkim imenom.");
+			model.addAttribute("userAlreadyExists", true);
+			model.addAttribute("showModal", true);
+			return "register";
+		}
 	}
-
-
-
-	
 
 }

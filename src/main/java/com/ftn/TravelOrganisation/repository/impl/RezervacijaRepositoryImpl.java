@@ -5,12 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -132,6 +134,23 @@ public class RezervacijaRepositoryImpl implements RezervacijaRepository {
 		RezervacijaRowCallBackHandler rowCallbackHandler = new RezervacijaRowCallBackHandler();
 		jdbcTemplate.query(sql, rowCallbackHandler);
 
+		return rowCallbackHandler.getRezervacije();
+	}
+
+	@Override
+	public List<Rezervacija> findAllFiltered(LocalDate pocetniDatum, LocalDate krajnjiDatum) {
+		StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM rezervacije WHERE 1=1");
+
+		if (pocetniDatum != null) {
+			sqlBuilder.append(" AND vreme_rezervacije >= '").append(pocetniDatum).append("'");
+		}
+
+		if (krajnjiDatum != null) {
+			sqlBuilder.append(" AND vreme_rezervacije <= '").append(krajnjiDatum).append("'");
+		}
+
+		RezervacijaRowCallBackHandler rowCallbackHandler = new RezervacijaRowCallBackHandler();
+		jdbcTemplate.query(sqlBuilder.toString(), rowCallbackHandler);
 		return rowCallbackHandler.getRezervacije();
 	}
 

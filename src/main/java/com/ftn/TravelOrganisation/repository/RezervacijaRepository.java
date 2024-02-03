@@ -1,5 +1,6 @@
 package com.ftn.TravelOrganisation.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.ftn.TravelOrganisation.model.Rezervacija;
@@ -13,4 +14,5 @@ public interface RezervacijaRepository {
 	public List<Rezervacija> findByPutovanjeId(Long putovanjeId);
 	public List<Rezervacija> findByKorisnikId(Long korisnikId);
 	public boolean updateStatus(Long idRezervacije, RezervacijaStatus noviStatus);
+	public List<Rezervacija> findAllFiltered(LocalDate datumPolaska, LocalDate datumPovratka);
 }

@@ -180,7 +180,11 @@
 								console.log('#{travelReserve.js.reservationSuccess}', data);
 								$("#rezervisiModal").hide();
 							},
-							error: function (error) {
+							error: function (xhr, textStatus, error) {
+
+								if (xhr.status === 400) {
+									alert("Nema dovoljno mesta");
+								}
 								console.error('#{travelReserve.js.reservationError}', error);
 							}
 						})

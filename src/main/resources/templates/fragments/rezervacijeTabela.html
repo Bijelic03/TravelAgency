@@ -29,27 +29,23 @@
 	</tbody>
 </table>
 
-<table id="rezervacijeTableKorisnik"
-	th:if="${rezervacije != null && session.prijavljeni_korisnik != null}"
-	class="mt-10 min-w-full bg-white border border-gray-300 shadow-md">
+<table class="table mt-4 w-full">
 	<thead>
 		<tr class="bg-gray-200">
-			<th class="py-2 px-4">Naziv destinacije</th>
-			<th class="py-2 px-4">Prevozno sredstvo</th>
-			<th class="py-2 px-4">Ukupan broj mesta</th>
-			<th class="py-2 px-4">Broj prodatih mesta</th>
-			<th class="py-2 px-4">Ukupna cena</th>
+			<th class="py-2 px-4 text-left" th:text="#{izvestaj.grad}">Grad</th>
+			<th class="py-2 px-4 text-left" th:text="#{izvestaj.prevoznoSredstvo}">Prevozno Sredstvo</th>
+			<th class="py-2 px-4 text-left" th:text="#{izvestaj.brojPutnika}">Broj Putnika</th>
+			<th class="py-2 px-4 text-left" th:text="#{izvestaj.brojMesta}">Broj Mesta</th>
+			<th class="py-2 px-4 text-left" th:text="#{izvestaj.cena}">Cena</th>
 		</tr>
 	</thead>
-	<tbody>
-		<tr th:if="${rezervacija.statusRezervacije.toString() == 'ODOBRENA'}" th:each="rezervacija : ${rezervacije}" class="hover:bg-gray-100 text-center">
+	<tbody id="travelTableBody" th:each="rezervacija : ${rezervacije}">
+		<tr class="hover:bg-gray-100 text-left">
 			<td class="py-2 px-4" th:text="${rezervacija.putovanje.destinacija.grad}"></td>
 			<td class="py-2 px-4" th:text="${rezervacija.putovanje.prevoznoSredstvo.prevoznoSredstvo}"></td>
-			<td class="py-2 px-4" th:text="${rezervacija.smestajnaJedinica.kapacitet}"></td>
 			<td class="py-2 px-4" th:text="${rezervacija.brojPutnika}"></td>
-			<td class="py-2 px-4" th:text="${rezervacija.brojPutnika * rezervacija.cena}"></td>
-
-
+			<td class="py-2 px-4" th:text="${rezervacija.putovanje.prevoznoSredstvo.brojSedista}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.cena}"></td>
 		</tr>
 	</tbody>
 </table>

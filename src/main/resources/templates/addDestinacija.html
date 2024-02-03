@@ -10,18 +10,22 @@
 	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
 		<div th:fragment="centralniDiv" class="bg-blue-100 flex items-center justify-center min-h-screen">
 
-			<form action="add" method="POST">
-				<label th:text="#{label.grad}">Grad</label>
-				<input name="grad" />
+<form action="add" method="POST" enctype="multipart/form-data">
+    <label th:text="#{label.grad}">Grad</label>
+    <input name="grad" />
 
-				<label th:text="#{label.drzava}">Država</label>
-				<input name="drzava" />
+    <label th:text="#{label.drzava}">Država</label>
+    <input name="drzava" />
 
-				<label th:text="#{label.kontinent}">Kontinent</label>
-				<input name="kontinent" />
+    <label th:text="#{label.kontinent}">Kontinent</label>
+    <input name="kontinent" />
 
-				<input type="submit" value="Dodaj" th:value="#{button.dodaj}" />
-			</form>
+    <label for="slika" th:text="#{label.slika}">Slika</label>
+    <input type="file" id="slika" name="slika" accept="image/*" />
+
+    <input type="submit" value="Dodaj" th:value="#{button.dodaj}" />
+</form>
+
 
 		</div>
 	</div>

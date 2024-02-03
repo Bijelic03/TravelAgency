@@ -87,12 +87,15 @@ public class PutovanjaController {
 
 	private final WishlistRepository wishlistRepository;
 
+	private final PutovanjaService putovanjaService;
+
 	@Autowired
 	public PutovanjaController(ServletContext servletContext, ObjectMapper objectMapper,
 			PrevoznoSredstvoRepository prevoznoSredstvoRepository, PutovanjeRepository putovanjeRepository,
 			DestinacijaRepository destinacijaRepository, SmestajnaJedinicaRepository smestajnaJedinicaRepository,
 			LoyaltyKarticaRepository loyaltyKarticaRepository, RezervacijeService rezervacijeService,
-			RezervacijaRepository rezervacijaRepository, WishlistRepository wishlistRepository) {
+			RezervacijaRepository rezervacijaRepository, WishlistRepository wishlistRepository,
+			PutovanjaService putovanjaService) {
 		this.servletContext = servletContext;
 		this.prevoznoSredstvoRepository = prevoznoSredstvoRepository;
 		this.objectMapper = objectMapper;
@@ -104,12 +107,18 @@ public class PutovanjaController {
 		this.rezervacijeService = rezervacijeService;
 		this.rezervacijaRepository = rezervacijaRepository;
 		this.wishlistRepository = wishlistRepository;
+		this.putovanjaService = putovanjaService;
 	}
 
 	@GetMapping("/putovanja")
-	public ModelAndView prikaziPutovanja() {
+	public ModelAndView prikaziPutovanja(HttpSession session, HttpServletRequest request) {
 		ModelAndView rezultat = new ModelAndView("putovanjaPage");
+		Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
 		List<Putovanje> putovanja = putovanjeRepository.findAll();
+		if (ulogovaniKorisnik == null || ulogovaniKorisnik.getIsPutnik()) {
+			putovanja = putovanjaService.getNepopunjenaPutovanja(putovanja);
+		}
+
 		System.out.println("putovanjaa");
 		rezultat.addObject("listaPutovanja", putovanja);
 		return rezultat;
@@ -276,6 +285,11 @@ public class PutovanjaController {
 			session = request.getSession(true);
 			List<Rezervacija> shoppingCart = (List<Rezervacija>) session.getAttribute("shoppingCart");
 
+			if (putovanjaService.getPreostaloSlobodnihMesta(putovanje.getId(), termin.getId(),
+					smestajId) < brojPutnika) {
+				return ResponseEntity.badRequest().body("Nema dovoljno mesta");
+			}
+
 			if (shoppingCart == null) {
 				shoppingCart = new ArrayList<>();
 				session.setAttribute("shoppingCart", shoppingCart);
@@ -394,7 +408,8 @@ public class PutovanjaController {
 	}
 
 	@PostMapping("putovanja/filter")
-	public String getPutovanjaByFilter(@RequestBody String filterJson, Model model) {
+	public String getPutovanjaByFilter(@RequestBody String filterJson, Model model, HttpSession session) {
+		Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
 
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -454,19 +469,12 @@ public class PutovanjaController {
 				nazivDestinacije = null;
 			}
 
-			System.out.println(cenaDo);
-			System.out.println(cenaOd);
-			System.out.println(datumPolaska);
-			System.out.println(datumPovratka);
-			System.out.println(nazivDestinacije);
-			System.out.println(smestajiEnum);
-			System.out.println(prevoziEnum);
-			System.out.println(kategorijeEnum);
-			System.out.println(brOsoba);
-			System.out.println(brNocenja);
 			List<Putovanje> filteredPutovanja = putovanjeRepository.filterBy(cenaDo, cenaOd, datumPolaska,
 					datumPovratka, nazivDestinacije, sifraPutovanja, smestajiEnum, prevoziEnum, kategorijeEnum, brOsoba,
 					brNocenja);
+			if (ulogovaniKorisnik == null || ulogovaniKorisnik.getIsPutnik()) {
+				filteredPutovanja = putovanjaService.getNepopunjenaPutovanja(filteredPutovanja);
+			}
 
 			model.addAttribute("listaPutovanja", filteredPutovanja);
 			return "fragments/putovanja :: listaPutovanja";

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+
+	<title>Your Travel Table</title>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+</head>
+
+<body class="bg-gray-100">
+
+    <div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+
+        <div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
+            <div class="container mx-auto mt-5 bg-white p-8">
+                <h2 class="text-2xl font-semibold mb-4" th:text="#{izvestaj.naslov}">Izvestaj</h2>
+
+                <!-- Search Form -->
+                <form th:action="@{/izvestaj/pretraga}" method="get">
+                    <!-- Date Search Inputs -->
+                    <div class="flex flex-col space-y-2">
+                        <div class="mb-2">
+                            <label class="text-sm" th:text="#{izvestaj.startDatum}">Start Date:</label>
+                            <input type="date" id="startDate" name="datumPolaskaStr"
+                                class="border p-2 rounded-md w-1/3">
+                        </div>
+                        <div>
+                            <label class="text-sm" th:text="#{izvestaj.endDatum}">End Date:</label>
+                            <input type="date" id="endDate" name="datumPovratkaStr"
+                                class="border p-2 rounded-md w-1/3">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mt-3">
+                        <button type="submit"
+                            class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            th:text="#{izvestaj.pretraga}">Search</button>
+                    </div>
+                </form>
+
+                <table class="table mt-4 w-full">
+                    <thead>
+                        <tr>
+                            <th class="text-left border" th:text="#{izvestaj.grad}">Grad</th>
+                            <th class="text-left border" th:text="#{izvestaj.prevoznoSredstvo}">Prevozno Sredstvo</th>
+                            <th class="text-left border" th:text="#{izvestaj.brojPutnika}">Broj Putnika</th>
+                            <th class="text-left border" th:text="#{izvestaj.brojMesta}">Broj Mesta</th>
+                            <th class="text-left border" th:text="#{izvestaj.cena}">Cena</th>
+                        </tr>
+                    </thead>
+                    <tbody id="travelTableBody" th:each="rezervacija : ${rezervacije}">
+                        <tr>
+                            <td class="text-left border" th:text="${rezervacija.putovanje.destinacija.grad}"></td>
+                            <td class="text-left border" th:text="${rezervacija.putovanje.prevoznoSredstvo.prevoznoSredstvo}"></td>
+                            <td class="text-left border" th:text="${rezervacija.brojPutnika}"></td>
+                            <td class="text-left border" th:text="${rezervacija.putovanje.prevoznoSredstvo.brojSedista}"></td>
+                            <td class="text-left border" th:text="${rezervacija.cena}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Totals Section -->
+                <div class="mt-4">
+                    <p class="text-sm" th:text="#{izvestaj.brojPutovanja} + ${brojRezervacija}">brojPutovanja: <span
+                            id="totalReservations">0</span></p>
+                    <p class="text-sm" th:text="#{izvestaj.cena} + ${ukupnaCena}" id="cost"></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+	<!-- JavaScript script to sum up all values in the "Cena" column and count the number of rows -->
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		document.addEventListener('DOMContentLoaded', function () {
+			// Function to calculate and update total cost and total reservations
+			function updateTotals() {
+				// Initialize total cost and total reservations
+				var totalCost = 0;
+				var totalReservations = 0;
+
+				// Loop through Thymeleaf model data
+				/*[# th:each="rezervacija : ${rezervacije}"]*/
+				{
+					// Get individual values for each row
+					var cenaValue = /*[[${rezervacija.cena}]]*/ 0;
+
+					// Check if the value is a valid number
+					if (!isNaN(cenaValue)) {
+						totalCost += parseFloat(cenaValue);
+						totalReservations++;
+					}
+				}
+				/*[/]*/
+
+				// Update the HTML elements with the calculated total cost and total reservations
+				document.getElementById('totalCost').innerText = new Intl.NumberFormat('en-US', {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2
+				}).format(totalCost);
+				document.getElementById('totalReservations').innerText = totalReservations;
+			}
+
+			// Attach the updateTotals function to the form submission event
+			document.querySelector('form').addEventListener('submit', function (event) {
+				// Prevent the default form submission
+				updateTotals(); // Call the function to update total cost and total reservations
+			});
+
+			// Initial update on page load
+			updateTotals();
+		});
+        /*]]>*/
+	</script>
+
+</body>
+
+</html>
