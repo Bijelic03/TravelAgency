@@ -1,56 +1,57 @@
 <table id="korisniciTable" class="text-gray-900 min-w-full bg-white border border-gray-300">
-	<thead>
-		<tr>
-			<th onclick="sortTable(this)" th:attr="data-sort-property='ime', data-sort-direction='ASC'"
-				class="py-2 px-4 border-b">Ime
-			</th>
+    <thead>
+        <tr>
+            <th onclick="sortTable(this)" th:attr="data-sort-property='ime', data-sort-direction='ASC'"
+                class="py-2 px-4 border-b" th:text="#{table.header.name}">Ime
+            </th>
 
-			<th class="py-2 px-4 border-b">Prezime</th>
-			<th class="py-2 px-4 border-b">Korisničko ime</th>
-			<th class="py-2 px-4 border-b">Datum registracije</th>
-			<th onclick="sortTable(this)" th:attr="data-sort-property='uloga', data-sort-direction='ASC'"
-				class="py-2 px-4 border-b">Uloga
-			</th>
-			<th> <svg id="arrowUp" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"
-					viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-					<path
-						d="m9.001 10.978h-3.251c-.412 0-.75-.335-.75-.752 0-.188.071-.375.206-.518 1.685-1.775 4.692-4.945 6.069-6.396.189-.2.452-.312.725-.312.274 0 .536.112.725.312 1.377 1.451 4.385 4.621 6.068 6.396.136.143.207.33.207.518 0 .417-.337.752-.75.752h-3.251v9.02c0 .531-.47 1.002-1 1.002h-3.998c-.53 0-1-.471-1-1.002z"
-						fill-rule="nonzero" />
-				</svg>
+            <th class="py-2 px-4 border-b" th:text="#{table.header.lastName}">Prezime</th>
+            <th class="py-2 px-4 border-b" th:text="#{table.header.username}">Korisničko ime</th>
+            <th class="py-2 px-4 border-b" th:text="#{table.header.registrationDate}">Datum registracije</th>
+            <th onclick="sortTable(this)" th:attr="data-sort-property='uloga', data-sort-direction='ASC'"
+                class="py-2 px-4 border-b" th:text="#{table.header.role}">Uloga
+            </th>
+            <th>
+                <svg id="arrowUp" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round"
+                    stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m9.001 10.978h-3.251c-.412 0-.75-.335-.75-.752 0-.188.071-.375.206-.518 1.685-1.775 4.692-4.945 6.069-6.396.189-.2.452-.312.725-.312.274 0 .536.112.725.312 1.377 1.451 4.385 4.621 6.068 6.396.136.143.207.33.207.518 0 .417-.337.752-.75.752h-3.251v9.02c0 .531-.47 1.002-1 1.002h-3.998c-.53 0-1-.471-1-1.002z"
+                        fill-rule="nonzero" />
+                </svg>
 
-				<svg class="hidden" id="arrowDown" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round"
-					stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-					<path
-						d="m9.001 13.022h-3.251c-.412 0-.75.335-.75.752 0 .188.071.375.206.518 1.685 1.775 4.692 4.945 6.069 6.396.189.2.452.312.725.312.274 0 .536-.112.725-.312 1.377-1.451 4.385-4.621 6.068-6.396.136-.143.207-.33.207-.518 0-.417-.337-.752-.75-.752h-3.251v-9.02c0-.531-.47-1.002-1-1.002h-3.998c-.53 0-1 .471-1 1.002z"
-						fill-rule="nonzero" />
-				</svg>
-			</th>
+                <svg class="hidden" id="arrowDown" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round"
+                    stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m9.001 13.022h-3.251c-.412 0-.75.335-.75.752 0 .188.071.375.206.518 1.685 1.775 4.692 4.945 6.069 6.396.189.2.452.312.725.312.274 0 .536-.112.725-.312 1.377-1.451 4.385-4.621 6.068-6.396.136-.143.207-.33.207-.518 0-.417-.337-.752-.75-.752h-3.251v-9.02c0-.531-.47-1.002-1-1.002h-3.998c-.53 0-1 .471-1 1.002z"
+                        fill-rule="nonzero" />
+                </svg>
+            </th>
 
-		</tr>
-		<tr>
+        </tr>
+        <tr>
 
-			<th>Pretraga</th>
-			<th class="flex flex-row"><input  id="userSearch"
-					class="mr-2 pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+            <th th:text="#{table.search}">Pretraga</th>
+            <th class="flex flex-row"><input id="userSearch"
+                    class="mr-2 pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
 										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"></input>
-				<button onclick="handleSearch()">traži</button>
+                <button onclick="handleSearch()" th:text="#{table.searchButton}">traži</button>
 
-			</th>
-			<th id="ulogaButton"><button>Uloga</button></th>
+            </th>
+            <th id="ulogaButton"><button th:text="#{table.roleButton}">Uloga</button></th>
 
-		</tr>
-	</thead>
-	<tbody id="korisniciTableBody" th:fragment="korisniciTableBody">
-		<tr th:class="korisnikClass" th:each="korisnik : ${listaKorisnika}" th:id="'row-' + ${korisnik.id}">
-			<td class="text-center py-2 px-2 border" th:text="${korisnik.ime}" data-property="ime"></td>
-			<td class="text-center py-2 px-2 border" th:text="${korisnik.prezime}"></td>
-			<td class="text-center py-2 px-2 border" th:text="${korisnik.korisnickoIme}"></td>
-			<td class="text-center py-2 px-2 border" th:text="${korisnik.datumVremeRegistracije}"></td>
-			<td class="text-center py-2 px-2 border" th:text="${korisnik.uloga}" data-property="uloga"></td>
-			<td class="text-center py-2 px-2 border">
-				<button class="blok" th:value="${korisnik.id}" th:if="${korisnik.blokiran}">Odblokiraj</button>
-				<button  class="blok" th:value="${korisnik.id}" th:unless="${korisnik.isAdmin || korisnik.blokiran}">Blokiraj</button>
-			</td>
-		</tr>
-	</tbody>
+        </tr>
+    </thead>
+    <tbody id="korisniciTableBody" th:fragment="korisniciTableBody">
+        <tr th:class="korisnikClass" th:each="korisnik : ${listaKorisnika}" th:id="'row-' + ${korisnik.id}">
+            <td class="text-center py-2 px-2 border" th:text="${korisnik.ime}" data-property="ime"></td>
+            <td class="text-center py-2 px-2 border" th:text="${korisnik.prezime}"></td>
+            <td class="text-center py-2 px-2 border" th:text="${korisnik.korisnickoIme}"></td>
+            <td class="text-center py-2 px-2 border" th:text="${korisnik.datumVremeRegistracije}"></td>
+            <td class="text-center py-2 px-2 border" th:text="${korisnik.uloga}" data-property="uloga"></td>
+            <td class="text-center py-2 px-2 border">
+                <button class="blok" th:value="${korisnik.id}" th:if="${korisnik.blokiran}" th:text="#{table.unblockButton}">Odblokiraj</button>
+                <button class="blok" th:value="${korisnik.id}" th:unless="${korisnik.isAdmin || korisnik.blokiran}" th:text="#{table.blockButton}">Blokiraj</button>
+            </td>
+        </tr>
+    </tbody>
 </table>

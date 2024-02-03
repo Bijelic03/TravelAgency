@@ -14,9 +14,9 @@
 				<thead>
 					<tr>
 
-						<th class="py-2 px-4 border-b">Grad</th>
-						<th class="py-2 px-4 border-b">Država</th>
-						<th class="py-2 px-4 border-b">Kontinent</th>
+						<th class="py-2 px-4 border-b" th:text="#{label.city}">Grad</th>
+						<th class="py-2 px-4 border-b" th:text="#{label.country}">Država</th>
+						<th class="py-2 px-4 border-b" th:text="#{label.continent}">Kontinent</th>
 
 					</tr>
 				</thead>
@@ -28,13 +28,13 @@
 						<td class="text-center py-2 px-2 border">
 							<form action="destinacije/delete" method="POST">
 								<input type="hidden" name="id" th:value="${destinacija.id}"></input>
-								<button>Obriši</button>
+								<button th:text="#{button.delete}">Obriši</button>
 							</form>
 						</td>
 						<td class="text-center py-2 px-2 border">
 							<form action="destinacije/izmeni" method="POST">
 								<input type="hidden" name="id" th:value="${destinacija.id}"></input>
-								<button>Izmeni</button>
+								<button th:text="#{button.edit}">Izmeni</button>
 							</form>
 						</td>
 
@@ -43,7 +43,7 @@
 				</tbody>
 			</table>
 			<a class="bg-white" th:href="@{/destinacije/dodaj}">
-				<button type="button">Dodaj destinaciju</button>
+				<button type="button" th:text="#{button.addDestination}">Dodaj destinaciju</button>
 			</a>
 
 		</div>

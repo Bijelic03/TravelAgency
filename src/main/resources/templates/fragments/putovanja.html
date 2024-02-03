@@ -10,11 +10,9 @@
 <body>
 	<div th:fragment="putovanja" class="bg-white">
 
-	
-
 		<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-				<h1 class="text-4xl font-bold tracking-tight text-gray-900">Putovanja</h1>
+				<h1 class="text-4xl font-bold tracking-tight text-gray-900" th:text="#{putovanja.title}">Putovanja</h1>
 
 				<div class="flex items-center">
 					<div class="relative inline-block text-left">
@@ -22,7 +20,7 @@
 							<button type="button" onclick="handleSort()"
 								class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
 								id="menu-button" aria-expanded="false" aria-haspopup="true">
-								Sortiranje prema:
+								<span th:text="#{putovanja.sortLabel}">Sortiranje prema:</span>
 								<svg class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
 									viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 									<path fill-rule="evenodd"
@@ -32,45 +30,48 @@
 							</button>
 						</div>
 
-	
+
 						<div id="sortMenu"
 							class="hidden absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
 							role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
 							<div class="py-1" role="none">
-		
 								<a href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
 									tabindex="-1" id="menu-item-0"></a>
 								<a onclick="sortCards(this)"
 									th:attr="data-sort-property='cena', data-sort-direction='ASC'"
 									class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
-									id="menu-item-1">Najnižoj ceni</a>
+									id="menu-item-1" th:text="#{putovanja.sortLowestPrice}">Najnižoj ceni</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='cena', data-sort-direction='DESC'" role="menuitem"
-									tabindex="-1" id="menu-item-2">Najvišoj ceni</a>
+									tabindex="-1" id="menu-item-2" th:text="#{putovanja.sortHighestPrice}">Najvišoj
+									ceni</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='destinacija', data-sort-direction='ASC'"
-									role="menuitem" tabindex="-1" id="menu-item-3">Destinaciji rastuće</a>
+									role="menuitem" tabindex="-1" id="menu-item-3"
+									th:text="#{putovanja.sortDestinationAsc}">Destinaciji rastuće</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='destinacija', data-sort-direction='DESC'"
-									role="menuitem" tabindex="-1" id="menu-item-3">Destinaciji opadajuće</a>
+									role="menuitem" tabindex="-1" id="menu-item-3"
+									th:text="#{putovanja.sortDestinationDesc}">Destinaciji opadajuće</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='kategorija', data-sort-direction='ASC'" role="menuitem"
-									tabindex="-1" id="menu-item-4">Kategoriji rastuće</a>
+									tabindex="-1" id="menu-item-4" th:text="#{putovanja.sortCategoryAsc}">Kategoriji
+									rastuće</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='kategorija', data-sort-direction='DESC'"
-									role="menuitem" tabindex="-1" id="menu-item-4">Kategoriji opadajuće</a>
+									role="menuitem" tabindex="-1" id="menu-item-4"
+									th:text="#{putovanja.sortCategoryDesc}">Kategoriji opadajuće</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='prevoz', data-sort-direction='ASC'" role="menuitem"
-									tabindex="-1" id="menu-item-4">Prevozno sredstvo rastuće</a>
+									tabindex="-1" id="menu-item-4" th:text="#{putovanja.sortTransportAsc}">Prevozno
+									sredstvo rastuće</a>
 								<a onclick="sortCards(this)" class="text-gray-500 block px-4 py-2 text-sm"
 									th:attr="data-sort-property='prevoz', data-sort-direction='DESC'" role="menuitem"
-									tabindex="-1" id="menu-item-4">Prevozno sredstvo opadajuće</a>
+									tabindex="-1" id="menu-item-4" th:text="#{putovanja.sortTransportDesc}">Prevozno
+									sredstvo opadajuće</a>
 							</div>
 						</div>
 					</div>
-
-
-
 				</div>
 			</div>
 
@@ -79,24 +80,21 @@
 				<div class="display-flex justify-center grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
 					<!-- Filters -->
 					<form class="col-span-1 hidden lg:block">
-
 						<div class="border-b border-gray-200 py-6">
 							<h3 class="-my-3 flow-root">
 								<!-- Expand/collapse section button -->
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-0" aria-expanded="false">
-									<span class="font-medium text-gray-900">Naziv destinacije</span>
-
+									<span class="font-medium text-gray-900" th:text="#{putovanja.destinationName}">Naziv
+										destinacije</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
 							<div class="relative mt-2 rounded-md shadow-sm">
-
 								<input type="text" id="nazivDestinacije"
 									class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									placeholder="">
-
 							</div>
 						</div>
 						<div class="border-b border-gray-200 py-6">
@@ -105,14 +103,13 @@
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-0" aria-expanded="false">
-									<span class="font-medium text-gray-900">Tip prevoznog sredstva</span>
-
+									<span class="font-medium text-gray-900" th:text="#{putovanja.transportType}">Tip
+										prevoznog sredstva</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
 							<div class="pt-6" id="filter-section-0">
 								<div id="prevoz" class="space-y-4">
-
 									<div th:each="tip : ${T(com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum).values()}"
 										id="tip" th:value="${tip}" class="flex items-center">
 										<input th:id="${tip}" type="checkbox"
@@ -120,12 +117,10 @@
 										<label for="filter-color-0" class="ml-3 text-sm text-gray-600"
 											th:text="${tip.displayName}"></label>
 									</div>
-
-
-
 								</div>
 							</div>
 						</div>
+
 
 
 						<div class="border-b border-gray-200 py-6">
@@ -134,8 +129,8 @@
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-0" aria-expanded="false">
-									<span class="font-medium text-gray-900">Kategorija putovanja</span>
-
+									<span class="font-medium text-gray-900"
+										th:text="#{putovanja.travelCategory}">Kategorija putovanja</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
@@ -147,8 +142,6 @@
 											class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
 										<label class="ml-3 text-sm text-gray-600" th:text="${tip.displayName}"></label>
 									</div>
-
-
 								</div>
 							</div>
 						</div>
@@ -159,8 +152,8 @@
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-1" aria-expanded="false">
-									<span class="font-medium text-gray-900">Tip smeštajne jedinice</span>
-
+									<span class="font-medium text-gray-900" th:text="#{putovanja.accommodationType}">Tip
+										smeštajne jedinice</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
@@ -172,73 +165,75 @@
 											class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
 										<label class="ml-3 text-sm text-gray-600" th:text="${tip.displayName}"></label>
 									</div>
-
-
 								</div>
 							</div>
 						</div>
+
+
 						<div class="border-b border-gray-200 py-6">
 							<h3 class="-my-3 flow-root">
 								<!-- Expand/collapse section button -->
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-2" aria-expanded="false">
-									<span class="font-medium text-gray-900">Vreme putovanja</span>
-
+									<span class="font-medium text-gray-900" th:text="#{putovanja.travelTime}">Vreme
+										putovanja</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
 							<div class="pt-6" id="filter-section-2">
 								<div class="mb-4 pr-5">
-									<label class="block text-sm font-medium text-gray-600">Datum polaska</label>
+									<label class="block text-sm font-medium text-gray-600"
+										th:text="#{putovanja.departureDate}">Datum polaska</label>
 									<input id="datumPolaska" type="date" class="mt-1 p-2 w-full border rounded-md" />
 								</div>
 
 								<div class="mb-4 pr-5">
-									<label class="block text-sm font-medium text-gray-600">Datum povratka</label>
+									<label class="block text-sm font-medium text-gray-600"
+										th:text="#{putovanja.returnDate}">Datum povratka</label>
 									<input id="datumPovratka" type="date" class="mt-1 p-2 w-full border rounded-md" />
 								</div>
 							</div>
 						</div>
+
 						<h3 class="-my-3 flow-root">
 							<!-- Expand/collapse section button -->
-							<span class="font-medium text-gray-900">Cena</span>
+							<span class="font-medium text-gray-900" th:text="#{putovanja.price}">Cena</span>
 						</h3>
 						<div class="flex">
 							<div class="flex items-center border-b border-gray-200 py-6 mr-4">
-								<p>od:</p>
+								<p th:text="#{putovanja.from}">od:</p>
 								<input type="text" id="cenaOd"
 									class="ml-3 block w-1/2 rounded-md border-0 py-1.5 pl-1 pr-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									placeholder="rsd">
 							</div>
 
 							<div class="flex items-center border-b border-gray-200 py-6 mr-4">
-								<p>do:</p>
+								<p th:text="#{putovanja.to}">do:</p>
 								<input type="text" id="cenaDo"
 									class="ml-3 block w-1/2 rounded-md border-0 py-1.5 pl-1 pr-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									placeholder="rsd">
 							</div>
 						</div>
+
 						<div class="border-b border-gray-200 py-6">
 							<h3 class="-my-3 flow-root">
 								<!-- Expand/collapse section button -->
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-0" aria-expanded="false">
-									<span class="font-medium text-gray-900">Broj nocenja</span>
-
+									<span class="font-medium text-gray-900" th:text="#{putovanja.numberOfNights}">Broj
+										nocenja</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
 							<div class="relative mt-2 rounded-md shadow-sm">
-
 								<input value="0" type="number" id="brojNocenja" max="10" min="0"
 									class="block w-1/3 rounded-md border-0 py-1.5 pl-2  pr-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									placeholder="">
-
 							</div>
-
 						</div>
+
 						<div class="border-b border-gray-200 py-6">
 							<h3 class="-my-3 flow-root">
 								<!-- Expand/collapse section button -->
@@ -266,30 +261,25 @@
 								<button type="button"
 									class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
 									aria-controls="filter-section-0" aria-expanded="false">
-									<span class="font-medium text-gray-900">Šifra putovanja</span>
-
+									<span class="font-medium text-gray-900" th:text="#{putovanja.travelCode}">Šifra
+										putovanja</span>
 								</button>
 							</h3>
 							<!-- Filter section, show/hide based on section state. -->
 							<div class="relative mt-2 rounded-md shadow-sm">
-
 								<input type="text" id="sifraPutovanja"
 									class="block w-full rounded-md border-0 py-1.5 pl-2  pr-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									placeholder="">
-
 							</div>
-
 						</div>
 						<div class="flex flex-col">
-
-
-
 							<div class="mb-4 pr-5 pt-5">
 								<button onclick="pretraziHandleClick()" id="pretraziBttn" type="button"
-									class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Pretraži</button>
+									class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+									th:text="#{putovanja.search}">Pretraži</button>
 							</div>
-
 						</div>
+
 
 
 

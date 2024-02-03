@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ftn.TravelOrganisation.bean.SecondConfiguration.ApplicationMemory;
 import com.ftn.TravelOrganisation.model.Destinacija;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
 import com.ftn.TravelOrganisation.service.DestinacijeService;
@@ -63,8 +62,9 @@ public class DestinacijeController {
 
 		ModelAndView rezultat = new ModelAndView("addDestinacija");
 		return rezultat;
-		
+
 	}
+
 	@PostMapping("destinacije/add")
 	public void addDestinacju(@ModelAttribute Destinacija destinacija, HttpServletResponse response)
 			throws IOException {
@@ -95,9 +95,8 @@ public class DestinacijeController {
 		Destinacija destinacija = destinacijaRepository.findOne(id);
 
 		ModelAndView rezultat = new ModelAndView("editDestinacija");
-		rezultat.addObject("destinacija", destinacija); 
+		rezultat.addObject("destinacija", destinacija);
 		return rezultat;
-
 
 	}
 

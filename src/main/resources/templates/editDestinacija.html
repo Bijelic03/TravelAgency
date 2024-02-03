@@ -12,11 +12,11 @@
 
 			<form action="edit" method="POST">
 				<input type="hidden" name="id" th:value="${destinacija.id}" />
-				<label>Grad</label>
+				<label th:text="#{label.city}">Grad</label>
 				<input th:value="${destinacija.grad}" name="grad" />
-				<label>Drzava</label>
+				<label th:text="#{label.country}">Drzava</label>
 				<input th:value="${destinacija.drzava}" name="drzava" />
-				<label>Kontinent</label>
+				<label th:text="#{label.continent}">Kontinent</label>
 				<input th:value="${destinacija.kontinent}" name="kontinent" />
 				<input type="submit" value="Izmeni" />
 			</form>

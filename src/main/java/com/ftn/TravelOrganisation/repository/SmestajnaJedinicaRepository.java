@@ -9,4 +9,5 @@ public interface SmestajnaJedinicaRepository {
 	public List<SmestajnaJedinica> findByDestinacijeId(Long id);
 	List<SmestajnaJedinica> getSmestajneJediniceByIds(List<Long> ids);
 	public int save(SmestajnaJedinica smestajnaJedinica);
+	public boolean updateKapacitet(SmestajnaJedinica smestajnaJedinica, int kapacitet);
 }

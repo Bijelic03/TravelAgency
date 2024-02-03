@@ -107,7 +107,7 @@ public class PrevoznoSredstvoRepositoryImpl implements PrevoznoSredstvoRepositor
 		return prevoznaSredstva;
 
 	}
-	
+
 	@Transactional
 	@Override
 	public int save(PrevoznoSredstvo prevoznoSredstvo) {
@@ -119,9 +119,7 @@ public class PrevoznoSredstvoRepositoryImpl implements PrevoznoSredstvoRepositor
 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				int index = 1;
-						
-					
-				
+
 				preparedStatement.setInt(index++, prevoznoSredstvo.getBrojSedista());
 				preparedStatement.setLong(index++, prevoznoSredstvo.getKrajnjaDestinacija().getId());
 				preparedStatement.setString(index++, prevoznoSredstvo.getOpis());
@@ -134,6 +132,15 @@ public class PrevoznoSredstvoRepositoryImpl implements PrevoznoSredstvoRepositor
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		boolean success = jdbcTemplate.update(preparedStatementCreator, keyHolder) == 1;
 		return success ? 1 : 0;
+	}
+
+	@Override
+	public boolean updateBrojSedista(PrevoznoSredstvo prevoznoSredstvo, int noviKapacitetPrevoz) {
+		String sql = "UPDATE prevozna_sredstva SET broj_sedista = ? WHERE id = ?";
+
+		int affectedRows = jdbcTemplate.update(sql, noviKapacitetPrevoz, prevoznoSredstvo.getId());
+
+		return affectedRows > 0;
 	}
 
 }

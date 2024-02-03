@@ -88,6 +88,15 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 	}
 
 	@Override
+	public boolean updateKapacitet(SmestajnaJedinica smestajnaJedinica, int kapacitet) {
+		String sql = "UPDATE smestajne_jedinice SET kapacitet = ? WHERE id = ?";
+
+		int affectedRows = jdbcTemplate.update(sql, kapacitet, smestajnaJedinica.getId());
+
+		return affectedRows > 0;
+	}
+
+	@Override
 	public SmestajnaJedinica findOne(Long id) {
 		String sql = "SELECT * FROM smestajne_jedinice " + "WHERE id = ? ";
 
@@ -132,11 +141,9 @@ public class SmestajnaJedinicaRepositoryImpl implements SmestajnaJedinicaReposit
 				int index = 1;
 
 				String uslugeStr = smestajnaJedinica.getUsluge().toString();
-				
+
 				uslugeStr = uslugeStr.substring(1, uslugeStr.length() - 1);
-						
-					
-				
+
 				preparedStatement.setString(index++, smestajnaJedinica.getNaziv());
 				preparedStatement.setInt(index++, smestajnaJedinica.getKapacitet());
 				preparedStatement.setLong(index++, smestajnaJedinica.getDestinacija().getId());

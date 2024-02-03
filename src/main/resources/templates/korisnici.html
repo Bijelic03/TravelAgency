@@ -8,8 +8,8 @@
 
 </head>
 
-<body>
-
+<body th:lang="${#locale.language}">
+	
 	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
 		<div th:fragment="centralniDiv" class="min-h-screen">
 
@@ -25,7 +25,8 @@
 					<div class="py-1" role="none">
 						<button th:each="uloga : ${T(com.ftn.TravelOrganisation.model.KorisnikUloga).values()}" href="#"
 							class="uloga font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
-							th:value="${uloga}" th:text="${uloga.displayName}" tabindex="-1" id="menu-item-0"></button>
+							th:value="${uloga}" th:text="#{${'uloga.' + uloga.name()}}" tabindex="-1"
+							id="menu-item-0"></button>
 					</div>
 				</div>
 			</div>
@@ -34,8 +35,8 @@
 				<table class="text-center bg-white min-w-full border border-gray-300">
 					<thead>
 						<tr>
-							<th class="py-2 px-4 border-b">Korisnicko ime</th>
-							<th class="py-2 px-4 border-b">Broj poena</th>
+							<th class="py-2 px-4 border-b" th:text="#{label.username}">Korisnicko ime</th>
+							<th class="py-2 px-4 border-b" th:text="#{label.points}">Broj poena</th>
 							<th class="py-2 px-4 border-b"></th>
 						</tr>
 					</thead>
@@ -47,34 +48,36 @@
 							<td class="py-2 px-4 border-b">
 								<button th:value="${kartica.id}" th:if="${!kartica.isOdobrena()}"
 									onclick="handleAcceptKartica(this)"
-									class="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded">Odobri</button>
-								<button th:value="${kartica.id}" th:if="${!kartica.isOdobrena()}" onclick="handleRejectKartica(this)"
-									class="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded">Odbij</button>
-
+									class="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded"
+									th:text="#{button.approve}">Odobri</button>
+								<button th:value="${kartica.id}" th:if="${!kartica.isOdobrena()}"
+									onclick="handleRejectKartica(this)"
+									class="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded"
+									th:text="#{button.reject}">Odbij</button>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 
-
 		</div>
 	</div>
 </body>
 
+
 <script th:inline="javascript">
 
 	rows = null
-	
-	function handleRejectKartica(button){
-				var karticaId = button.value;
+
+	function handleRejectKartica(button) {
+		var karticaId = button.value;
 
 		$.ajax({
 			type: 'POST',
 			url: '/TravelOrganisation/korisnici/rejectKartica',
 			data: {id: karticaId},
-			success: function(){
-				 window.location.href = 'korisnici';
+			success: function () {
+				window.location.href = 'korisnici';
 			},
 			error: function (error) {
 				console.error('Greška prilikom slanja na server:', error);
@@ -89,8 +92,8 @@
 			type: 'POST',
 			url: '/TravelOrganisation/korisnici/acceptKartica',
 			data: {id: karticaId},
-			success: function(){
-				 window.location.href = 'korisnici';
+			success: function () {
+				window.location.href = 'korisnici';
 			},
 			error: function (error) {
 				console.error('Greška prilikom slanja na server:', error);

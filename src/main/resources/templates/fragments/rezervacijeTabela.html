@@ -1,0 +1,55 @@
+<table id="rezervacijeTablePutovanja"
+	th:if="${rezervacije != null && session.prijavljeni_korisnik != null && session.prijavljeni_korisnik.isMenadzer}"
+	class="mt-10 min-w-full bg-white border border-gray-300 shadow-md">
+	<thead>
+		<tr class="bg-gray-200">
+			<th class="py-2 px-4">Naziv destinacije</th>
+			<th class="py-2 px-4">Prevozno sredstvo</th>
+			<th class="py-2 px-4">Ukupan broj mesta</th>
+			<th class="py-2 px-4">Broj prodatih mesta</th>
+			<th class="py-2 px-4">Ukupna cena</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="rezervacija : ${rezervacije}" class="hover:bg-gray-100 text-center">
+			<td class="py-2 px-4" th:text="${rezervacija.putovanje.destinacija.grad}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.putovanje.prevoznoSredstvo.prevoznoSredstvo}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.smestajnaJedinica.kapacitet}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.brojPutnika}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.brojPutnika * rezervacija.cena}"></td>
+			<td th:if="${rezervacija.statusRezervacije != null and rezervacija.statusRezervacije.toString() == 'KREIRANA'}"
+				class="py-2 px-4">
+				<form th:action="@{/putovanja/odobriRezervaciju}" method="post">
+					<input type="hidden" th:name="idRezervacije" th:value="${rezervacija.id}" />
+					<button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-full mt-4">Odobri</button>
+				</form>
+			</td>
+
+		</tr>
+	</tbody>
+</table>
+
+<table id="rezervacijeTableKorisnik"
+	th:if="${rezervacije != null && session.prijavljeni_korisnik != null}"
+	class="mt-10 min-w-full bg-white border border-gray-300 shadow-md">
+	<thead>
+		<tr class="bg-gray-200">
+			<th class="py-2 px-4">Naziv destinacije</th>
+			<th class="py-2 px-4">Prevozno sredstvo</th>
+			<th class="py-2 px-4">Ukupan broj mesta</th>
+			<th class="py-2 px-4">Broj prodatih mesta</th>
+			<th class="py-2 px-4">Ukupna cena</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:if="${rezervacija.statusRezervacije.toString() == 'ODOBRENA'}" th:each="rezervacija : ${rezervacije}" class="hover:bg-gray-100 text-center">
+			<td class="py-2 px-4" th:text="${rezervacija.putovanje.destinacija.grad}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.putovanje.prevoznoSredstvo.prevoznoSredstvo}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.smestajnaJedinica.kapacitet}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.brojPutnika}"></td>
+			<td class="py-2 px-4" th:text="${rezervacija.brojPutnika * rezervacija.cena}"></td>
+
+
+		</tr>
+	</tbody>
+</table>

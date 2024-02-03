@@ -24,12 +24,13 @@
 				<h3 class="text-sm text-gray-700">
 					<a href="/destinacija/1">
 						<span aria-hidden="true" class="absolute inset-0"></span>
-						<span>Ime destinacije</span>
+						<span th:text="#{fragments.imeDestinacije}">Ime destinacije</span>
 					</a>
 				</h3>
 				<!-- Ostali detalji o destinaciji -->
-				<p class="mt-1 text-sm text-gray-500">Kategorija destinacije</p>
-				<p class="mt-1 text-sm text-gray-500">Prevozno sredstvo</p>
+				<p class="mt-1 text-sm text-gray-500" th:text="#{fragments.kategorijaDestinacije}">Kategorija
+					destinacije</p>
+				<p class="mt-1 text-sm text-gray-500" th:text="#{fragments.prevoznoSredstvo}">Prevozno sredstvo</p>
 			</div>
 			<!-- Cena destinacije -->
 			<p class="text-sm font-medium text-gray-900">$500</p>
@@ -37,8 +38,12 @@
 	</div>
 
 
-	<div th:fragment="putovanjeCard" class="bg-white rounded-md group relative"
+	<div th:fragment="putovanjeCard"
+		class=" transform hover:scale-105 transition-transform duration-300 bg-white rounded-md group relative"
 		th:attr="data-cena=${putovanje.cenaAranzmana}, data-destinacija=${putovanje.destinacija.grad}, data-prevoz=${putovanje.prevoznoSredstvo.prevoznoSredstvo}, data-kategorija=${putovanje.kategorijaPutovanja}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+			integrity="sha384-ez3j1I5qgGr4t3u8z2LrKpLjVlg4J00so9nDH2j47ZlYUA0kqD0Z9RQOnL4sLUfc" crossorigin="anonymous">
+
 		<a th:href="@{/putovanja/detalji/{id}(id=${putovanje.id})}">
 
 			<div
@@ -49,27 +54,41 @@
 
 			<div class="px-4 pb-5 mt-4 flex justify-between">
 				<div class="flex flex-row">
+
 					<div class="pr-5">
 						<span aria-hidden="true" class="absolute inset-0"></span>
-						<p>Grad: </p>
+						<p th:text="#{fragments.grad}">Grad: </p>
 						<p class="text-md" th:text="${putovanje.destinacija.grad}"></p>
 					</div>
 					<div class="pr-5">
-						<p>Cena: </p>
+						<p th:text="#{fragments.cena}">Cena: </p>
 						<p class="text-md" data-property="cena" th:text="${putovanje.cenaAranzmana}"></p>
 					</div>
 
 					<div class="pr-5">
-						<p>Kategorija: </p>
+						<p th:text="#{fragments.kategorija}">Kategorija: </p>
 						<p class="text-md" th:text="${putovanje.kategorijaPutovanja}"></p>
 					</div>
 					<div class="pr-5">
-						<p>Prevozno sredstvo: </p>
+						<p th:text="#{fragments.prevoznoSredstvo}">Prevozno sredstvo: </p>
 						<p class="text-md" th:text="${putovanje.prevoznoSredstvo.prevoznoSredstvo}"></p>
 					</div>
 				</div>
 			</div>
 		</a>
+		<form th:if="${session.prijavljeni_korisnik != null}" action="putovanja/addToWishLIst" method="post">
+			<input type="hidden" name="putovanjeId" id="putovanjeId" th:value="${putovanje.id}">
+			<button type="submit" class="text-red-300 hover:text-red-500 focus:outline-none transform">
+				<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+					viewBox="0 0 24 24" class="w-6 h-6">
+					<path
+						d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C14.09 3.81 15.76 3 17.5 3 20.58 3 23 5.42 23 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z">
+					</path>
+				</svg>
+			</button>
+		</form>
+
+
 	</div>
 
 </body>

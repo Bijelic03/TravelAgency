@@ -11,14 +11,18 @@
 		<div th:fragment="centralniDiv" class="bg-blue-100 flex items-center justify-center min-h-screen">
 
 			<form action="add" method="POST">
-				<label>Grad</label>
+				<label th:text="#{label.grad}">Grad</label>
 				<input name="grad" />
-				<label>Drzava</label>
+
+				<label th:text="#{label.drzava}">Država</label>
 				<input name="drzava" />
-				<label>Kontinent</label>
+
+				<label th:text="#{label.kontinent}">Kontinent</label>
 				<input name="kontinent" />
-				<input type="submit" value="Dodaj" />
+
+				<input type="submit" value="Dodaj" th:value="#{button.dodaj}" />
 			</form>
+
 		</div>
 	</div>
 </body>

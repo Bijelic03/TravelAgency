@@ -2,63 +2,75 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<!-- Dodaj link za učitavanje Tailwind CSS-a -->
+	<!-- Add link to load Tailwind CSS -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 
-
 <header class="bg-gray-900">
-	<nav class="mx-auto flex max-w-6xl items-center justify-between p-4 lg:px-6" aria-label="Global">
+	<nav class="mx-auto flex max-w-8xl items-center justify-between p-4 lg:px-6" aria-label="Global">
 		<div class="flex lg:flex-1">
 			<a href="/TravelOrganisation" class="-m-1.5 p-1.5">
-				<span class="sr-only">Your Company</span>
+				<span class="sr-only" th:text="#{fragments.header.companyName}">Your Company</span>
 				<img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="">
 			</a>
 		</div>
 
-		<div class=" lg:flex lg:gap-x-12">
-
-
-			<a th:href="@{/putovanja}" class=" text-sm font-semibold leading-6 text-white">Putavanja</a>
+		<div class=" lg:flex lg:gap-x-8">
+			<a th:href="@{/putovanja}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.putovanja}">Putovanja</a>
 			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
-				th:href="@{/putovanja/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj putovanje</a>
+				th:href="@{/putovanja/dodaj}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.dodajPutovanje}">Dodaj putovanje</a>
 			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
-				th:href="@{/smestaj/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj smeštaj</a>
+				th:href="@{/smestaj/dodaj}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.dodajSmestaj}">Dodaj smeštaj</a>
 			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
-				th:href="@{/prevoz/dodaj}" class=" text-sm font-semibold leading-6 text-white">Dodaj prevoz</a>
+				th:href="@{/prevoz/dodaj}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.dodajPrevoz}">Dodaj prevoz</a>
 			<a th:if="${session.prijavljeni_korisnik != null && session.prijavljeni_korisnik.isAdmin}"
-				th:href="@{/korisnici}" class=" text-sm font-semibold leading-6 text-white">Korisnici</a>
-
+				th:href="@{/korisnici}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.korisnici}">Korisnici</a>
 			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
-				th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white">Destinacije</a>
+				th:href="@{/destinacije}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.destinacije}">Destinacije</a>
+			<a th:if="${session.prijavljeni_korisnik != null && !session.prijavljeni_korisnik.isPutnik}"
+				th:href="@{/izvestaj}" class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.izvestaj}">Izvestaj</a>
 			<a th:href="@{/register}" th:if="${session.prijavljeni_korisnik == null}"
-				class="text-sm font-semibold leading-6 text-white">Registracija</a>
+				class="text-sm font-semibold leading-6 text-white"
+				th:text="#{fragments.header.registracija}">Registracija</a>
 			<a href="/TravelOrganisation/profil" th:if="${session.prijavljeni_korisnik != null}"
 				th:text="${session.prijavljeni_korisnik.korisnickoIme}"
 				class="text-sm font-semibold leading-6 text-white"></a>
-
-			<a th:href="@{/putovanja/shoppingCart}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-					viewBox="0 0 24 24" fill="white">
+			<a th:href="@{/putovanja/shoppingCart}">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
 					<path
 						d="M10 19.5c0 .829-.672 1.5-1.5 1.5s-1.5-.671-1.5-1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5zm3.5-1.5c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm1.336-5l1.977-7h-16.813l2.938 7h11.898zm4.969-10l-3.432 12h-12.597l.839 2h13.239l3.474-12h1.929l.743-2h-4.195z" />
 				</svg>
-				</ath:href="@{ /register}">
-
-
-
+			</a>
+		</div>
+		<div class="hidden lg:flex lg:flex-1 lg:justify-end mr-5">
+			<a href="/TravelOrganisation/login" th:if="${session.prijavljeni_korisnik == null}"
+				class="text-sm font-semibold leading-6 text-white" th:text="#{fragments.header.prijaviSe}">Prijavi
+				se</a>
+			<a href="/TravelOrganisation/logout" th:if="${session.prijavljeni_korisnik != null}"
+				class="text-sm font-semibold leading-6 text-white" th:text="#{fragments.header.odjaviSe}">Odjavi se</a>
 
 		</div>
-		<div class="hidden lg:flex lg:flex-1 lg:justify-end">
-			<a href="/TravelOrganisation/login" th:if="${session.prijavljeni_korisnik == null}"
-				class="text-sm font-semibold leading-6 text-white">Prijavi se</a>
-			<a href="/TravelOrganisation/logout" th:if="${session.prijavljeni_korisnik != null}"
-				class="text-sm font-semibold leading-6 text-white">Odjavi se</a>
+		<div>
+			<form method="get" th:action="@{/TravelOrganisation/change-language}" id="languageForm" >
+				<div class="flex items-center space-x-4  text-white">
+					<select  id="locales" name="locales" onchange="document.getElementById('languageForm').submit()"
+						class="bg-gray-900 p-1 ">
+						<option value="sr" th:text="#{lang.sr}" th:selected="${#locale.language == 'sr'}"></option>
+						<option value="en" th:text="#{lang.en}" th:selected="${#locale.language == 'en'}"></option>
+					</select>
+				</div>
+			</form>
+
+
 		</div>
 	</nav>
-
 </header>
-
-
-
 
 </html>

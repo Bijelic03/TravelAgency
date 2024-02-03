@@ -16,4 +16,6 @@ public interface LoyaltyKarticaRepository {
 
 	public void rejectKartica(Long id);
 
+	public boolean updateBrojPoena(LoyaltyKartica loyaltyKartica, int brojPoena);
+
 }

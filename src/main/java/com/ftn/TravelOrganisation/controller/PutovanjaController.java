@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,22 +38,32 @@ import com.ftn.TravelOrganisation.model.Destinacija;
 import com.ftn.TravelOrganisation.model.Interval;
 import com.ftn.TravelOrganisation.model.KategorijaPutovanjaEnum;
 import com.ftn.TravelOrganisation.model.Korisnik;
+import com.ftn.TravelOrganisation.model.LoyaltyKartica;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvo;
 import com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum;
 import com.ftn.TravelOrganisation.model.Putovanje;
 import com.ftn.TravelOrganisation.model.Rezervacija;
+import com.ftn.TravelOrganisation.model.RezervacijaStatus;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinicaTipEnum;
+import com.ftn.TravelOrganisation.model.WishlistItem;
 import com.ftn.TravelOrganisation.repository.DestinacijaRepository;
+import com.ftn.TravelOrganisation.repository.LoyaltyKarticaRepository;
 import com.ftn.TravelOrganisation.repository.PrevoznoSredstvoRepository;
 import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
+import com.ftn.TravelOrganisation.repository.RezervacijaRepository;
 import com.ftn.TravelOrganisation.repository.SmestajnaJedinicaRepository;
+import com.ftn.TravelOrganisation.repository.WishlistRepository;
 import com.ftn.TravelOrganisation.service.DestinacijeService;
+import com.ftn.TravelOrganisation.service.PutovanjaService;
 import com.ftn.TravelOrganisation.service.RegisterService;
+import com.ftn.TravelOrganisation.service.RezervacijeService;
 
 @Controller
 @RequestMapping("")
 public class PutovanjaController {
+
+	public static final String PRIJAVLJENI_KORISNIK = "prijavljeni_korisnik";
 
 	private final String bURL;
 
@@ -62,16 +73,26 @@ public class PutovanjaController {
 
 	private final PutovanjeRepository putovanjeRepository;
 
+	private final LoyaltyKarticaRepository loyaltyKarticaRepository;
+
 	private DestinacijaRepository destinacijaRepository;
 
 	private final SmestajnaJedinicaRepository smestajnaJedinicaRepository;
 
 	private final ServletContext servletContext;
 
+	private final RezervacijeService rezervacijeService;
+
+	private final RezervacijaRepository rezervacijaRepository;
+
+	private final WishlistRepository wishlistRepository;
+
 	@Autowired
 	public PutovanjaController(ServletContext servletContext, ObjectMapper objectMapper,
 			PrevoznoSredstvoRepository prevoznoSredstvoRepository, PutovanjeRepository putovanjeRepository,
-			DestinacijaRepository destinacijaRepository, SmestajnaJedinicaRepository smestajnaJedinicaRepository) {
+			DestinacijaRepository destinacijaRepository, SmestajnaJedinicaRepository smestajnaJedinicaRepository,
+			LoyaltyKarticaRepository loyaltyKarticaRepository, RezervacijeService rezervacijeService,
+			RezervacijaRepository rezervacijaRepository, WishlistRepository wishlistRepository) {
 		this.servletContext = servletContext;
 		this.prevoznoSredstvoRepository = prevoznoSredstvoRepository;
 		this.objectMapper = objectMapper;
@@ -79,6 +100,10 @@ public class PutovanjaController {
 		this.destinacijaRepository = destinacijaRepository;
 		this.smestajnaJedinicaRepository = smestajnaJedinicaRepository;
 		this.bURL = servletContext.getContextPath();
+		this.loyaltyKarticaRepository = loyaltyKarticaRepository;
+		this.rezervacijeService = rezervacijeService;
+		this.rezervacijaRepository = rezervacijaRepository;
+		this.wishlistRepository = wishlistRepository;
 	}
 
 	@GetMapping("/putovanja")
@@ -100,11 +125,66 @@ public class PutovanjaController {
 
 	}
 
-	@GetMapping("/putovanja/shoppingCart")
-	public ModelAndView prikaziShoppingCart() {
-		ModelAndView rezultat = new ModelAndView("shoppingCart");
-		return rezultat;
+	@PostMapping("/putovanja/odobriRezervaciju")
+	public String odobriRezervaciju(@RequestParam("idRezervacije") Long idRezervacije) {
+		rezervacijaRepository.updateStatus(idRezervacije, RezervacijaStatus.ODOBRENA);
+		return "redirect:/";
+	}
 
+	@GetMapping("/putovanja/shoppingCart")
+	public ModelAndView prikaziShoppingCart(HttpSession session, HttpServletRequest request) {
+		Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
+		ModelAndView rezultat = new ModelAndView("shoppingCart");
+
+		if (ulogovaniKorisnik != null) {
+			LoyaltyKartica loyaltyKartica = loyaltyKarticaRepository.findByKorisnikId(ulogovaniKorisnik.getId());
+			rezultat.addObject("kartica", loyaltyKartica);
+
+		}
+		return rezultat;
+	}
+
+	@PostMapping("/putovanja/wishlist/remove")
+	public String removeWishlistItem(@RequestParam("idWishlist") Long idWishlist) {
+
+		wishlistRepository.remove(idWishlist);
+
+		return "redirect:/profil";
+	}
+
+	@PostMapping("/putovanja/reservation/buy")
+	public ResponseEntity<String> rezervisi(HttpSession session, HttpServletRequest request,
+			@RequestParam int brojBodova, @RequestParam double ukupnaCifra) {
+		Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
+		List<Rezervacija> rezervacije = (List<Rezervacija>) session.getAttribute("shoppingCart");
+
+		ResponseEntity<String> response = rezervacijeService.handleReservations(rezervacije, brojBodova,
+				ulogovaniKorisnik);
+		if (response.getStatusCode() == HttpStatus.OK) {
+
+			session.removeAttribute("shoppingCart");
+		}
+
+		return null;
+	}
+
+	@PostMapping("/putovanja/addToWishLIst")
+	public String handlePutovanjeRequest(@RequestParam("putovanjeId") Long putovanjeId, HttpSession session,
+			HttpServletRequest request) {
+		Korisnik ulogovaniKorisnik = (Korisnik) session.getAttribute(PRIJAVLJENI_KORISNIK);
+		Putovanje putovanje = putovanjeRepository.findOne(putovanjeId);
+		List<WishlistItem> wishlist = wishlistRepository.findAllByKorisnik(ulogovaniKorisnik.getId());
+
+		for (WishlistItem wishlistItem : wishlist) {
+			if (wishlistItem.getPutovanje().getId() == putovanjeId) {
+				return "redirect:/";
+
+			}
+		}
+		WishlistItem wishlistItem = new WishlistItem(ulogovaniKorisnik, putovanje);
+		wishlistRepository.save(wishlistItem);
+
+		return "redirect:/";
 	}
 
 	@PostMapping("/putovanja/add")
@@ -173,7 +253,7 @@ public class PutovanjaController {
 
 	}
 
-	@PostMapping("/putovanja/reservation/addToWishlist")
+	@PostMapping("/putovanja/reservation/addToShoppingCart")
 	public ResponseEntity<String> dodajRezervacijuUWishlist(@RequestBody String reservationRequest, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -200,12 +280,66 @@ public class PutovanjaController {
 				shoppingCart = new ArrayList<>();
 				session.setAttribute("shoppingCart", shoppingCart);
 			}
-			
-			long rezervacijaId = shoppingCart.size()+1;
+
+			long rezervacijaId = shoppingCart.size() + 1;
 			rezervacija.setId(rezervacijaId);
 			shoppingCart.add(rezervacija);
 
+			return ResponseEntity.ok("Putovanje uspešno dodato!");
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Greška prilikom parsiranja JSON-a.");
+		}
+
+	}
+
+	@PostMapping("/putovanja/reservation/changePassangerNumberWishlist")
+	public ResponseEntity<String> promeniBrojPutnikaWishlist(@RequestParam Long rezervacijaId,
+			@RequestParam Integer newPassengerCount, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+
+			Rezervacija rezervacija = null;
+
+			session = request.getSession(true);
+			List<Rezervacija> shoppingCart = (List<Rezervacija>) session.getAttribute("shoppingCart");
+			for (Rezervacija rezervacijaToChange : shoppingCart) {
+				if (rezervacijaToChange.getId() == rezervacijaId) {
+					rezervacija = rezervacijaToChange;
+				}
+			}
+			Double cena = rezervacija.getPutovanje().getCenaAranzmana() * rezervacija.getTermin().getBrojNocenja()
+					* newPassengerCount;
+			rezervacija.setCena(cena);
+			rezervacija.setBrojPutnika(newPassengerCount);
+			if (shoppingCart == null) {
+				shoppingCart = new ArrayList<>();
+			}
+			session.setAttribute("shoppingCart", shoppingCart);
+
+			return ResponseEntity.ok("Putovanje uspešno dodato!");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Greška prilikom parsiranja JSON-a.");
+		}
+
+	}
+
+	@PostMapping("/putovanja/reservation/removeFromShoppingCart")
+	public ResponseEntity<String> obrisiRezervacijuWishlist(@RequestParam Long rezervacijaId, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+
+			Rezervacija rezervacija = null;
+
+			session = request.getSession(true);
+			List<Rezervacija> shoppingCart = (List<Rezervacija>) session.getAttribute("shoppingCart");
+
+			shoppingCart.removeIf(rezervacijaa -> rezervacijaa.getId().equals(rezervacijaId));
+
+			session.setAttribute("shoppingCart", shoppingCart);
 
 			return ResponseEntity.ok("Putovanje uspešno dodato!");
 
@@ -220,9 +354,10 @@ public class PutovanjaController {
 	public ModelAndView prikaziPutovanje(@PathVariable Long id) {
 		ModelAndView rezultat = new ModelAndView("fragments/putovanje");
 		Putovanje putovanje = putovanjeRepository.findOne(id);
+		List<Rezervacija> rezervacije = rezervacijaRepository.findByPutovanjeId(id);
 		List<Interval> termini = putovanjeRepository.getTerminiByPutovanjeId(id);
 		rezultat.addObject("putovanje", putovanje);
-
+		rezultat.addObject("rezervacije", rezervacije);
 		rezultat.addObject("termini", termini);
 		return rezultat;
 

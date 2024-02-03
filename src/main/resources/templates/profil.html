@@ -99,20 +99,21 @@
 							</div>
 
 							<div th:if="${session.prijavljeni_korisnik.isPutnik}">
-							<button th:if="${kartica == null}" onclick="getLoyaltyKartica()"
-								id="loyaltyKarticaApplication"
-								class="block w-1/2  rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Posaljite
-								zahtev
-							</button>
-							
-							
-							<button disabled th:if="${kartica != null && !kartica.isOdobrena()}"
-								class="block w-1/2  rounded-md bg-gray-300 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Zahtev
-								za karticu je poslat
-							</button>
-							<div th:if="${kartica != null && kartica.isOdobrena()}">
-								<h2 class="font-medium text-gray-900" th:text="'Broj poena na loyalty kartici: ' + ${kartica.brojPoena}"></h2>
-							</div>
+								<button th:if="${kartica == null}" onclick="getLoyaltyKartica()"
+									id="loyaltyKarticaApplication"
+									class="block w-1/2  rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Posaljite
+									zahtev
+								</button>
+
+
+								<button disabled th:if="${kartica != null && !kartica.isOdobrena()}"
+									class="block w-1/2  rounded-md bg-gray-300 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Zahtev
+									za karticu je poslat
+								</button>
+								<div th:if="${kartica != null && kartica.isOdobrena()}">
+									<h2 class="font-medium text-gray-900"
+										th:text="'Broj poena na loyalty kartici: ' + ${kartica.brojPoena}"></h2>
+								</div>
 							</div>
 						</div>
 
@@ -120,89 +121,8 @@
 
 
 							<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-								<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-									<thead
-										class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-										<tr>
-											<th scope="col" class="px-6 py-3">
-												Product name
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Color
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Category
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Price
-											</th>
-											<th scope="col" class="px-6 py-3">
-												<span class="sr-only">Edit</span>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr
-											class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-											<th scope="row"
-												class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Apple MacBook Pro 17"
-											</th>
-											<td class="px-6 py-4">
-												Silver
-											</td>
-											<td class="px-6 py-4">
-												Laptop
-											</td>
-											<td class="px-6 py-4">
-												$2999
-											</td>
-											<td class="px-6 py-4 text-right">
-												<a href="#"
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-											</td>
-										</tr>
-										<tr
-											class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-											<th scope="row"
-												class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Microsoft Surface Pro
-											</th>
-											<td class="px-6 py-4">
-												White
-											</td>
-											<td class="px-6 py-4">
-												Laptop PC
-											</td>
-											<td class="px-6 py-4">
-												$1999
-											</td>
-											<td class="px-6 py-4 text-right">
-												<a href="#"
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-											</td>
-										</tr>
-										<tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-											<th scope="row"
-												class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Magic Mouse 2
-											</th>
-											<td class="px-6 py-4">
-												Black
-											</td>
-											<td class="px-6 py-4">
-												Accessories
-											</td>
-											<td class="px-6 py-4">
-												$99
-											</td>
-											<td class="px-6 py-4 text-right">
-												<a href="#"
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+
+								<div th:replace="~{fragments/wishlistTabela :: #wishlistTabela}"></div>
 
 							</div>
 
@@ -211,89 +131,8 @@
 
 
 							<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-								<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-									<thead
-										class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-										<tr>
-											<th scope="col" class="px-6 py-3">
-												Product name
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Color
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Category
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Price
-											</th>
-											<th scope="col" class="px-6 py-3">
-												<span class="sr-only">Edit</span>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr
-											class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-											<th scope="row"
-												class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Apple MacBook Pro 17"
-											</th>
-											<td class="px-6 py-4">
-												Silver
-											</td>
-											<td class="px-6 py-4">
-												Laptop
-											</td>
-											<td class="px-6 py-4">
-												$2999
-											</td>
-											<td class="px-6 py-4 text-right">
-												<a href="#"
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-											</td>
-										</tr>
-										<tr
-											class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-											<th scope="row"
-												class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Microsoft Surface Pro
-											</th>
-											<td class="px-6 py-4">
-												White
-											</td>
-											<td class="px-6 py-4">
-												Laptop PC
-											</td>
-											<td class="px-6 py-4">
-												$1999
-											</td>
-											<td class="px-6 py-4 text-right">
-												<a href="#"
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-											</td>
-										</tr>
-										<tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-											<th scope="row"
-												class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Magic Mouse 2
-											</th>
-											<td class="px-6 py-4">
-												Black
-											</td>
-											<td class="px-6 py-4">
-												Accessories
-											</td>
-											<td class="px-6 py-4">
-												$99
-											</td>
-											<td class="px-6 py-4 text-right">
-												<a href="#"
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div th:replace="~{fragments/rezervacijeTabela :: #rezervacijeTableKorisnik}"></div>
+
 							</div>
 
 						</div>

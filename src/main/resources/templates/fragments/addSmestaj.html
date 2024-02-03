@@ -20,13 +20,14 @@
 			<form>
 				<div class="space-y-12">
 					<div class="border-b border-gray-900/10 pb-12">
-						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900">Dodavanje smeštaja</h1>
+						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900"
+							th:text="#{fragments.dodavanjeSmestaja}">Dodavanje smeštaja</h1>
 
 						<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-
 							<div class="sm:col-span-5">
-								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">
+								<label for="country" class="block text-sm font-medium leading-6 text-gray-900"
+									th:text="#{fragments.nazivSmestaja}">
 									Naziv smeštaja</label>
 								<div class="mt-2">
 									<input id="naziv" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
@@ -35,13 +36,15 @@
 							</div>
 
 							<div class="sm:col-span-5">
-								<label for="country" class="block text-sm font-medium leading-6 text-gray-900">Tip
-									smeštaja
+								<label for="country" class="block text-sm font-medium leading-6 text-gray-900"
+									th:text="#{fragments.tipSmestaja}">
+									Tip smeštaja
 								</label>
 								<div class="mt-2">
 									<select id="tipSmestaja" name="tipSmestaja"
 										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-										<option value="" selected="true" disabled="disabled">Izaberite kategoriju
+										<option value="" selected="true" disabled="disabled"
+											th:text="#{fragments.izaberiteKategoriju}">Izaberite kategoriju
 										</option>
 
 										<option
@@ -55,12 +58,13 @@
 							</div>
 
 							<div class="sm:col-span-5">
-								<label for="country"
-									class="block text-sm font-medium leading-6 text-gray-900">Destinacija</label>
+								<label for="country" class="block text-sm font-medium leading-6 text-gray-900"
+									th:text="#{fragments.destinacija}">Destinacija</label>
 								<div class="mt-2">
 									<select id="destinacijaSelect" name="destinacijaSelect"
 										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-										<option value="" selected="true" disabled="disabled">Izaberite destinaciju
+										<option value="" selected="true" disabled="disabled"
+											th:text="#{fragments.izaberiteDestinaciju}">Izaberite destinaciju
 										</option>
 
 										<option th:each="destinacija : ${destinacije}" th:value="${destinacija.id}"
@@ -70,16 +74,12 @@
 									</select>
 								</div>
 							</div>
-
-
-
-
-
 						</div>
+
 						<div class="mt-10 space-y-10">
 							<fieldset>
-								<legend class="text-sm font-semibold leading-6 text-gray-900">Usluge
-								</legend>
+								<legend class="text-sm font-semibold leading-6 text-gray-900"
+									th:text="#{fragments.usluge}">Usluge</legend>
 								<div id="usluge" class="mt-6 space-y-6">
 
 
@@ -102,44 +102,41 @@
 
 						</div>
 
-
-
 						<div class="sm:col-span-5">
-							<label class="block text-sm font-medium leading-6 text-gray-900">
+							<label class="block text-sm font-medium leading-6 text-gray-900"
+								th:text="#{fragments.kapacitet}">
 								Kapacitet</label>
 							<div class="mt-2">
-								<input id="kapacitet" type="number" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+								<input id="kapacitet" type="number"
+									class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 									placeholder="0">
 							</div>
 						</div>
-						
-							<div class="sm:col-span-5">
-							<label  class="block text-sm font-medium leading-6 text-gray-900">
+
+						<div class="sm:col-span-5">
+							<label class="block text-sm font-medium leading-6 text-gray-900"
+								th:text="#{fragments.opis}">
 								Opis</label>
 							<div class="mt-2">
-								<input id="opis" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-									>
+								<input id="opis" type="text"
+									class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
 							</div>
 						</div>
 					</div>
-
-
-
 				</div>
 
 				<div class="mt-6 flex items-center justify-end gap-x-6">
-					<button type="button" class="text-sm font-semibold leading-6 text-gray-900">Odustani</button>
+					<button type="button" class="text-sm font-semibold leading-6 text-gray-900"
+						th:text="#{fragments.odustani}">Odustani</button>
 					<button id="kreirajbutton"
-						class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Kreiraj</button>
+						class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						th:text="#{fragments.kreiraj}">Kreiraj</button>
 				</div>
 			</form>
 		</div>
 	</div>
-
-
 </body>
+
 <script>
 
 	var kreirajbutton = $('#kreirajbutton')

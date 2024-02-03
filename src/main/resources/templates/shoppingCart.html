@@ -54,7 +54,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:id="rezervacija.id" th:each="rezervacija, iterStat : ${session.shoppingCart}">
+							<tr th:id="rezervacija.id" class="rezervacija" th:attr="cenaRezervacije=${rezervacija.cena}"
+								th:each="rezervacija, iterStat : ${session.shoppingCart}">
 								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
 									<!-- Prikaz informacija o putovanju -->
 									<span th:text="${rezervacija.putovanje.destinacija.grad}"></span>
@@ -79,7 +80,8 @@
 									<!-- Prikaz broja putnika -->
 									<span th:text="${rezervacija.brojPutnika}"></span>
 									<!-- Dugme za menjanje broja putnika -->
-									<button  th:onclick="'javascript:changePassengerCount(' + ${iterStat.index} + ', ' + ${rezervacija.id} + ');'">Promeni</button>
+									<button
+										th:onclick="'javascript:changePassengerCount(' + ${iterStat.index} + ', ' + ${rezervacija.id} + ');'">Promeni</button>
 
 								</td>
 								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
@@ -97,14 +99,24 @@
 								<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
 									<!-- Dugme za izbacivanje iz shopping cart-a -->
 									<button
-										th:onclick="'javascript:removeFromCart(' + ${iterStat.index} + ');'">Izbaci</button>
+										th:onclick="'javascript:removeFromCart(' + ${iterStat.index} + ', ' + ${rezervacija.id} + ');'">Izbaci</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-				<p>Total: <span></span></p>
-				<button onclick="checkout()">Završi kupovinu</button>
+				<p>Ukupna cena: <span id="totalValue"></span></p>
+				<div th:if="${kartica} != null">
+					<p>Bodovi na loyalty kartici: <span th:text="${kartica.brojPoena}"></span></p>
+					<p>Iskoristi bodove: </p>
+					<input onchange="getTotal()" id="brojBodova" type="number" th:value="0"
+						th:attr="max=${kartica.brojPoena > 10 ? 10 : kartica.brojPoena}" min="0"
+						class="border rounded-md"></input>
+				</div>
+
+				<button
+					class="mt-3 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+					onclick="checkout()">Završi kupovinu</button>
 			</div>
 			<div th:unless="${session.shoppingCart != null and not session.shoppingCart.isEmpty()}">
 				<p>Shopping cart je prazan.</p>
@@ -113,25 +125,76 @@
 	</div>
 
 	<script>
+
+		var brojBodova = 0;
+		getTotal()
 		// Implementirajte funkcije za promenu broja putnika i izbacivanje iz shopping cart-a
 		function changePassengerCount(index, rezervacijaId) {
+			var newPassengerCount = prompt("Unesite novi broj putnika:");
 
-			console.log(rezervacijaId);
-
-			console.log(index + " index")
-			$("#promeniBrPutnika").show();
+			if (newPassengerCount !== null) {
+				// Provera da li je uneta vrednost broj i veća od 0
+				if (!isNaN(newPassengerCount) && newPassengerCount >= 1) {
+					$.ajax({
+						type: 'POST',
+						url: '/TravelOrganisation/putovanja/reservation/changePassangerNumberWishlist',
+						data: {rezervacijaId: rezervacijaId, newPassengerCount: parseInt(newPassengerCount, 10)},
+						success: function (data) {
+							alert('Broj putnika uspešno promenjen.');
+							location.reload();
+						},
+						error: function (error) {
+							alert('Došlo je do greške prilikom ažuriranja broja putnika.');
+						}
+					});
+				} else {
+					alert('Unesite ispravan broj putnika (broj mora biti veći ili jednak 1).');
+				}
+			}
 		}
 
-		function removeFromCart(index) {
-			// Implementacija logike za izbacivanje iz shopping cart-a
-			alert('Implementirajte izbacivanje stavke broj ' + (index + 1) + ' iz shopping cart-a.');
+
+
+
+		function removeFromCart(index, rezervacijaId) {
+			$.ajax({
+				type: 'POST',
+				url: '/TravelOrganisation/putovanja/reservation/removeFromShoppingCart',
+				data: {rezervacijaId: rezervacijaId},
+				success: function (data) {
+					location.reload();
+				},
+				error: function (error) {
+					alert('Došlo je do greške prilikom brisanja.');
+				}
+			});
 		}
+
+
 
 		function checkout() {
-			korisnik = $("#prikazPutovanja").attr("korisnik")
-
+			korisnik = $("#shoppingCart").attr("korisnik")
 			if (korisnik != undefined) {
-				alert('Implementirajte završetak kupovine.');
+
+				brojBodova = $("#brojBodova").val();
+				
+				if(brojBodova == undefined){
+					brojBodova = 0
+				}
+				ukupnaCifra = getTotal();
+				console.log(brojBodova)
+
+				$.ajax({
+					type: "POST",
+					url: "/TravelOrganisation/putovanja/reservation/buy",
+					data: {brojBodova: brojBodova, ukupnaCifra: ukupnaCifra},
+					success: function (data) {
+						location.reload();
+					},
+					error: function (error) {
+						alert('Došlo je do greške prilikom brisanja.');
+					}
+				})
 
 			}
 			else {
@@ -140,9 +203,20 @@
 		}
 
 		function getTotal() {
-			// Implementacija logike za računanje ukupne cene
-			var total = 0;
-			// Dodajte logiku za sabiranje cena svih stavki u korpi
+			var total = 0
+			brojBodova = $("#brojBodova").val();
+			$(".rezervacija").each(function () {
+				total = total + parseInt($(this).attr("cenaRezervacije"), 10)
+
+			})
+			if(brojBodova != undefined){
+						total = total - total * 0.05 * brojBodova
+	
+			}
+			else{brojBodova = 0}
+			$("#totalValue").text(total);
+
+			console.log(total)
 			return total;
 		}
 
@@ -164,31 +238,7 @@
 		});
 	</script>
 
-	<div hidden id="promeniBrPutnika" class=" modal fixed top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
 
-		<div class="modal-content p-6 bg-white border border-2">
-			<h2 class="text-2xl font-bold mb-4">Broj putnika</h2>
-
-
-
-			<div>
-
-				<div class="mb-4">
-					<label for="numberOfPassengers" class="block text-sm font-semibold text-gray-600">Broj
-						putnika:</label>
-					<input onchange="handleChangeBrojPutnika()" min="0" type="number" id="brojPutnika"
-						class="mt-1 p-2 border rounded-md w-full" required>
-
-				</div>
-
-
-				<button id="changeBttn" class="bg-blue-500 text-white px-4 py-2 rounded-full">
-					Potvrdi</button>
-				<button id="cancelReservationBttn" class="bg-blue-500 text-white px-4 py-2 rounded-full">
-					Otkaži</button>
-			</div>
-		</div>
-	</div>
 
 </body>
 

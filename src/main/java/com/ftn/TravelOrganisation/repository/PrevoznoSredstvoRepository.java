@@ -10,4 +10,5 @@ public PrevoznoSredstvo findOne(Long id);
 public List<PrevoznoSredstvo> findAll();
 public List<PrevoznoSredstvo> findByDestinacijeId(Long id);
 public int save(PrevoznoSredstvo prevoznoSredstvo);
+public boolean updateBrojSedista(PrevoznoSredstvo prevoznoSredstvo, int noviKapacitetPrevoz);
 }

@@ -11,18 +11,18 @@
 
          <div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen">
 			     <div class="bg-white p-8 shadow-md rounded-md w-96">
-        <h2 class="text-2xl font-bold mb-6">Login</h2>
+                <h2 class="text-2xl font-bold mb-6" th:text="#{label.login}">Login</h2>
         <form th:action="@{/login}" method="post">
             <div class="mb-4">
-                <label for="korisnickoIme" class="block text-sm font-medium text-gray-600">Korisničko Ime:</label>
+                        <label for="korisnickoIme" class="block text-sm font-medium text-gray-600" th:text="#{label.username}">Korisničko Ime:</label>
                 <input type="text" id="korisnickoIme" name="korisnickoIme" class="mt-1 p-2 w-full border rounded-md">
             </div>
             <div class="mb-4">
-                <label for="sifra" class="block text-sm font-medium text-gray-600">Šifra:</label>
+                        <label for="sifra" class="block text-sm font-medium text-gray-600" th:text="#{label.password}">Šifra:</label>
                 <input type="password" id="sifra" name="sifra" class="mt-1 p-2 w-full border rounded-md">
             </div>
             <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Login</button>
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md" th:text="#{button.login}">Login</button>
             </div>
         </form>
     </div>
@@ -30,3 +30,5 @@
     </div>
 </body>
 </html>
+
+

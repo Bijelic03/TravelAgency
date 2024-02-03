@@ -24,6 +24,8 @@ import com.ftn.TravelOrganisation.model.Destinacija;
 import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.LoyaltyKartica;
 import com.ftn.TravelOrganisation.model.Recenzija;
+import com.ftn.TravelOrganisation.model.Rezervacija;
+import com.ftn.TravelOrganisation.model.RezervacijaStatus;
 import com.ftn.TravelOrganisation.model.SmestajnaJedinica;
 import com.ftn.TravelOrganisation.repository.KorisnikRepository;
 import com.ftn.TravelOrganisation.repository.LoyaltyKarticaRepository;
@@ -127,6 +129,15 @@ public class LoyaltyKarticaRepositoryImpl implements LoyaltyKarticaRepository {
 		String sql = "DELETE FROM loyalty_kartice "+ "WHERE id = ?";
 		jdbcTemplate.update(sql, karticaId);
 
+	}
+	
+	@Override
+	public boolean updateBrojPoena(LoyaltyKartica loyaltyKartica, int brojPoena) {
+		String sql = "UPDATE loyalty_kartice SET broj_poena = ? WHERE id = ?";
+
+		int affectedRows = jdbcTemplate.update(sql, brojPoena, loyaltyKartica.getId());
+
+		return affectedRows > 0;
 	}
 
 }

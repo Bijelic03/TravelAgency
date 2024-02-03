@@ -24,9 +24,13 @@ import com.ftn.TravelOrganisation.model.Korisnik;
 import com.ftn.TravelOrganisation.model.KorisnikUloga;
 import com.ftn.TravelOrganisation.model.LoyaltyKartica;
 import com.ftn.TravelOrganisation.model.Putovanje;
+import com.ftn.TravelOrganisation.model.Rezervacija;
+import com.ftn.TravelOrganisation.model.WishlistItem;
 import com.ftn.TravelOrganisation.repository.KorisnikRepository;
 import com.ftn.TravelOrganisation.repository.LoyaltyKarticaRepository;
 import com.ftn.TravelOrganisation.repository.PutovanjeRepository;
+import com.ftn.TravelOrganisation.repository.RezervacijaRepository;
+import com.ftn.TravelOrganisation.repository.WishlistRepository;
 import com.ftn.TravelOrganisation.service.KorisnikService;
 import com.mysql.cj.Session;
 
@@ -41,16 +45,20 @@ public class KorisniciController {
 	PutovanjeRepository putovanjeRepository;
 	LoyaltyKarticaRepository loyaltyKarticaRepository;
 	HttpSession session;
+	RezervacijaRepository rezervacijaRepository;
+	WishlistRepository wishlistRepository;
 
 	@Autowired
 	public KorisniciController(KorisnikRepository korisnikRepository, KorisnikService korisnikService,
 			PutovanjeRepository putovanjeRepository, LoyaltyKarticaRepository loyaltyKarticaRepository,
-			HttpSession session) {
+			HttpSession session, RezervacijaRepository rezervacijaRepository, WishlistRepository wishlistRepository) {
 		this.korisnikService = korisnikService;
 		this.korisnikRepository = korisnikRepository;
 		this.putovanjeRepository = putovanjeRepository;
 		this.loyaltyKarticaRepository = loyaltyKarticaRepository;
 		this.session = session;
+		this.rezervacijaRepository = rezervacijaRepository;
+		this.wishlistRepository = wishlistRepository;
 	}
 
 	@GetMapping("korisnici")
@@ -68,7 +76,7 @@ public class KorisniciController {
 		loyaltyKarticaRepository.acceptKartica(id);
 		return ResponseEntity.ok("Kartica accepted successfully");
 	}
-	
+
 	@PostMapping("korisnici/rejectKartica")
 	public ResponseEntity<String> rejectKartica(@RequestParam Long id) {
 		loyaltyKarticaRepository.rejectKartica(id);
@@ -82,13 +90,22 @@ public class KorisniciController {
 
 			return new ModelAndView("redirect:/login");
 		}
+		List<Rezervacija> rezervacije = rezervacijaRepository.findByKorisnikId(prijavljeniKorisnik.getId());
 
+		List<WishlistItem> wishlist = wishlistRepository.findAllByKorisnik(prijavljeniKorisnik.getId());
+
+		for (WishlistItem wishlistItem : wishlist) {
+
+			System.out.println(wishlistItem.getId());
+		}
 		LoyaltyKartica loyaltyKartica = loyaltyKarticaRepository.findByKorisnikId(prijavljeniKorisnik.getId());
 		ModelAndView rezultat = new ModelAndView("profil");
 		List<Putovanje> listaPutovanja = putovanjeRepository.findAll();
 
+		rezultat.addObject("wishlist", wishlist);
 		rezultat.addObject("listaPutovanja", listaPutovanja);
 		rezultat.addObject("kartica", loyaltyKartica);
+		rezultat.addObject("rezervacije", rezervacije);
 
 		return rezultat;
 	}

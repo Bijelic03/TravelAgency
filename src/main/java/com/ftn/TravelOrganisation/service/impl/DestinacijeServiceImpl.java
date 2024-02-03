@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.ftn.TravelOrganisation.bean.SecondConfiguration.ApplicationMemory;
 import com.ftn.TravelOrganisation.controller.DestinacijeController;
 import com.ftn.TravelOrganisation.model.Destinacija;
 import com.ftn.TravelOrganisation.service.DestinacijeService;

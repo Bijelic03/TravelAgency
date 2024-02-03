@@ -1,113 +1,99 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-	<title th:text="'Dodaj smeštaj'"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <title th:text="#{fragments.dodajSmestaj}"></title>
 
-	<script src=https://code.jquery.com/jquery-3.6.0.js></script>
-	<script>
-		var destinacije = /*[[${destinacije}]]*/ 'destinacije';
-	</script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        var destinations = /*[[${destinacije}]]*/ 'destinacije';
+    </script>
 
 </head>
 
 <body>
-	<div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
+    <div th:replace="fragments/layout :: zajednickaStranica(~{::title}, ~{::centralniDiv})">
 
-		<div th:fragment="centralniDiv" class="flex items-center justify-center min-h-screen bg-white">
+        <div th:fragment="centralniDiv"
+            class="flex items-center justify-center min-h-screen bg-white">
 
-			<form>
-				<div class="space-y-12">
-					<div class="border-b border-gray-900/10 pb-12">
-						<h1 class="pt-10 text-base font-semibold leading-7 text-gray-900">Dodavanje prevoznog sredstva
-						</h1>
+            <form>
+                <div class="space-y-12">
+                    <div class="border-b border-gray-900/10 pb-12">
+                        <h1 class="pt-10 text-base font-semibold leading-7 text-gray-900"
+                            th:text="#{fragments.dodavanjePrevoznogSredstva}">Dodavanje prevoznog sredstva</h1>
 
-						<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div class="sm:col-span-5">
+                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                    th:text="#{fragments.tipPrevoza}">Tip prevoznog sredstva</label>
+                                <div class="mt-2">
+                                    <select id="tipPrevoza" name="tipPrevoza"
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                        <option value="" selected="true" disabled="disabled"
+                                            th:text="#{fragments.izaberiteKategoriju}">Izaberite kategoriju</option>
 
+                                        <option th:each="tip : ${T(com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum).values()}"
+                                            th:id="tip" th:value="${tip}" th:text="${tip.displayName}"></option>
 
+                                    </select>
+                                </div>
+                            </div>
 
+                            <div class="sm:col-span-5">
+                                <label for="country"
+                                    class="block text-sm font-medium leading-6 text-gray-900"
+                                    th:text="#{fragments.destinacija}">Destinacija</label>
+                                <div class="mt-2">
+                                    <select id="destinacijaSelect" name="destinacijaSelect"
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                        <option value="" selected="true" disabled="disabled"
+                                            th:text="#{fragments.izaberiteDestinaciju}">Izaberite destinaciju</option>
 
-							<div class="sm:col-span-5">
-								<label  class="block text-sm font-medium leading-6 text-gray-900">Tip
-									prevoznog sredstva
-								</label>
-								<div class="mt-2">
-									<select id="tipPrevoza" name="tipPrevoza"
-										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-										<option value="" selected="true" disabled="disabled">Izaberite kategoriju
-										</option>
+                                        <option th:each="destinacija : ${destinacije}" th:value="${destinacija.id}"
+                                            th:text="${destinacija.grad}"></option>
 
-										<option
-											th:each="tip : ${T(com.ftn.TravelOrganisation.model.PrevoznoSredstvoTipEnum).values()}"
-											th:id="tip" th:value="${tip}" th:text="${tip.displayName}">
-										</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-									</select>
-								</div>
-							</div>
+                        <div class="sm:col-span-5">
+                            <label for="country"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                th:text="#{fragments.brojSedista}">Broj sedišta</label>
+                            <div class="mt-2">
+                                <input min="1" id="brojSedista" type="number"
+                                    class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                            </div>
+                        </div>
 
-							<div class="sm:col-span-5">
-								<label for="country"
-									class="block text-sm font-medium leading-6 text-gray-900">Destinacija</label>
-								<div class="mt-2">
-									<select id="destinacijaSelect" name="destinacijaSelect"
-										class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-										<option value="" selected="true" disabled="disabled">Izaberite destinaciju
-										</option>
+                        <div class="sm:col-span-5">
+                            <label class="block text-sm font-medium leading-6 text-gray-900"
+                                th:text="#{fragments.opis}">Opis</label>
+                            <div class="mt-2">
+                                <input id="opis" type="text"
+                                    class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-										<option th:each="destinacija : ${destinacije}" th:value="${destinacija.id}"
-											th:text="${destinacija.grad}">
-										</option>
-
-									</select>
-								</div>
-							</div>
-
-
-
-
-
-						</div>
-						<div class="sm:col-span-5">
-							<label for="country" class="block text-sm font-medium leading-6 text-gray-900">
-								Broj sedišta</label>
-							<div class="mt-2">
-								<input min="1" id="brojSedista" type="number" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-							</div>
-						</div>
-
-
-
-
-
-						<div class="sm:col-span-5">
-							<label class="block text-sm font-medium leading-6 text-gray-900">
-								Opis</label>
-							<div class="mt-2">
-								<input id="opis" type="text" class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-										ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-							</div>
-						</div>
-					</div>
-
-
-
-				</div>
-
-				<div class="mt-6 flex items-center justify-end gap-x-6">
-					<button type="button" class="text-sm font-semibold leading-6 text-gray-900">Odustani</button>
-					<button id="kreirajbutton"
-						class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Kreiraj</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-
+                <div class="mt-6 flex items-center justify-end gap-x-6">
+                    <button type="button"
+                        class="text-sm font-semibold leading-6 text-gray-900"
+                        th:text="#{fragments.odustani}">Odustani</button>
+                    <button id="kreirajbutton"
+                        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        th:text="#{fragments.kreiraj}">Kreiraj</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
 <script>
+
 
 	var kreirajbutton = $('#kreirajbutton')
 	var chosenDestinacijaId = null
